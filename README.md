@@ -3,7 +3,7 @@ New firmware for the Spikenzie Labs Labs Solder:Time Desk Clock
 
 ![Clock](https://github.com/porrey/Clock3/raw/master/Images/Clock.jpg)
 
-This firmware has been written from scratch using standard library's.
+This firmware has been written from scratch using standard libraries.
 
 
 - A driver has been created for the LED matrix so it is compatible with the Adafruit GXF library.
