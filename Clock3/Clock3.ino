@@ -6,6 +6,8 @@
 #include <RTClib.h>
 #include <SoftwareSerial.h>
 #include <TinyGPS.h>
+#include <AceButton.h>
+using namespace ace_button;
 
 // ***
 // *** Initialization strings for the GPS.
@@ -14,16 +16,24 @@
 #define PMTK_SET_NMEA_UPDATE_200_MILLIHERTZ  F("$PMTK220,5000*1B")
 #define PMTK_API_SET_FIX_CTL_1HZ  F("$PMTK300,1000,0,0,0,0*1C")
 #define PMTK_SET_NMEA_OUTPUT_RMCGGA F("$PMTK314,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*28")
-#define PMTK_ENABLE_WAAS
+#define PMTK_ENABLE_WAAS F("$PMTK301,2*2E")
 #define PGCMD_ANTENNA F("$PGCMD,33,1*6C")
 #define PGCMD_NOANTENNA F("$PGCMD,33,0*6D")
 
 // ***
-// *** Define the RX/TX pins for the debug serial port.
+// *** Define the serial port for displaying debug messages. When debugging
+// *** on an Arduino, this should be the standard Serial port. Note we specify
+// *** RX of 0 since we only send data and do not expect to receive any data.
 // ***
-#define DEBUG_RX  PB7
-#define DEBUG_TX  7
-SoftwareSerial Debug(DEBUG_RX, DEBUG_TX); // RX, TX
+SoftwareSerial Debug(0, 7); // RX, TX
+//#define Debug Serial
+
+// ***
+// *** Define the Serial port used by the GPS. For the clock this should be the standard
+// *** serial port. If debugging on an Arduino, this should use the soft serial port.
+// ***
+#define GpsSerial Serial
+//SoftwareSerial GpsSerial(2, 3); // RX, TX
 
 // ***
 // *** An instance of the TinyGPS interface.
@@ -34,8 +44,11 @@ TinyGPS _gps;
 // *** Create an instance of the Clock LED Display Matrix that is part
 // *** of the Spikenzielabs clock kit found at
 // *** https://www.spikenzielabs.com/Catalog/watches-clocks/solder-time-desk-clock.
+// *** Although the use INDIVIDUAL_LED mode would look nicer, it requires so
+// *** much CPU time that it interferres with the serial port and stops the GPS
+// *** from working. We will use FULL_COLUMN mode instead.
 // ***
-ClockLedMatrix _display = ClockLedMatrix();
+ClockLedMatrix _display = ClockLedMatrix(ClockLedMatrix::FULL_COLUMN);
 
 // ***
 // *** An instance of the the RTC_DS1307 library. The RTC in the Spikenzielabs clock
@@ -44,41 +57,48 @@ ClockLedMatrix _display = ClockLedMatrix();
 RTC_DS1307 _rtc;
 
 // ***
-// *** The time zone offset. The default is -6 since I live in Chicago.
+// *** The time zone offset.
 // ***
-volatile int8_t _tz_offset = -6;
+int8_t _tz_offset = -5;
+//uint8_t _tz_change_direction = -1;
 
 // ***
 // ***
 // ***
-volatile bool _isDst = true;
+bool _isDst = false;
 
 // ***
 // *** Tracks the last minute displayed so the display can be updated once per minute.
 // ***
-int16_t _lastMinute = -1;
-
-// ***
-// *** A flag to indicate if time has been set.
-// ***
-bool _timeIsSet = false;
+int16_t _lastMinuteDisplayed = -1;
 
 // ***
 // *** The time of the last GPS update.
 // ***
-DateTime _lastUpdated;
+DateTime _lastGpsUpdate = DateTime(1900, 1, 1, 0, 0, 0);
+bool _gpsFix = false;
 
 // ***
 // *** Mode
 // ***
-enum MODES
-{
-  MODE_DISPLAY_TIME = 0,
-  MODE_SHOW_OFFSET = 1,
-  MODE_SHOW_DST = 2
-};
+bool _modeChanged = false;
+uint8_t _mode = 0;
 
-MODES _mode = MODE_DISPLAY_TIME;
+#define MODE_DISPLAY_TIME 0
+#define MODE_TZ 1
+#define MODE_DST 2
+
+// ***
+// *** Setup
+// ***
+bool _setupChanged = false;
+
+// ***
+// *** Create a button object for the mode button.
+// ***
+#define MODE_BUTTON_ID 0
+#define SETUP_BUTTON_ID 1
+//AceButton _buttons[2];
 
 void setup()
 {
@@ -114,22 +134,23 @@ void setup()
   Debug.println(F("The display has been initialized."));
 
   // ***
-  // *** Set up the timer for display refresh.
+  // *** Set up the timer for display refresh. Use the recommended
+  // *** values based on refresh mode.
   // ***
-  Timer1.initialize(250);
-  Timer1.attachInterrupt(refreshSupply);
+  Timer1.initialize(_display.refreshDelay());
+  Timer1.attachInterrupt(refreshDisplay);
 
   // ***
   // *** Initialize the GPS.
   // ***
-  Serial.begin(9600);
+  GpsSerial.begin(9600);
 
-  Serial.println(PMTK_SET_BAUD_9600); delay(250);
-  Serial.println(PMTK_SET_NMEA_UPDATE_200_MILLIHERTZ); delay(250);
-  Serial.println(PMTK_API_SET_FIX_CTL_1HZ); delay(250);
-  Serial.println(PMTK_SET_NMEA_OUTPUT_RMCGGA); delay(250);
-  Serial.println(PMTK_ENABLE_WAAS); delay(250);
-  Serial.println(PGCMD_NOANTENNA); delay(250);
+  GpsSerial.println(PMTK_SET_BAUD_9600); delay(250);
+  GpsSerial.println(PMTK_SET_NMEA_UPDATE_200_MILLIHERTZ); delay(250);
+  GpsSerial.println(PMTK_API_SET_FIX_CTL_1HZ); delay(250);
+  GpsSerial.println(PMTK_SET_NMEA_OUTPUT_RMCGGA); delay(250);
+  GpsSerial.println(PMTK_ENABLE_WAAS); delay(250);
+  GpsSerial.println(PGCMD_NOANTENNA); delay(250);
 
   // ***
   // *** Check the RTC.
@@ -147,136 +168,239 @@ void setup()
     // *** on the serial device.
     // ***
     DateTime time = _rtc.now();
-    Debug.println(String(F("DateTime::TIMESTAMP_FULL:\t")) + time.timestamp(DateTime::TIMESTAMP_FULL));
+    Debug.print(F("DateTime::TIMESTAMP_FULL: ")); Serial.println(time.timestamp(DateTime::TIMESTAMP_FULL));
   }
+
+  // ***
+  // *** Initialize the button pins.
+  // ***
+  //pinMode(MODE_BUTTON, INPUT_PULLUP);
+  //digitalWrite(MODE_BUTTON, HIGH);
+  //pinMode(SETUP_BUTTON, INPUT_PULLUP);
+  //digitalWrite(SETUP_BUTTON, HIGH);
+
+  // ***
+  // *** Initialize the buttons.
+  // ***
+  //_buttons[MODE_BUTTON_ID].init(MODE_BUTTON, HIGH, MODE_BUTTON_ID);
+  //_buttons[SETUP_BUTTON_ID].init(SETUP_BUTTON, HIGH, SETUP_BUTTON_ID);
+
+  // ***
+  // *** Configure the ButtonConfig with the event handler.
+  // ***
+  //ButtonConfig* buttonConfig = ButtonConfig::getSystemButtonConfig();
+  //buttonConfig->setEventHandler(buttonEventHandler);
+  //buttonConfig->setFeature(ButtonConfig::kFeatureLongPress);
+  //buttonConfig->setFeature(ButtonConfig::kFeatureClick);
 
   // ***
   // *** Power on test.
   // ***
-  powerOnTest();
+  powerOnTest(_gps);
 
   // ***
-  // *** Display the GPS fix indicator.
+  // *** Show version number.
   // ***
-  updateGpsFixDisplay();
+  drawMomentaryTextCentered(_display, "ver 3", 2000, true);
+
+  Debug.println(F("Setup completed."));
+  Debug.println(F(""));
+}
+
+void buttonEventHandler(AceButton* button, uint8_t eventType, uint8_t state)
+{
+  uint8_t id = button->getId();
+
+  if (eventType == ButtonConfig::kFeatureLongPress)
+  {
+    if (id == MODE_BUTTON_ID)
+    {
+      drawMomentaryTextCentered(_display, "GPS", 1500, true);
+    }
+  }
+  else if (eventType == ButtonConfig::kFeatureClick)
+  {
+    if (id == MODE_BUTTON_ID)
+    {
+      // ***
+      // *** Increment the mode and set the mode
+      // *** changed flag.
+      // ***
+      _mode = (++_mode) % 3;
+      _modeChanged = true;
+    }
+    else
+    {
+      switch (_mode)
+      {
+        case MODE_TZ:
+          // ***
+          // *** Toggle the DST flag.
+          // ***
+          _isDst = !_isDst;
+          break;
+        case MODE_DST:
+          // ***
+          // *** Increment the TZ offset
+          // *** by 30 minutes.
+          // ***
+          //_tz_offset += (_tz_change_direction * .5);
+          break;
+      }
+    }
+  }
 }
 
 void loop()
 {
+  // ***
+  // *** Check the buttons to update their state.
+  // ***
+  //_buttons[MODE_BUTTON_ID].check();
+  //_buttons[SETUP_BUTTON_ID].check();
+
+  // ***
+  // *** Check to see if it is time to update the RTC time
+  // *** from the GPS data. We will update every hour
+  // *** (3600 seconds).
+  // ***
+  if (checkIfTimeForRtcUpdateFromGps(_lastGpsUpdate, _gps, _rtc, 3600))
+  {
+    _lastGpsUpdate = _rtc.now();
+    _gpsFix = true;
+    Debug.println("GPS Fix = Yes");
+  }
+
+  // ***
+  // *** If the mode has changed, reset the display.
+  // ***
+  if (_modeChanged)
+  {
+    _display.reset();
+  }
+
+  // ***
+  // *** Check the current mode.
+  // ***
   switch (_mode)
   {
     // ***
     // *** Display the time.
     // ***
     case MODE_DISPLAY_TIME:
-      // ***
-      // *** Update the displayed time.
-      // ***
-      updateTimeDisplay();
+      {
+        // ***
+        // *** Update the displayed time.
+        // ***
+        if (updateTimeDisplay(_display, _rtc, _lastMinuteDisplayed, _modeChanged))
+        {
+          // ***
+          // *** Track the time of the last update. We only change the display each minute.
+          // ***
+          _lastMinuteDisplayed = _rtc.now().minute();
+        }
 
-      // ***
-      // *** Display the GPS fix indicator.
-      // ***
-      updateGpsFixDisplay();
+        // ***
+        // *** Display the GPS fix indicator.
+        // ***
+        updateGpsFixDisplay(_gpsFix);
+      }
       break;
-    case MODE_SHOW_OFFSET:
-      // ***
-      // *** Display the current offset.
-      // ***
-      showOffset();
+    case MODE_TZ:
+      {
+        // ***
+        // *** Display the current offset.
+        // ***
+        if (_modeChanged)
+        {
+          drawMomentaryTextCentered(_display, "TZ", 1000, true);
+        }
+
+        showOffset(_display);
+      }
       break;
-    case MODE_SHOW_DST:
-      // ***
-      // *** Display the current DST mode.
-      // ***
-      showDst();
+    case MODE_DST:
+      {
+        // ***
+        // *** Display the current DST mode.
+        // ***
+        if (_modeChanged)
+        {
+          drawMomentaryTextCentered(_display, "DST", 1000, true);
+        }
+
+        showDst(_display);
+      }
       break;
   }
 
   // ***
-  // *** Check to see if a GPS update is needed.
+  // *** Reset mode and setup change flags.
   // ***
-  checkGpsTime();
+  _modeChanged = false;
+  _setupChanged = false;
 
   // ***
-  // *** Short delay.
+  // *** Read data from the GPS for up to 750ms. This
+  // *** is the "loop delay".
   // ***
-  delay(250);
+  readGpsData(_gps, 750);
 }
 
-void updateTimeDisplay()
+bool updateTimeDisplay(const ClockLedMatrix& display, const RTC_DS1307& rtc, int16_t lastMinute, bool force)
 {
-  DateTime now = _rtc.now();
+  bool returnValue = false;
 
-  if (_lastMinute != now.minute())
+  DateTime now = rtc.now();
+
+  if (force | lastMinute != now.minute())
   {
-    // ***
-    // *** Get the number of seconds since the last GPS update.
-    // ***
-    uint32_t secondsSinceLastGpsUpdate = now.unixtime() - _lastUpdated.unixtime();
+    Debug.print(F("RTC Date/Time: ")); Serial.println(now.timestamp(DateTime::TIMESTAMP_FULL));
 
     // ***
     // *** Clear the display.
     // ***
-    _display.reset();
+    display.reset();
+
+    // ***
+    // *** Adjust for the current time zone.
+    // ***
+    Debug.print("Time Zone Offset: "); Serial.println(_tz_offset);
+    Debug.print("DST: "); Serial.println(_isDst ? "Yes" : "No");
+    DateTime localNow = DateTime(now.unixtime() + (_tz_offset * 3600));
+    Debug.print(F("Local Date/Time: ")); Serial.println(localNow.timestamp(DateTime::TIMESTAMP_FULL));
 
     // ***
     // *** Get a string version of the time.
     // ***
-    String time = getTimeString(&now);
-    Debug.print(F("Time: ")); Serial.println(time);
-
-    // ***
-    // *** The time displayed will be centered. Calculate the width
-    // *** and left position.
-    // ***
-    int len = time.length();
-    int width = len * 3;
-    int16_t left = ((int16_t)((_display.width() - width) / 2.0)) - 1;
-
-    // ***
-    // *** Set the cursor to center the time.
-    // ***
-    _display.setCursor(left, 6);
+    String time = dateTimeToTimeString(&localNow);
+    Debug.print(F("Time Display: ")); Debug.println(time);
 
     // ***
     // *** Update the time on the display.
     // ***
-    _display.println(time);
+    drawTextCentered(display, time);
 
     // ***
     // *** Update the AM/PM mark on the display.
     // ***
-    updateAmPmDisplay(&now);
+    updateAmPmDisplay(&localNow);
 
-    // ***
-    // *** Track the time of the last update. We only change the display each minute.
-    // ***
-    _lastMinute = now.minute();
+    Debug.println(F(""));
 
-    // ***
-    // *** Trigger a GPS read every hour.
-    // ***
-    if (secondsSinceLastGpsUpdate > 3600)
-    {
-      Debug.println(F("Triggering GPS update."));
-      _timeIsSet = false;
-    }
+    returnValue = true;
   }
+
+  return returnValue;
 }
 
-void updateGpsFixDisplay()
+void updateGpsFixDisplay(bool gpsHasTime)
 {
-  // ***
-  // ** Check if we have a GPS fix.
-  // ***
-  bool fix = _timeIsSet;
-
   // ***
   // *** Highlight the LED at x = 18 and y = 5
   // *** when the time is PM.
   // ***
-  _display.drawPixel(18, 1, fix ? 1 : 0);
+  _display.drawPixel(18, 1, gpsHasTime ? 1 : 0);
 }
 
 void updateAmPmDisplay(DateTime* now)
@@ -285,6 +409,7 @@ void updateAmPmDisplay(DateTime* now)
   // ** Check if it is PM.
   // ***
   bool pm = now->hour() >= 12;
+  Debug.print("AM/PM => "); Debug.println(pm ? "PM" : "AM");
 
   // ***
   // *** Highlight the LED at x = 18 and y = 5
@@ -293,31 +418,32 @@ void updateAmPmDisplay(DateTime* now)
   _display.drawPixel(18, 5, pm ? 1 : 0);
 }
 
-void checkGpsTime()
+bool checkIfTimeForRtcUpdateFromGps(DateTime lastGpsUpdate, const TinyGPS& gps, const RTC_DS1307& rtc, uint64_t updateInterval)
 {
+  bool returnValue = false;
+
+  // ***
+  // *** Get the number of seconds since the last GPS update.
+  // ***
+  uint32_t secondsSinceLastGpsUpdate = rtc.now().unixtime() - lastGpsUpdate.unixtime();
+
   // ***
   // *** Check if the time needs to be set from the GPS signal.
   // ***
-  if (!_timeIsSet)
+  if (secondsSinceLastGpsUpdate > updateInterval)
   {
-    // ***
-    // *** Get data for the GPS. Let it read for about 2
-    // *** seconds; should be enough.
-    // ***
-    getGpsData(_gps, 2000);
+    Debug.println(F("Triggering RTC update from GPS."));
 
     // ***
     // *** Try to get the time from GPS and set the clock.
     // ***
-    if (setDateAndTime(_gps, _rtc, _tz_offset))
-    {
-      _lastUpdated = _rtc.now();
-      _timeIsSet = true;
-    }
+    returnValue = setDateAndTimeFromGps(gps, rtc);
   }
+
+  return returnValue;
 }
 
-void refreshSupply()
+void refreshDisplay()
 {
   // ***
   // *** Refresh the LED matrix.
@@ -325,7 +451,7 @@ void refreshSupply()
   _display.refresh();
 }
 
-void powerOnTest()
+void powerOnTest(const TinyGPS& gps)
 {
   // ***
   // *** Light each LED.
@@ -340,9 +466,9 @@ void powerOnTest()
   }
 
   // ***
-  // *** Pause.
+  // *** Pause for 2 seconds by reading GPS data.
   // ***
-  delay(1000);
+  readGpsData(gps, 2000);
 
   // ***
   // *** Reset the display.
@@ -350,20 +476,20 @@ void powerOnTest()
   _display.reset();
 }
 
-void getGpsData(const TinyGPS& gps, uint64_t readTime)
+void readGpsData(const TinyGPS& gps, uint64_t readWaitTime)
 {
   uint64_t start = millis();
 
   do
   {
-    while (Serial.available())
+    while (GpsSerial.available())
     {
-      _gps.encode(Serial.read());
+      gps.encode(GpsSerial.read());
     }
-  } while (millis() - start < readTime);
+  } while (millis() - start < readWaitTime);
 }
 
-bool setDateAndTime(const TinyGPS& gps, const RTC_DS1307& rtc, int tz_offset)
+bool setDateAndTimeFromGps(const TinyGPS& gps, const RTC_DS1307& rtc)
 {
   bool returnValue = false;
 
@@ -387,20 +513,14 @@ bool setDateAndTime(const TinyGPS& gps, const RTC_DS1307& rtc, int tz_offset)
     // *** Create  UTC date and time instance.
     // ***
     DateTime dt = DateTime(year, month, day, hour, minute, second);
-    Debug.println(String(F("GPS/UTC Date/Time:\t")) + dt.timestamp(DateTime::TIMESTAMP_FULL));
-
-    // ***
-    // *** Adjust for the current time zone.
-    // ***
-    DateTime dtAdjusted = DateTime(dt.unixtime() + (tz_offset * 3600));
-    Debug.println(String(F("Local Date/Time:\t")) + dtAdjusted.timestamp(DateTime::TIMESTAMP_FULL));
+    Debug.print(F("GPS/UTC Date/Time: ")); Serial.println(dt.timestamp(DateTime::TIMESTAMP_FULL));
 
     // ***
     // *** Set the time on the RTC.
     // ***
     // ***
     Debug.println("RTC time has been set.");
-    rtc.adjust(dtAdjusted);
+    rtc.adjust(dt);
 
     // ***
     // *** Return true to indicate the clock was set.
@@ -409,14 +529,16 @@ bool setDateAndTime(const TinyGPS& gps, const RTC_DS1307& rtc, int tz_offset)
   }
   else
   {
-    Debug.println("Date and Time not available.");
+    Debug.print("Date and Time not available. Age = "); Debug.println(age);
     returnValue = false;
   }
+
+  Debug.println(F(""));
 
   return returnValue;
 }
 
-String getTimeString(DateTime* now)
+String dateTimeToTimeString(DateTime* now)
 {
   uint8_t hour = now->hour() > 12 ? now->hour() - 12 : now->hour();
   char buffer[5];
@@ -424,34 +546,45 @@ String getTimeString(DateTime* now)
   return String(buffer);
 }
 
-void showOffset()
+void showOffset(const ClockLedMatrix& display)
 {
-  char buffer[9];
-  sprintf(buffer, "TZO: %01d", _tz_offset);
-
-  // ***
-  // *** Set the cursor to center the time.
-  // ***
-  _display.setCursor(1, 6);
-
-  // ***
-  // *** Update the time on the display.
-  // ***
-  _display.println(buffer);
+  display.setCursor(0, 6);
+  display.println(_tz_offset);
 }
 
-void showDst()
+void showDst(const ClockLedMatrix& display)
 {
-  char buffer[9];
-  sprintf(buffer, "DST: %s", _isDst ? "Y" : "N");
-
-  // ***
-  // *** Set the cursor to center the time.
-  // ***
-  _display.setCursor(1, 6);
+  char buffer[3];
+  sprintf(buffer, "%s", _isDst ? "Yes" : "No");
 
   // ***
   // *** Update the time on the display.
   // ***
-  _display.println(buffer);
+  drawTextCentered(display, String(buffer));
+}
+
+void drawTextCentered(const ClockLedMatrix& display, String text)
+{
+  display.reset();
+
+  // ***
+  // *** Calculate the width and left position.
+  // ***
+  int len = text.length();
+  int width = len * 3;
+  int16_t left = ((int16_t)((display.width() - width) / 2.0)) - 1;
+  display.setCursor(left, display.height() - 1);
+  display.println(text);
+}
+
+void drawMomentaryTextCentered(const ClockLedMatrix& display, String text, uint64_t displayTime, bool resetAfter)
+{
+  drawTextCentered(display, text);
+
+  delay(displayTime);
+
+  if (resetAfter)
+  {
+    display.reset();
+  }
 }

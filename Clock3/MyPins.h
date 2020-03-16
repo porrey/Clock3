@@ -2,6 +2,12 @@
 #define MY_PINS_H
 
 // ***
+// *** Buttons
+// ***
+#define MODE_BUTTON 2
+#define SETUP_BUTTON 3
+
+// ***
 // *** Defines the register and port for the 74LS138N 3 to 8 decoders. The three
 // *** input pins are on PD4 (A), PD5 (B) and PD6 (C). A, B and C are all tied
 // *** together on on three decoder chips.

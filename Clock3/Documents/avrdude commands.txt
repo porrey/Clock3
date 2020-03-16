@@ -1,6 +1,0 @@
-avrdude -c usbtiny -p m328p -C "C:\Program Files (x86)\Arduino\hardware\tools\avr\etc\avrdude.conf"
-
-avrdude -c usbtiny -p atmega328p -C "C:\Program Files (x86)\Arduino\hardware\tools\avr\etc\avrdude.conf" -Uflash:w:"Y:\Desktop\Clock.hex":i -Uefuse:w:0xFD:m -Uhfuse:w:0xDA:m -Ulfuse:w:0xE2:m -e -v
-
-avrdude -c usbtiny -p atmega328p -C "C:\Program Files (x86)\Arduino\hardware\tools\avr\etc\avrdude.conf" -Uflash:w:"C:\Users\porrey\AppData\Local\Temp\arduino_build_948318\Clock3.ino.hex":i -Uefuse:w:0xFD:m -Uhfuse:w:0xDA:m -Ulfuse:w:0xE2:m -e -v
-avrdude -c usbtiny -p atmega328p -C "C:\Program Files (x86)\Arduino\hardware\tools\avr\etc\avrdude.conf" -Uflash:w:"C:\Users\porrey\AppData\Local\Temp\arduino_build_847104\Clock3.ino.hex":i -e -v

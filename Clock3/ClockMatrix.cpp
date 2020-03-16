@@ -2,6 +2,12 @@
 
 ClockLedMatrix::ClockLedMatrix() : Adafruit_GFX(COLUMNS, ROWS)
 {
+  this->refreshMode = ClockLedMatrix::FULL_COLUMN;
+}
+
+ClockLedMatrix::ClockLedMatrix(RefreshMode refreshMode) : Adafruit_GFX(COLUMNS, ROWS)
+{
+  this->refreshMode = refreshMode;
 }
 
 void ClockLedMatrix::begin()
@@ -27,6 +33,21 @@ void ClockLedMatrix::begin()
   this->reset();
 }
 
+uint16_t ClockLedMatrix::refreshDelay()
+{
+  uint16_t returnValue = 0;
+
+  if (this->refreshMode == FULL_COLUMN)
+  {
+    returnValue = 1000;
+  }
+  else
+  {
+    returnValue = 150;
+  }
+  return returnValue;
+}
+
 void ClockLedMatrix::drawPixel(int16_t x, int16_t y, uint16_t color)
 {
   if (color == 0)
@@ -39,7 +60,7 @@ void ClockLedMatrix::drawPixel(int16_t x, int16_t y, uint16_t color)
   }
 }
 
-void ClockLedMatrix::drawColumn(uint8_t column, byte rows)
+void ClockLedMatrix::drawColumn(uint8_t column, uint8_t rows)
 {
   if (column >= 0 && column < this->width())
   {
@@ -65,17 +86,100 @@ void ClockLedMatrix::drawColumn(uint8_t column, byte rows)
     // ***
     // *** Select the correct column bank.
     // ***
-    if (column >= 0 && column <= 7)
+    if (column <= 7)
     {
       CHIP_SELECT_PORT = DECODER_1;
     }
-    else if (column >= 8 && column <= 15)
+    else if (column <= 15)
     {
       CHIP_SELECT_PORT = DECODER_2;
     }
-    else if (column >= 15 && column <= 19)
+    else if (column <= 19)
     {
       CHIP_SELECT_PORT = DECODER_3;
+    }
+  }
+
+  // ***
+  // *** Increment the current column.
+  // ***
+  this->_currentColumn++;
+
+  // ***
+  // *** Check if the last column has been updated.
+  // ***
+  if (this->_currentColumn == this->width())
+  {
+    this->_currentColumn = 0;
+  }
+}
+
+void ClockLedMatrix::drawLed(uint8_t column, uint8_t row)
+{
+  if (column >= 0 && column < this->width())
+  {
+    // ***
+    // *** Disable all decoders.
+    // ***
+    CHIP_SELECT_PORT = DECODERS_OFF;
+
+    // ***
+    // *** Set the rows. The mask selects the current bit.
+    // ***
+    uint8_t mask = (1 << row);
+    uint8_t bits = this->_matrixBuffer[this->_currentColumn] & mask;
+    ROW_PORT = (ROW_PORT & B10000000) | bits;
+
+    // ***
+    // *** Select the correct column. After taking the modulo of
+    // *** the column number with 8, the last 3 bits give the value of
+    // *** of the A, B and C channels. These 3 bits need to be
+    // *** shifted into the correction positions for the decorder
+    // *** port.
+    // ***
+    DECODER_PORT = (DECODER_PORT & B10001111) | ((column % 8) << 4);
+
+    // ***
+    // *** Select the correct column bank.
+    // ***
+    if (column <= 7)
+    {
+      CHIP_SELECT_PORT = DECODER_1;
+    }
+    else if (column <= 15)
+    {
+      CHIP_SELECT_PORT = DECODER_2;
+    }
+    else if (column <= 19)
+    {
+      CHIP_SELECT_PORT = DECODER_3;
+    }
+  }
+
+  // ***
+  // *** Increment the current row.
+  // ***
+  this->_currentRow++;
+
+  // ***
+  // *** Check if the last row has been updated.
+  // ***
+  if (this->_currentRow == this->height())
+  {
+    this->_currentRow = 0;
+
+    // ***
+    // *** Increment the current column.
+    // ***
+    this->_currentColumn++;
+
+    // ***
+    // ***
+    // ***
+    if (this->_currentColumn == this->width())
+    {
+      this->_currentColumn = 0;
+      this->_currentRow = 0;
     }
   }
 }
@@ -100,6 +204,7 @@ void ClockLedMatrix::reset()
   // ***
   // *** Reset the row and column counter for the refresh.
   // ***
+  this->_currentRow = 0;
   this->_currentColumn = 0;
 
   // ***
@@ -110,21 +215,18 @@ void ClockLedMatrix::reset()
 
 void ClockLedMatrix::refresh()
 {
-  // ***
-  // *** Draw the current column.
-  // ***
-  this->drawColumn(this->_currentColumn, this->_matrixBuffer[this->_currentColumn]);
-
-  // ***
-  // *** Increment the current column.
-  // ***
-  this->_currentColumn++;
-
-  // ***
-  // ***
-  // ***
-  if (this->_currentColumn == this->width())
+  if (this->refreshMode == ClockLedMatrix::FULL_COLUMN)
   {
-    this->_currentColumn = 0;
+    // ***
+    // *** Draw the current column.
+    // ***
+    this->drawColumn(this->_currentColumn, this->_matrixBuffer[this->_currentColumn]);
+  }
+  else
+  {
+    // ***
+    // *** Draw the current column.
+    // ***
+    this->drawLed(this->_currentColumn, this->_currentRow);
   }
 }
