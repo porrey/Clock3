@@ -1,5 +1,5 @@
 # Clock3
-New firmware for the Spikenzie Labs Labs Solder:Time Desk Clock
+New firmware for the Spikenzie Labs Solder:Time Desk Clock
 
 ![Clock](https://github.com/porrey/Clock3/raw/master/Images/Clock.jpg)
 
