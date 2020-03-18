@@ -1,0 +1,45 @@
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\App.g.i.cs
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\App.g.cs
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\MainPage.g.i.cs
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\MainPage.g.cs
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\XamlTypeInfo.g.cs
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\App.xaml
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\MainPage.xaml
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\App.xbf
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\MainPage.xbf
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\XamlSaveStateFile.xml
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\bin\x86\Debug\App.xbf
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\bin\x86\Debug\MainPage.xbf
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\bin\x86\Debug\GFX Font Editor.xr.xml
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\bin\x86\Debug\GFX Font Editor.exe
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\bin\x86\Debug\GFX Font Editor.pdb
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\bin\x86\Debug\resources.pri
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\bin\x86\Debug\AppxManifest.xml
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\bin\x86\Debug\Core\AppxManifest.xml
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\bin\x86\Debug\Core\GFX Font Editor.exe
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\bin\x86\Debug\GFX Font Editor.build.appxrecipe
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\bin\x86\Debug\System.Runtime.dll
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\bin\x86\Debug\Microsoft.UI.Xaml.Markup.winmd
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\GFX Font Editor.csproj.CopyComplete
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\GFX Font Editor.exe
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\GFX Font Editor.pdb
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\ResourceHandlingTask.state
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\priconfig.xml
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\priconfig.xml.intermediate
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\unfiltered.layout.resfiles
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\unfiltered.layout.resfiles.intermediate
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\filtered.layout.resfiles
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\filtered.layout.resfiles.intermediate
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\excluded.layout.resfiles
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\excluded.layout.resfiles.intermediate
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\resources.resfiles
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\resources.resfiles.intermediate
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\pri.resfiles
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\pri.resfiles.intermediate
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\qualifiers.txt
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\qualifiers.txt.intermediate
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\MultipleQualifiersPerDimensionFound.txt
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\ProjectArchitectures.txt
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\.winmd_cache\$Microsoft.UI.Xaml.Markup.winmd_636885490160000000.json
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\obj\x86\Debug\GFX Font Editor.csprojAssemblyReference.cache
+C:\Users\porrey\source\Projects\GFX Font Editor Solution\GFX Font Editor\bin\x86\Debug\Newtonsoft.Json.dll

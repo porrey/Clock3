@@ -1,0 +1,317 @@
+﻿<models:BindablePage xmlns:models="using:GfxFontEditor.Models"
+					 x:Class="GfxFontEditor.MainPage"
+					 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+					 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+					 mc:Ignorable="d"
+					 Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+	<models:BindablePage.Resources>
+		<DataTemplate x:Key="Glyph">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="2*" />
+					<ColumnDefinition Width="5*" />
+					<ColumnDefinition Width="1*" />
+				</Grid.ColumnDefinitions>
+
+				<TextBlock Grid.Column="0"
+						   Text="{Binding Key}"
+						   FontSize="16"
+						   FontFamily="Consolas"
+						   VerticalAlignment="Center"
+						   HorizontalAlignment="Center"
+						   Margin="5, 5, 20, 5" />
+
+				<TextBlock Grid.Column="1"
+						   Text="{Binding Display}"
+						   FontSize="12"
+						   FontFamily="Consolas"
+						   VerticalAlignment="Center"
+						   HorizontalAlignment="Left"
+						   Margin="5, 5, 0, 5"
+						   Foreground="#aaaaaa" />
+
+				<TextBlock Grid.Column="2"
+						   Text="{Binding Hex}"
+						   FontSize="11"
+						   FontFamily="Consolas"
+						   VerticalAlignment="Center"
+						   HorizontalAlignment="Left"
+						   Margin="0, 5, 0, 5"
+						   Foreground="#aaaaaa" />
+			</Grid>
+		</DataTemplate>
+	</models:BindablePage.Resources>
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+
+		<CommandBar Grid.Row="0"
+					DefaultLabelPosition="Right">
+			<AppBarButton Icon="OpenFile"
+						  Label="Open"
+						  Click="OpenFont" />
+
+			<AppBarButton Icon="SaveLocal"
+						  Label="Save"
+						  Click="SaveFont" />
+
+			<AppBarSeparator />
+
+			<AppBarButton Icon="Import"
+						  Label="Import"
+						  Click="ImportFont" />
+
+			<AppBarButton Icon="SaveLocal"
+						  Label="Export"
+						  Click="ExportFont" />
+
+			<AppBarSeparator />
+
+			<AppBarButton Icon="Font"
+						  Label="New"
+						  Click="NewFont" />
+
+			<CommandBar.Content>
+				<TextBlock Text="{x:Bind FileName, Mode=TwoWay}"
+						   Margin="12,14" />
+			</CommandBar.Content>
+		</CommandBar>
+
+		<Grid Grid.Row="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="370" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+
+			<!-- Character List -->
+			<Grid Grid.Column="0">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="60" />
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
+
+				<Border Grid.Row="0"
+						BorderThickness="1"
+						BorderBrush="#aaaaaa"
+						Margin="2"
+						Background="SteelBlue">
+					<TextBlock Grid.Column="0"
+							   Text="Characters"
+							   Margin="5"
+							   FontSize="28"
+							   Foreground="White"
+							   HorizontalAlignment="Left"
+							   VerticalAlignment="Center" />
+				</Border>
+
+				<ListView Grid.Row="1"
+						  Margin="2"
+						  BorderThickness="1"
+						  BorderBrush="#aaaaaa"
+						  ItemsSource="{x:Bind Items}"
+						  ItemTemplate="{StaticResource Glyph}"
+						  SelectedItem="{x:Bind SelectedItem, Mode=TwoWay}">
+					<ListView.ItemContainerStyle>
+						<Style TargetType="ListViewItem">
+							<Setter Property="HorizontalContentAlignment"
+									Value="Stretch" />
+						</Style>
+					</ListView.ItemContainerStyle>
+				</ListView>
+			</Grid>
+
+			<!-- Character Display -->
+			<Grid Grid.Column="1">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="60" />
+					<RowDefinition Height="150" />
+					<RowDefinition Height="60" />
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
+
+				<!-- Properties Header -->
+				<Border Grid.Row="0"
+						BorderThickness="1"
+						BorderBrush="#aaaaaa"
+						Margin="2"
+						Background="SteelBlue">
+					<TextBlock Text="Glyph Properties"
+							   FontSize="28"
+							   Foreground="White"
+							   HorizontalAlignment="Left"
+							   VerticalAlignment="Center"
+							   Margin="5" />
+				</Border>
+
+				<!-- Properties -->
+				<Border Grid.Row="1"
+						BorderThickness="1"
+						BorderBrush="#aaaaaa"
+						Margin="2">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="2*" />
+							<ColumnDefinition Width="3*" />
+							<ColumnDefinition Width="2*" />
+							<ColumnDefinition Width="3*" />
+							<ColumnDefinition Width="2*" />
+							<ColumnDefinition Width="3*" />
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="1*" />
+							<RowDefinition Height="1*" />
+							<RowDefinition Height="1*" />
+						</Grid.RowDefinitions>
+
+						<!-- Key -->
+						<TextBlock Grid.Row="0"
+								   Grid.Column="0"
+								   Text="Key"
+								   Margin="3"
+								   FontSize="14"
+								   VerticalAlignment="Center"
+								   HorizontalAlignment="Center" />
+						<TextBox Grid.Row="0"
+								 Grid.Column="1"
+								 Text="{x:Bind SelectedItem.Key, Mode=TwoWay}"
+								 Margin="3, 3, 10, 3"
+								 FontSize="14"
+								 VerticalAlignment="Center"
+								 HorizontalAlignment="Stretch" />
+
+						<!-- Index -->
+						<TextBlock Grid.Row="1"
+								   Grid.Column="0"
+								   Text="Index"
+								   Margin="3"
+								   FontSize="14"
+								   VerticalAlignment="Center"
+								   HorizontalAlignment="Center" />
+						<TextBox Grid.Row="1"
+								 Grid.Column="1"
+								 Text="{x:Bind SelectedItem.BitmapOffset, Mode=TwoWay}"
+								 Margin="3, 3, 10, 3"
+								 FontSize="14"
+								 VerticalAlignment="Center"
+								 HorizontalAlignment="Stretch"
+								 IsReadOnly="True" />
+
+						<!-- Width -->
+						<TextBlock Grid.Row="1"
+								   Grid.Column="2"
+								   Text="Width"
+								   Margin="3"
+								   FontSize="14"
+								   VerticalAlignment="Center"
+								   HorizontalAlignment="Center" />
+						<TextBox Grid.Row="1"
+								 Grid.Column="3"
+								 Text="{x:Bind SelectedItem.Width, Mode=TwoWay}"
+								 Margin="3, 3, 10, 3"
+								 FontSize="14"
+								 VerticalAlignment="Center"
+								 HorizontalAlignment="Stretch" />
+
+						<!-- Height -->
+						<TextBlock Grid.Row="1"
+								   Grid.Column="4"
+								   Text="Height"
+								   Margin="3"
+								   FontSize="14"
+								   VerticalAlignment="Center"
+								   HorizontalAlignment="Center" />
+						<TextBox Grid.Row="1"
+								 Grid.Column="5"
+								 Text="{x:Bind SelectedItem.Height, Mode=TwoWay}"
+								 Margin="3, 3, 10, 3"
+								 FontSize="14"
+								 VerticalAlignment="Center"
+								 HorizontalAlignment="Stretch" />
+
+						<!-- x Advance -->
+						<TextBlock Grid.Row="2"
+								   Grid.Column="0"
+								   Text="x Advance"
+								   Margin="3"
+								   FontSize="14"
+								   VerticalAlignment="Center"
+								   HorizontalAlignment="Center" />
+						<TextBox Grid.Row="2"
+								 Grid.Column="1"
+								 Text="{x:Bind SelectedItem.xAdvance, Mode=TwoWay}"
+								 Margin="3, 3, 10, 3"
+								 FontSize="14"
+								 VerticalAlignment="Center"
+								 HorizontalAlignment="Stretch" />
+
+						<!-- x Offset -->
+						<TextBlock Grid.Row="2"
+								   Grid.Column="2"
+								   Text="x Offset"
+								   Margin="3"
+								   FontSize="14"
+								   VerticalAlignment="Center"
+								   HorizontalAlignment="Center" />
+						<TextBox Grid.Row="2"
+								 Grid.Column="3"
+								 Text="{x:Bind SelectedItem.xOffset, Mode=TwoWay}"
+								 Margin="3, 3, 10, 3"
+								 FontSize="14"
+								 VerticalAlignment="Center"
+								 HorizontalAlignment="Stretch" />
+
+						<!-- x Offset -->
+						<TextBlock Grid.Row="2"
+								   Grid.Column="4"
+								   Text="y Offset"
+								   Margin="3"
+								   FontSize="14"
+								   VerticalAlignment="Center"
+								   HorizontalAlignment="Center" />
+						<TextBox Grid.Row="2"
+								 Grid.Column="5"
+								 Text="{x:Bind SelectedItem.yOffset, Mode=TwoWay}"
+								 Margin="3, 3, 10, 3"
+								 FontSize="14"
+								 VerticalAlignment="Center"
+								 HorizontalAlignment="Stretch" />
+					</Grid>
+				</Border>
+
+				<!-- Bitmap Display Header -->
+				<Border Grid.Row="2"
+						BorderThickness="1"
+						Margin="2"
+						BorderBrush="#aaaaaa"
+						Background="SteelBlue">
+					<TextBlock Text="Bitmap Display"
+							   FontSize="28"
+							   Foreground="White"
+							   HorizontalAlignment="Left"
+							   VerticalAlignment="Center"
+							   Margin="5" />
+				</Border>
+
+				<!-- Bitmap Display -->
+				<Border Grid.Row="3"
+						BorderThickness="1"
+						BorderBrush="#aaaaaa"
+						Margin="2">
+					<Grid VerticalAlignment="Center"
+						  HorizontalAlignment="Center"
+						  BorderBrush="Azure"
+						  BorderThickness="1"
+						  x:Name="BitmapGrid">
+					</Grid>
+				</Border>
+			</Grid>
+
+		</Grid>
+	</Grid>
+</models:BindablePage>

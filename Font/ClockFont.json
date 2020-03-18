@@ -1,0 +1,1807 @@
+[
+  {
+    "Key": " ",
+    "AsciiCode": 32,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 3,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "Display": "{ 0, 8, 5, 3, 0, -4 }",
+    "Hex": "0x20"
+  },
+  {
+    "Key": "!",
+    "AsciiCode": 33,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 2,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      128,
+      128,
+      128,
+      0,
+      128
+    ],
+    "Display": "{ 0, 8, 5, 2, 0, -4 }",
+    "Hex": "0x21"
+  },
+  {
+    "Key": "\"",
+    "AsciiCode": 34,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      160,
+      160,
+      0,
+      0,
+      0
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x22"
+  },
+  {
+    "Key": "#",
+    "AsciiCode": 35,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 6,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      80,
+      248,
+      80,
+      248,
+      80
+    ],
+    "Display": "{ 0, 8, 5, 6, 0, -4 }",
+    "Hex": "0x23"
+  },
+  {
+    "Key": "$",
+    "AsciiCode": 36,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      64,
+      224,
+      64,
+      224,
+      64
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x24"
+  },
+  {
+    "Key": "%",
+    "AsciiCode": 37,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      128,
+      32,
+      64,
+      128,
+      32
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x25"
+  },
+  {
+    "Key": "&",
+    "AsciiCode": 38,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 5,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "Display": "{ 0, 8, 5, 5, 0, -4 }",
+    "Hex": "0x26"
+  },
+  {
+    "Key": "'",
+    "AsciiCode": 39,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 2,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      128,
+      128,
+      0,
+      0,
+      0
+    ],
+    "Display": "{ 0, 8, 5, 2, 0, -4 }",
+    "Hex": "0x27"
+  },
+  {
+    "Key": "(",
+    "AsciiCode": 40,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 3,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      64,
+      128,
+      128,
+      128,
+      64
+    ],
+    "Display": "{ 0, 8, 5, 3, 0, -4 }",
+    "Hex": "0x28"
+  },
+  {
+    "Key": ")",
+    "AsciiCode": 41,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 3,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      128,
+      64,
+      64,
+      64,
+      128
+    ],
+    "Display": "{ 0, 8, 5, 3, 0, -4 }",
+    "Hex": "0x29"
+  },
+  {
+    "Key": "*",
+    "AsciiCode": 42,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      0,
+      160,
+      64,
+      160,
+      0
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x2A"
+  },
+  {
+    "Key": "+",
+    "AsciiCode": 43,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      0,
+      64,
+      224,
+      64,
+      0
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x2B"
+  },
+  {
+    "Key": ",",
+    "AsciiCode": 44,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 3,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      0,
+      0,
+      0,
+      64,
+      128
+    ],
+    "Display": "{ 0, 8, 5, 3, 0, -4 }",
+    "Hex": "0x2C"
+  },
+  {
+    "Key": "-",
+    "AsciiCode": 45,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 3,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      0,
+      0,
+      192,
+      0,
+      0
+    ],
+    "Display": "{ 0, 8, 5, 3, 0, -4 }",
+    "Hex": "0x2D"
+  },
+  {
+    "Key": ".",
+    "AsciiCode": 46,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 2,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      0,
+      0,
+      0,
+      0,
+      128
+    ],
+    "Display": "{ 0, 8, 5, 2, 0, -4 }",
+    "Hex": "0x2E"
+  },
+  {
+    "Key": "/",
+    "AsciiCode": 47,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 6,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      8,
+      16,
+      32,
+      64,
+      128
+    ],
+    "Display": "{ 0, 8, 5, 6, 0, -4 }",
+    "Hex": "0x2F"
+  },
+  {
+    "Key": "0",
+    "AsciiCode": 48,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      224,
+      160,
+      160,
+      160,
+      224
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x30"
+  },
+  {
+    "Key": "1",
+    "AsciiCode": 49,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 2,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      128,
+      128,
+      128,
+      128,
+      128
+    ],
+    "Display": "{ 0, 8, 5, 2, 0, -4 }",
+    "Hex": "0x31"
+  },
+  {
+    "Key": "2",
+    "AsciiCode": 50,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      224,
+      32,
+      224,
+      128,
+      224
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x32"
+  },
+  {
+    "Key": "3",
+    "AsciiCode": 51,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      224,
+      32,
+      224,
+      32,
+      224
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x33"
+  },
+  {
+    "Key": "4",
+    "AsciiCode": 52,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      160,
+      160,
+      224,
+      32,
+      32
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x34"
+  },
+  {
+    "Key": "5",
+    "AsciiCode": 53,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      224,
+      128,
+      224,
+      32,
+      224
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x35"
+  },
+  {
+    "Key": "6",
+    "AsciiCode": 54,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      224,
+      128,
+      224,
+      160,
+      224
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x36"
+  },
+  {
+    "Key": "7",
+    "AsciiCode": 55,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      224,
+      32,
+      32,
+      32,
+      32
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x37"
+  },
+  {
+    "Key": "8",
+    "AsciiCode": 56,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      224,
+      160,
+      224,
+      160,
+      224
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x38"
+  },
+  {
+    "Key": "9",
+    "AsciiCode": 57,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      224,
+      160,
+      224,
+      32,
+      224
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x39"
+  },
+  {
+    "Key": ":",
+    "AsciiCode": 58,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 3,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      0,
+      64,
+      0,
+      64,
+      0
+    ],
+    "Display": "{ 0, 8, 5, 3, 0, -4 }",
+    "Hex": "0x3A"
+  },
+  {
+    "Key": ";",
+    "AsciiCode": 59,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 3,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      0,
+      64,
+      0,
+      64,
+      128
+    ],
+    "Display": "{ 0, 8, 5, 3, 0, -4 }",
+    "Hex": "0x3B"
+  },
+  {
+    "Key": "<",
+    "AsciiCode": 60,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      32,
+      64,
+      128,
+      64,
+      32
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x3C"
+  },
+  {
+    "Key": "=",
+    "AsciiCode": 61,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 3,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      0,
+      192,
+      0,
+      192,
+      0
+    ],
+    "Display": "{ 0, 8, 5, 3, 0, -4 }",
+    "Hex": "0x3D"
+  },
+  {
+    "Key": ">",
+    "AsciiCode": 62,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      128,
+      64,
+      32,
+      64,
+      128
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x3E"
+  },
+  {
+    "Key": "?",
+    "AsciiCode": 63,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      224,
+      32,
+      96,
+      0,
+      64
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x3F"
+  },
+  {
+    "Key": "@",
+    "AsciiCode": 64,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      192,
+      160,
+      224,
+      128,
+      96
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x40"
+  },
+  {
+    "Key": "A",
+    "AsciiCode": 65,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      224,
+      160,
+      224,
+      160,
+      160
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x41"
+  },
+  {
+    "Key": "B",
+    "AsciiCode": 66,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      224,
+      160,
+      192,
+      160,
+      224
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x42"
+  },
+  {
+    "Key": "C",
+    "AsciiCode": 67,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      224,
+      128,
+      128,
+      128,
+      224
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x43"
+  },
+  {
+    "Key": "D",
+    "AsciiCode": 68,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      192,
+      160,
+      160,
+      160,
+      192
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x44"
+  },
+  {
+    "Key": "E",
+    "AsciiCode": 69,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      224,
+      128,
+      192,
+      128,
+      224
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x45"
+  },
+  {
+    "Key": "F",
+    "AsciiCode": 70,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      224,
+      128,
+      192,
+      128,
+      128
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x46"
+  },
+  {
+    "Key": "G",
+    "AsciiCode": 71,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      96,
+      128,
+      224,
+      160,
+      96
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x47"
+  },
+  {
+    "Key": "H",
+    "AsciiCode": 72,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      160,
+      160,
+      224,
+      160,
+      160
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x48"
+  },
+  {
+    "Key": "I",
+    "AsciiCode": 73,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      224,
+      64,
+      64,
+      64,
+      224
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x49"
+  },
+  {
+    "Key": "J",
+    "AsciiCode": 74,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      96,
+      32,
+      32,
+      160,
+      192
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x4A"
+  },
+  {
+    "Key": "K",
+    "AsciiCode": 75,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      160,
+      160,
+      192,
+      160,
+      160
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x4B"
+  },
+  {
+    "Key": "L",
+    "AsciiCode": 76,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      128,
+      128,
+      128,
+      128,
+      224
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x4C"
+  },
+  {
+    "Key": "M",
+    "AsciiCode": 77,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 6,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      136,
+      136,
+      216,
+      168,
+      168
+    ],
+    "Display": "{ 0, 8, 5, 6, 0, -4 }",
+    "Hex": "0x4D"
+  },
+  {
+    "Key": "N",
+    "AsciiCode": 78,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 5,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      144,
+      208,
+      176,
+      144,
+      144
+    ],
+    "Display": "{ 0, 8, 5, 5, 0, -4 }",
+    "Hex": "0x4E"
+  },
+  {
+    "Key": "O",
+    "AsciiCode": 79,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      224,
+      160,
+      160,
+      160,
+      224
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x4F"
+  },
+  {
+    "Key": "P",
+    "AsciiCode": 80,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      224,
+      160,
+      224,
+      128,
+      128
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x50"
+  },
+  {
+    "Key": "Q",
+    "AsciiCode": 81,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 5,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      224,
+      160,
+      160,
+      160,
+      208
+    ],
+    "Display": "{ 0, 8, 5, 5, 0, -4 }",
+    "Hex": "0x51"
+  },
+  {
+    "Key": "R",
+    "AsciiCode": 82,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      224,
+      160,
+      192,
+      160,
+      160
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x52"
+  },
+  {
+    "Key": "S",
+    "AsciiCode": 83,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      224,
+      128,
+      224,
+      32,
+      224
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x53"
+  },
+  {
+    "Key": "T",
+    "AsciiCode": 84,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      224,
+      64,
+      64,
+      64,
+      64
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x54"
+  },
+  {
+    "Key": "U",
+    "AsciiCode": 85,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      160,
+      160,
+      160,
+      160,
+      224
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x55"
+  },
+  {
+    "Key": "V",
+    "AsciiCode": 86,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      160,
+      160,
+      160,
+      160,
+      64
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x56"
+  },
+  {
+    "Key": "W",
+    "AsciiCode": 87,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 5,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      136,
+      136,
+      168,
+      112,
+      32
+    ],
+    "Display": "{ 0, 8, 5, 5, 0, -4 }",
+    "Hex": "0x57"
+  },
+  {
+    "Key": "X",
+    "AsciiCode": 88,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 6,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      136,
+      80,
+      32,
+      80,
+      136
+    ],
+    "Display": "{ 0, 8, 5, 6, 0, -4 }",
+    "Hex": "0x58"
+  },
+  {
+    "Key": "Y",
+    "AsciiCode": 89,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      160,
+      160,
+      64,
+      64,
+      64
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x59"
+  },
+  {
+    "Key": "Z",
+    "AsciiCode": 90,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      224,
+      32,
+      64,
+      128,
+      224
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x5A"
+  },
+  {
+    "Key": "[",
+    "AsciiCode": 91,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 3,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      192,
+      128,
+      128,
+      128,
+      192
+    ],
+    "Display": "{ 0, 8, 5, 3, 0, -4 }",
+    "Hex": "0x5B"
+  },
+  {
+    "Key": "\\",
+    "AsciiCode": 92,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 6,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      128,
+      64,
+      32,
+      16,
+      8
+    ],
+    "Display": "{ 0, 8, 5, 6, 0, -4 }",
+    "Hex": "0x5C"
+  },
+  {
+    "Key": "]",
+    "AsciiCode": 93,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      192,
+      64,
+      64,
+      64,
+      192
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x5D"
+  },
+  {
+    "Key": "^",
+    "AsciiCode": 94,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 5,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      64,
+      160,
+      0,
+      0,
+      0
+    ],
+    "Display": "{ 0, 8, 5, 5, 0, -4 }",
+    "Hex": "0x5E"
+  },
+  {
+    "Key": "_",
+    "AsciiCode": 95,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 5,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      0,
+      0,
+      224,
+      0,
+      0
+    ],
+    "Display": "{ 0, 8, 5, 5, 0, -4 }",
+    "Hex": "0x5F"
+  },
+  {
+    "Key": "`",
+    "AsciiCode": 96,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 5,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      64,
+      32,
+      0,
+      0,
+      0
+    ],
+    "Display": "{ 0, 8, 5, 5, 0, -4 }",
+    "Hex": "0x60"
+  },
+  {
+    "Key": "a",
+    "AsciiCode": 97,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      64,
+      160,
+      96,
+      160,
+      224
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x61"
+  },
+  {
+    "Key": "b",
+    "AsciiCode": 98,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      128,
+      128,
+      224,
+      160,
+      224
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x62"
+  },
+  {
+    "Key": "c",
+    "AsciiCode": 99,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      0,
+      0,
+      96,
+      128,
+      96
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x63"
+  },
+  {
+    "Key": "d",
+    "AsciiCode": 100,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      32,
+      32,
+      224,
+      160,
+      224
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x64"
+  },
+  {
+    "Key": "e",
+    "AsciiCode": 101,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      64,
+      160,
+      192,
+      160,
+      224
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x65"
+  },
+  {
+    "Key": "f",
+    "AsciiCode": 102,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      64,
+      160,
+      192,
+      128,
+      128
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x66"
+  },
+  {
+    "Key": "g",
+    "AsciiCode": 103,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      64,
+      160,
+      64,
+      32,
+      224
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x67"
+  },
+  {
+    "Key": "h",
+    "AsciiCode": 104,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      0,
+      128,
+      192,
+      160,
+      160
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x68"
+  },
+  {
+    "Key": "i",
+    "AsciiCode": 105,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 3,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      64,
+      0,
+      64,
+      64,
+      64
+    ],
+    "Display": "{ 0, 8, 5, 3, 0, -4 }",
+    "Hex": "0x69"
+  },
+  {
+    "Key": "j",
+    "AsciiCode": 106,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      32,
+      0,
+      32,
+      160,
+      96
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x6A"
+  },
+  {
+    "Key": "k",
+    "AsciiCode": 107,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      128,
+      128,
+      160,
+      192,
+      160
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x6B"
+  },
+  {
+    "Key": "l",
+    "AsciiCode": 108,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      128,
+      64,
+      64,
+      64,
+      224
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x6C"
+  },
+  {
+    "Key": "m",
+    "AsciiCode": 109,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 6,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      0,
+      0,
+      80,
+      168,
+      136
+    ],
+    "Display": "{ 0, 8, 5, 6, 0, -4 }",
+    "Hex": "0x6D"
+  },
+  {
+    "Key": "n",
+    "AsciiCode": 110,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      0,
+      64,
+      160,
+      160,
+      160
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x6E"
+  },
+  {
+    "Key": "o",
+    "AsciiCode": 111,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      0,
+      0,
+      64,
+      160,
+      64
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x6F"
+  },
+  {
+    "Key": "p",
+    "AsciiCode": 112,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      64,
+      160,
+      224,
+      128,
+      128
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x70"
+  },
+  {
+    "Key": "q",
+    "AsciiCode": 113,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      192,
+      160,
+      96,
+      32,
+      32
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x71"
+  },
+  {
+    "Key": "r",
+    "AsciiCode": 114,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      0,
+      64,
+      160,
+      128,
+      128
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x72"
+  },
+  {
+    "Key": "s",
+    "AsciiCode": 115,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      0,
+      96,
+      192,
+      32,
+      192
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x73"
+  },
+  {
+    "Key": "t",
+    "AsciiCode": 116,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      0,
+      64,
+      224,
+      64,
+      96
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x74"
+  },
+  {
+    "Key": "u",
+    "AsciiCode": 117,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      0,
+      0,
+      160,
+      160,
+      192
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x75"
+  },
+  {
+    "Key": "v",
+    "AsciiCode": 118,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      0,
+      0,
+      160,
+      160,
+      64
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x76"
+  },
+  {
+    "Key": "w",
+    "AsciiCode": 119,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 6,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      0,
+      0,
+      168,
+      112,
+      32
+    ],
+    "Display": "{ 0, 8, 5, 6, 0, -4 }",
+    "Hex": "0x77"
+  },
+  {
+    "Key": "x",
+    "AsciiCode": 120,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      0,
+      0,
+      160,
+      64,
+      160
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x78"
+  },
+  {
+    "Key": "y",
+    "AsciiCode": 121,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      0,
+      160,
+      224,
+      32,
+      224
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x79"
+  },
+  {
+    "Key": "z",
+    "AsciiCode": 122,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      0,
+      224,
+      64,
+      32,
+      224
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x7A"
+  },
+  {
+    "Key": "{",
+    "AsciiCode": 123,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      96,
+      64,
+      128,
+      64,
+      96
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x7B"
+  },
+  {
+    "Key": "|",
+    "AsciiCode": 124,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 3,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      64,
+      64,
+      0,
+      64,
+      64
+    ],
+    "Display": "{ 0, 8, 5, 3, 0, -4 }",
+    "Hex": "0x7C"
+  },
+  {
+    "Key": "}",
+    "AsciiCode": 125,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      192,
+      64,
+      32,
+      64,
+      192
+    ],
+    "Display": "{ 0, 8, 5, 4, 0, -4 }",
+    "Hex": "0x7D"
+  },
+  {
+    "Key": "~",
+    "AsciiCode": 126,
+    "BitmapOffset": 0,
+    "Width": 8,
+    "Height": 5,
+    "xAdvance": 5,
+    "xOffset": 0,
+    "yOffset": -4,
+    "FontBitmap": [
+      0,
+      160,
+      80,
+      0,
+      0
+    ],
+    "Display": "{ 0, 8, 5, 5, 0, -4 }",
+    "Hex": "0x7E"
+  }
+]
