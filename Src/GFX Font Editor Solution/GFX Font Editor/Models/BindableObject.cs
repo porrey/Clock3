@@ -52,7 +52,7 @@ namespace GfxFontEditor.Models
 			return true;
 		}
 
-		protected void RaisePropertyChanged([CallerMemberName]string propertyName = null)
+		public void RaisePropertyChanged([CallerMemberName]string propertyName = null)
 		{
 			this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
 		}

@@ -59,7 +59,8 @@
 
 			<AppBarButton Icon="SaveLocal"
 						  Label="Save"
-						  Click="SaveFont" />
+						  Click="SaveFont"
+						  IsEnabled="{x:Bind Items, Converter={StaticResource ItemsCountToBooleanConverter}, Mode=OneWay}" />
 
 			<AppBarSeparator />
 
@@ -69,7 +70,8 @@
 
 			<AppBarButton Icon="SaveLocal"
 						  Label="Export"
-						  Click="ExportFont" />
+						  Click="ExportFont"
+						  IsEnabled="{x:Bind Items, Converter={StaticResource ItemsCountToBooleanConverter}, Mode=OneWay}" />
 
 			<AppBarSeparator />
 
@@ -183,7 +185,9 @@
 								 Margin="3, 3, 10, 3"
 								 FontSize="14"
 								 VerticalAlignment="Center"
-								 HorizontalAlignment="Stretch" />
+								 HorizontalAlignment="Stretch"
+								 TextChanged="KeyTextChanged"
+								 IsEnabled="{x:Bind SelectedItem, Converter={StaticResource SelectedItemToBooleanConverter}, Mode=OneWay}" />
 
 						<!-- Index -->
 						<TextBlock Grid.Row="1"
@@ -200,7 +204,8 @@
 								 FontSize="14"
 								 VerticalAlignment="Center"
 								 HorizontalAlignment="Stretch"
-								 IsReadOnly="True" />
+								 IsReadOnly="True"
+								 IsEnabled="{x:Bind SelectedItem, Converter={StaticResource SelectedItemToBooleanConverter}, Mode=OneWay}" />
 
 						<!-- Width -->
 						<TextBlock Grid.Row="1"
@@ -216,7 +221,10 @@
 								 Margin="3, 3, 10, 3"
 								 FontSize="14"
 								 VerticalAlignment="Center"
-								 HorizontalAlignment="Stretch" />
+								 HorizontalAlignment="Stretch"
+								 TextChanged="WidthChanged"
+								 InputScope="Number"
+								 IsEnabled="{x:Bind SelectedItem, Converter={StaticResource SelectedItemToBooleanConverter}, Mode=OneWay}" />
 
 						<!-- Height -->
 						<TextBlock Grid.Row="1"
@@ -232,7 +240,10 @@
 								 Margin="3, 3, 10, 3"
 								 FontSize="14"
 								 VerticalAlignment="Center"
-								 HorizontalAlignment="Stretch" />
+								 HorizontalAlignment="Stretch"
+								 TextChanged="HeightChanged"
+								 InputScope="Number"
+								 IsEnabled="{x:Bind SelectedItem, Converter={StaticResource SelectedItemToBooleanConverter}, Mode=OneWay}" />
 
 						<!-- x Advance -->
 						<TextBlock Grid.Row="2"
@@ -248,7 +259,10 @@
 								 Margin="3, 3, 10, 3"
 								 FontSize="14"
 								 VerticalAlignment="Center"
-								 HorizontalAlignment="Stretch" />
+								 HorizontalAlignment="Stretch"
+								 TextChanged="xAdavanceChanged"
+								 InputScope="Number"
+								 IsEnabled="{x:Bind SelectedItem, Converter={StaticResource SelectedItemToBooleanConverter}, Mode=OneWay}" />
 
 						<!-- x Offset -->
 						<TextBlock Grid.Row="2"
@@ -264,7 +278,10 @@
 								 Margin="3, 3, 10, 3"
 								 FontSize="14"
 								 VerticalAlignment="Center"
-								 HorizontalAlignment="Stretch" />
+								 HorizontalAlignment="Stretch"
+								 TextChanged="xOffsetChanged"
+								 InputScope="Number"
+								 IsEnabled="{x:Bind SelectedItem, Converter={StaticResource SelectedItemToBooleanConverter}, Mode=OneWay}" />
 
 						<!-- x Offset -->
 						<TextBlock Grid.Row="2"
@@ -280,7 +297,10 @@
 								 Margin="3, 3, 10, 3"
 								 FontSize="14"
 								 VerticalAlignment="Center"
-								 HorizontalAlignment="Stretch" />
+								 HorizontalAlignment="Stretch"
+								 TextChanged="yOffsetChanged"
+								 InputScope="Number"
+								 IsEnabled="{x:Bind SelectedItem, Converter={StaticResource SelectedItemToBooleanConverter}, Mode=OneWay}" />
 					</Grid>
 				</Border>
 

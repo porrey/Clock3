@@ -32,7 +32,7 @@ namespace GfxFontEditor.Models
 
 		protected StorageFile File { get; set; }
 
-		public async Task<IEnumerable<Glyph>> Load()
+		public async Task<IEnumerable<Glyph>> Import()
 		{
 			IList<Glyph> returnValue = new List<Glyph>();
 

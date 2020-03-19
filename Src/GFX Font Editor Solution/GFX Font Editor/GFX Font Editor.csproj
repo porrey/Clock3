@@ -119,6 +119,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\ItemsCountToBooleanConverter.cs" />
+    <Compile Include="Converters\SelectedItemToBooleanConverter.cs" />
     <Compile Include="Decorators\ObservableCollectionDecorator.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -126,6 +128,7 @@
     <Compile Include="Models\BindableObject.cs" />
     <Compile Include="Models\BindablePage.cs" />
     <Compile Include="Models\BorderTag.cs" />
+    <Compile Include="Models\CodeFactory.cs" />
     <Compile Include="Models\FontFile.cs" />
     <Compile Include="Models\Glyph.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -162,6 +165,10 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <PRIResource Include="Strings\en-US\Resources.resw" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

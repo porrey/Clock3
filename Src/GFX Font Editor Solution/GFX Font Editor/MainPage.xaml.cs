@@ -76,7 +76,7 @@ namespace GfxFontEditor
 			}
 		}
 
-		protected StorageFile File { get; set; }
+		public StorageFile File { get; set; }
 
 		protected void CreateGrid(IEnumerable<Glyph> items)
 		{
@@ -168,7 +168,7 @@ namespace GfxFontEditor
 				// ***
 				int baseline = rows - 1;
 				int x = glyph.xOffset;
-				int y = baseline + glyph.yOffset;
+				int y = baseline + glyph.yOffset + 1;
 
 				foreach (byte b in glyph.FontBitmap)
 				{
@@ -209,8 +209,11 @@ namespace GfxFontEditor
 		{
 			Border border = this.GetBorderObject(row, column);
 
-			border.Background = new SolidColorBrush(color);
-			((BorderTag)border.Tag).IsOn = bitOn;
+			if (border != null)
+			{
+				border.Background = new SolidColorBrush(color);
+				((BorderTag)border.Tag).IsOn = bitOn;
+			}
 		}
 
 		protected (int, int) GetGridDimensions(IEnumerable<Glyph> items)
@@ -232,7 +235,7 @@ namespace GfxFontEditor
 								  where tbl is Border border
 								  && ((BorderTag)border.Tag).Column == column
 								  && ((BorderTag)border.Tag).Row == row
-								  select tbl).Single() as Border;
+								  select tbl).SingleOrDefault() as Border;
 
 			return returnValue;
 		}
@@ -253,16 +256,34 @@ namespace GfxFontEditor
 			{
 				this.Items.Clear();
 				FontFile fontFile = new FontFile(file);
-				IEnumerable<Glyph> items = await fontFile.Load();
+				IEnumerable<Glyph> items = await fontFile.Import();
 				this.CreateGrid(items);
 				this.Items.AddRange(items);
 				this.FileName = file.Name;
 				this.File = null;
+				this.RaisePropertyChanged(nameof(this.Items));
 			}
 		}
 
-		private void ExportFont(object sender, RoutedEventArgs e)
+		private async void ExportFont(object sender, RoutedEventArgs e)
 		{
+			FileSavePicker picker = new FileSavePicker()
+			{
+				SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
+				SuggestedFileName = this.FileName,
+				DefaultFileExtension = ".h"
+			};
+
+			picker.FileTypeChoices.Add("H", new List<string>() { ".h" });
+
+			StorageFile file = await picker.PickSaveFileAsync();
+
+			if (this.File != null)
+			{
+				CodeFactory codeFactory = new CodeFactory(this.Items);
+				string code = await codeFactory.CreateSourceCode(this.FileName);
+				await FileIO.WriteTextAsync(file, code);
+			}
 		}
 
 		private async void SaveFont(object sender, RoutedEventArgs e)
@@ -317,6 +338,7 @@ namespace GfxFontEditor
 				this.Items.AddRange(items);
 				this.FileName = file.Name;
 				this.File = file;
+				this.RaisePropertyChanged(nameof(this.Items));
 			}
 		}
 
@@ -346,6 +368,7 @@ namespace GfxFontEditor
 
 			this.CreateGrid(this.Items);
 			this.FileName = "New Font";
+			this.RaisePropertyChanged(nameof(this.Items));
 		}
 
 		private List<byte> GetBitmapFromGrid(Glyph glyph)
@@ -372,6 +395,59 @@ namespace GfxFontEditor
 			}
 
 			return returnValue;
+		}
+
+		private void Reindex()
+		{
+			for (int i = 0; i < this.Items.Count(); i++)
+			{
+				if (i == 0)
+				{
+					Glyph glyph = this.Items.ElementAt(i);
+					glyph.BitmapOffset = 0;
+				}
+				else
+				{
+					Glyph glyph = this.Items.ElementAt(i);
+					Glyph previousGlyph = this.Items.ElementAt(i-1);
+					glyph.BitmapOffset = previousGlyph.BitmapOffset + previousGlyph.Height;
+				}
+			}
+		}
+
+		private void KeyTextChanged(object sender, TextChangedEventArgs e)
+		{
+			this.RaisePropertyChanged(nameof(this.SelectedItem.Key));
+		}
+
+		private void WidthChanged(object sender, TextChangedEventArgs e)
+		{
+			this.Reindex();
+			this.RaisePropertyChanged(nameof(this.SelectedItem.Width));
+		}
+
+		private void HeightChanged(object sender, TextChangedEventArgs e)
+		{
+			this.Reindex();
+			this.RaisePropertyChanged(nameof(this.SelectedItem.Height));
+		}
+
+		private void xAdavanceChanged(object sender, TextChangedEventArgs e)
+		{
+			this.DrawGlyph(this.SelectedItem);
+			this.RaisePropertyChanged(nameof(this.SelectedItem.xAdvance));
+		}
+
+		private void xOffsetChanged(object sender, TextChangedEventArgs e)
+		{
+			this.DrawGlyph(this.SelectedItem);
+			this.RaisePropertyChanged(nameof(this.SelectedItem.xOffset));
+		}
+
+		private void yOffsetChanged(object sender, TextChangedEventArgs e)
+		{
+			this.DrawGlyph(this.SelectedItem);
+			this.RaisePropertyChanged(nameof(this.SelectedItem.yOffset));
 		}
 	}
 }

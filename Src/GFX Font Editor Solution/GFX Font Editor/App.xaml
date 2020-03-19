@@ -1,6 +1,12 @@
 ﻿<Application x:Class="GfxFontEditor.App"
 			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-			 xmlns:local="using:GFX_Font_Editor">
+			 xmlns:converters="using:GfxFontEditor.Converters">
 
+	<Application.Resources>
+		<ResourceDictionary>
+			<converters:SelectedItemToBooleanConverter x:Key="SelectedItemToBooleanConverter" />
+			<converters:ItemsCountToBooleanConverter x:Key="ItemsCountToBooleanConverter" />
+		</ResourceDictionary>
+	</Application.Resources>
 </Application>

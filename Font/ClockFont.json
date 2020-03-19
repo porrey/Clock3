@@ -1,1807 +1,1553 @@
 [
   {
-    "Key": " ",
-    "AsciiCode": 32,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": " Space",
+    "asciiCode": 32,
+    "bitmapOffset": 0,
+    "width": 8,
+    "height": 1,
     "xAdvance": 3,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
-      0,
-      0,
-      0,
-      0,
+    "yOffset": -5,
+    "fontBitmap": [
       0
-    ],
-    "Display": "{ 0, 8, 5, 3, 0, -4 }",
-    "Hex": "0x20"
+    ]
   },
   {
-    "Key": "!",
-    "AsciiCode": 33,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "!",
+    "asciiCode": 33,
+    "bitmapOffset": 1,
+    "width": 8,
+    "height": 5,
     "xAdvance": 2,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       128,
       128,
       128,
       0,
       128
-    ],
-    "Display": "{ 0, 8, 5, 2, 0, -4 }",
-    "Hex": "0x21"
+    ]
   },
   {
-    "Key": "\"",
-    "AsciiCode": 34,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "\"",
+    "asciiCode": 34,
+    "bitmapOffset": 6,
+    "width": 8,
+    "height": 2,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       160,
-      160,
-      0,
-      0,
-      0
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x22"
+      160
+    ]
   },
   {
-    "Key": "#",
-    "AsciiCode": 35,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "#",
+    "asciiCode": 35,
+    "bitmapOffset": 8,
+    "width": 8,
+    "height": 5,
     "xAdvance": 6,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       80,
       248,
       80,
       248,
       80
-    ],
-    "Display": "{ 0, 8, 5, 6, 0, -4 }",
-    "Hex": "0x23"
+    ]
   },
   {
-    "Key": "$",
-    "AsciiCode": 36,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "$",
+    "asciiCode": 36,
+    "bitmapOffset": 13,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       64,
       224,
       64,
       224,
       64
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x24"
+    ]
   },
   {
-    "Key": "%",
-    "AsciiCode": 37,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "%",
+    "asciiCode": 37,
+    "bitmapOffset": 18,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       128,
       32,
       64,
       128,
       32
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x25"
+    ]
   },
   {
-    "Key": "&",
-    "AsciiCode": 38,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "&",
+    "asciiCode": 38,
+    "bitmapOffset": 23,
+    "width": 8,
+    "height": 5,
     "xAdvance": 5,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
-      0,
-      0,
-      0,
-      0,
-      0
-    ],
-    "Display": "{ 0, 8, 5, 5, 0, -4 }",
-    "Hex": "0x26"
+    "yOffset": -5,
+    "fontBitmap": [
+      64,
+      160,
+      64,
+      160,
+      80
+    ]
   },
   {
-    "Key": "'",
-    "AsciiCode": 39,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "'",
+    "asciiCode": 39,
+    "bitmapOffset": 28,
+    "width": 8,
+    "height": 2,
     "xAdvance": 2,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       128,
-      128,
-      0,
-      0,
-      0
-    ],
-    "Display": "{ 0, 8, 5, 2, 0, -4 }",
-    "Hex": "0x27"
+      128
+    ]
   },
   {
-    "Key": "(",
-    "AsciiCode": 40,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "(",
+    "asciiCode": 40,
+    "bitmapOffset": 30,
+    "width": 8,
+    "height": 5,
     "xAdvance": 3,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       64,
       128,
       128,
       128,
       64
-    ],
-    "Display": "{ 0, 8, 5, 3, 0, -4 }",
-    "Hex": "0x28"
+    ]
   },
   {
-    "Key": ")",
-    "AsciiCode": 41,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": ")",
+    "asciiCode": 41,
+    "bitmapOffset": 35,
+    "width": 8,
+    "height": 5,
     "xAdvance": 3,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       128,
       64,
       64,
       64,
       128
-    ],
-    "Display": "{ 0, 8, 5, 3, 0, -4 }",
-    "Hex": "0x29"
+    ]
   },
   {
-    "Key": "*",
-    "AsciiCode": 42,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "*",
+    "asciiCode": 42,
+    "bitmapOffset": 40,
+    "width": 8,
+    "height": 3,
     "xAdvance": 4,
     "xOffset": 0,
     "yOffset": -4,
-    "FontBitmap": [
-      0,
+    "fontBitmap": [
       160,
       64,
-      160,
-      0
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x2A"
+      160
+    ]
   },
   {
-    "Key": "+",
-    "AsciiCode": 43,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "+",
+    "asciiCode": 43,
+    "bitmapOffset": 43,
+    "width": 8,
+    "height": 3,
     "xAdvance": 4,
     "xOffset": 0,
     "yOffset": -4,
-    "FontBitmap": [
-      0,
+    "fontBitmap": [
       64,
       224,
-      64,
-      0
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x2B"
+      64
+    ]
   },
   {
-    "Key": ",",
-    "AsciiCode": 44,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": ",",
+    "asciiCode": 44,
+    "bitmapOffset": 46,
+    "width": 8,
+    "height": 2,
     "xAdvance": 3,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
-      0,
-      0,
-      0,
+    "yOffset": -2,
+    "fontBitmap": [
       64,
       128
-    ],
-    "Display": "{ 0, 8, 5, 3, 0, -4 }",
-    "Hex": "0x2C"
+    ]
   },
   {
-    "Key": "-",
-    "AsciiCode": 45,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "-",
+    "asciiCode": 45,
+    "bitmapOffset": 48,
+    "width": 8,
+    "height": 1,
     "xAdvance": 3,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
-      0,
-      0,
-      192,
-      0,
-      0
-    ],
-    "Display": "{ 0, 8, 5, 3, 0, -4 }",
-    "Hex": "0x2D"
+    "yOffset": -3,
+    "fontBitmap": [
+      192
+    ]
   },
   {
-    "Key": ".",
-    "AsciiCode": 46,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": ".",
+    "asciiCode": 46,
+    "bitmapOffset": 49,
+    "width": 8,
+    "height": 1,
     "xAdvance": 2,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
-      0,
-      0,
-      0,
-      0,
+    "yOffset": -1,
+    "fontBitmap": [
       128
-    ],
-    "Display": "{ 0, 8, 5, 2, 0, -4 }",
-    "Hex": "0x2E"
+    ]
   },
   {
-    "Key": "/",
-    "AsciiCode": 47,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "/",
+    "asciiCode": 47,
+    "bitmapOffset": 50,
+    "width": 8,
+    "height": 5,
     "xAdvance": 6,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       8,
       16,
       32,
       64,
       128
-    ],
-    "Display": "{ 0, 8, 5, 6, 0, -4 }",
-    "Hex": "0x2F"
+    ]
   },
   {
-    "Key": "0",
-    "AsciiCode": 48,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "0",
+    "asciiCode": 48,
+    "bitmapOffset": 55,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       224,
       160,
       160,
       160,
       224
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x30"
+    ]
   },
   {
-    "Key": "1",
-    "AsciiCode": 49,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "1",
+    "asciiCode": 49,
+    "bitmapOffset": 60,
+    "width": 8,
+    "height": 5,
     "xAdvance": 2,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       128,
       128,
       128,
       128,
       128
-    ],
-    "Display": "{ 0, 8, 5, 2, 0, -4 }",
-    "Hex": "0x31"
+    ]
   },
   {
-    "Key": "2",
-    "AsciiCode": 50,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "2",
+    "asciiCode": 50,
+    "bitmapOffset": 65,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       224,
       32,
       224,
       128,
       224
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x32"
+    ]
   },
   {
-    "Key": "3",
-    "AsciiCode": 51,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "3",
+    "asciiCode": 51,
+    "bitmapOffset": 70,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       224,
       32,
       224,
       32,
       224
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x33"
+    ]
   },
   {
-    "Key": "4",
-    "AsciiCode": 52,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "4",
+    "asciiCode": 52,
+    "bitmapOffset": 75,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       160,
       160,
       224,
       32,
       32
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x34"
+    ]
   },
   {
-    "Key": "5",
-    "AsciiCode": 53,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "5",
+    "asciiCode": 53,
+    "bitmapOffset": 80,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       224,
       128,
       224,
       32,
       224
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x35"
+    ]
   },
   {
-    "Key": "6",
-    "AsciiCode": 54,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "6",
+    "asciiCode": 54,
+    "bitmapOffset": 85,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       224,
       128,
       224,
       160,
       224
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x36"
+    ]
   },
   {
-    "Key": "7",
-    "AsciiCode": 55,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "7",
+    "asciiCode": 55,
+    "bitmapOffset": 90,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       224,
       32,
       32,
       32,
       32
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x37"
+    ]
   },
   {
-    "Key": "8",
-    "AsciiCode": 56,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "8",
+    "asciiCode": 56,
+    "bitmapOffset": 95,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       224,
       160,
       224,
       160,
       224
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x38"
+    ]
   },
   {
-    "Key": "9",
-    "AsciiCode": 57,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "9",
+    "asciiCode": 57,
+    "bitmapOffset": 100,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       224,
       160,
       224,
       32,
       224
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x39"
+    ]
   },
   {
-    "Key": ":",
-    "AsciiCode": 58,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": ":",
+    "asciiCode": 58,
+    "bitmapOffset": 105,
+    "width": 8,
+    "height": 3,
     "xAdvance": 3,
     "xOffset": 0,
     "yOffset": -4,
-    "FontBitmap": [
-      0,
+    "fontBitmap": [
       64,
       0,
-      64,
-      0
-    ],
-    "Display": "{ 0, 8, 5, 3, 0, -4 }",
-    "Hex": "0x3A"
+      64
+    ]
   },
   {
-    "Key": ";",
-    "AsciiCode": 59,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": ";",
+    "asciiCode": 59,
+    "bitmapOffset": 108,
+    "width": 8,
+    "height": 4,
     "xAdvance": 3,
     "xOffset": 0,
     "yOffset": -4,
-    "FontBitmap": [
-      0,
+    "fontBitmap": [
       64,
       0,
       64,
       128
-    ],
-    "Display": "{ 0, 8, 5, 3, 0, -4 }",
-    "Hex": "0x3B"
+    ]
   },
   {
-    "Key": "<",
-    "AsciiCode": 60,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "<",
+    "asciiCode": 60,
+    "bitmapOffset": 112,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       32,
       64,
       128,
       64,
       32
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x3C"
+    ]
   },
   {
-    "Key": "=",
-    "AsciiCode": 61,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "=",
+    "asciiCode": 61,
+    "bitmapOffset": 117,
+    "width": 8,
+    "height": 3,
     "xAdvance": 3,
     "xOffset": 0,
     "yOffset": -4,
-    "FontBitmap": [
-      0,
+    "fontBitmap": [
       192,
       0,
-      192,
-      0
-    ],
-    "Display": "{ 0, 8, 5, 3, 0, -4 }",
-    "Hex": "0x3D"
+      192
+    ]
   },
   {
-    "Key": ">",
-    "AsciiCode": 62,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": ">",
+    "asciiCode": 62,
+    "bitmapOffset": 120,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       128,
       64,
       32,
       64,
       128
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x3E"
+    ]
   },
   {
-    "Key": "?",
-    "AsciiCode": 63,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "?",
+    "asciiCode": 63,
+    "bitmapOffset": 125,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       224,
       32,
       96,
       0,
       64
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x3F"
+    ]
   },
   {
-    "Key": "@",
-    "AsciiCode": 64,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "@",
+    "asciiCode": 64,
+    "bitmapOffset": 130,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       192,
       160,
       224,
       128,
       96
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x40"
+    ]
   },
   {
-    "Key": "A",
-    "AsciiCode": 65,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "A",
+    "asciiCode": 65,
+    "bitmapOffset": 135,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       224,
       160,
       224,
       160,
       160
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x41"
+    ]
   },
   {
-    "Key": "B",
-    "AsciiCode": 66,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "B",
+    "asciiCode": 66,
+    "bitmapOffset": 140,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       224,
       160,
       192,
       160,
       224
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x42"
+    ]
   },
   {
-    "Key": "C",
-    "AsciiCode": 67,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "C",
+    "asciiCode": 67,
+    "bitmapOffset": 145,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       224,
       128,
       128,
       128,
       224
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x43"
+    ]
   },
   {
-    "Key": "D",
-    "AsciiCode": 68,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "D",
+    "asciiCode": 68,
+    "bitmapOffset": 150,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       192,
       160,
       160,
       160,
       192
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x44"
+    ]
   },
   {
-    "Key": "E",
-    "AsciiCode": 69,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "E",
+    "asciiCode": 69,
+    "bitmapOffset": 155,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       224,
       128,
       192,
       128,
       224
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x45"
+    ]
   },
   {
-    "Key": "F",
-    "AsciiCode": 70,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "F",
+    "asciiCode": 70,
+    "bitmapOffset": 160,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       224,
       128,
       192,
       128,
       128
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x46"
+    ]
   },
   {
-    "Key": "G",
-    "AsciiCode": 71,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "G",
+    "asciiCode": 71,
+    "bitmapOffset": 165,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       96,
       128,
       224,
       160,
       96
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x47"
+    ]
   },
   {
-    "Key": "H",
-    "AsciiCode": 72,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "H",
+    "asciiCode": 72,
+    "bitmapOffset": 170,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       160,
       160,
       224,
       160,
       160
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x48"
+    ]
   },
   {
-    "Key": "I",
-    "AsciiCode": 73,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "I",
+    "asciiCode": 73,
+    "bitmapOffset": 175,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       224,
       64,
       64,
       64,
       224
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x49"
+    ]
   },
   {
-    "Key": "J",
-    "AsciiCode": 74,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "J",
+    "asciiCode": 74,
+    "bitmapOffset": 180,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       96,
       32,
       32,
       160,
       192
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x4A"
+    ]
   },
   {
-    "Key": "K",
-    "AsciiCode": 75,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "K",
+    "asciiCode": 75,
+    "bitmapOffset": 185,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       160,
       160,
       192,
       160,
       160
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x4B"
+    ]
   },
   {
-    "Key": "L",
-    "AsciiCode": 76,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "L",
+    "asciiCode": 76,
+    "bitmapOffset": 190,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       128,
       128,
       128,
       128,
       224
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x4C"
+    ]
   },
   {
-    "Key": "M",
-    "AsciiCode": 77,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "M",
+    "asciiCode": 77,
+    "bitmapOffset": 195,
+    "width": 8,
+    "height": 5,
     "xAdvance": 6,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       136,
       136,
       216,
       168,
       168
-    ],
-    "Display": "{ 0, 8, 5, 6, 0, -4 }",
-    "Hex": "0x4D"
+    ]
   },
   {
-    "Key": "N",
-    "AsciiCode": 78,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "N",
+    "asciiCode": 78,
+    "bitmapOffset": 200,
+    "width": 8,
+    "height": 5,
     "xAdvance": 5,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       144,
       208,
       176,
       144,
       144
-    ],
-    "Display": "{ 0, 8, 5, 5, 0, -4 }",
-    "Hex": "0x4E"
+    ]
   },
   {
-    "Key": "O",
-    "AsciiCode": 79,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "O",
+    "asciiCode": 79,
+    "bitmapOffset": 205,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       224,
       160,
       160,
       160,
       224
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x4F"
+    ]
   },
   {
-    "Key": "P",
-    "AsciiCode": 80,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "P",
+    "asciiCode": 80,
+    "bitmapOffset": 210,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       224,
       160,
       224,
       128,
       128
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x50"
+    ]
   },
   {
-    "Key": "Q",
-    "AsciiCode": 81,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "Q",
+    "asciiCode": 81,
+    "bitmapOffset": 215,
+    "width": 8,
+    "height": 5,
     "xAdvance": 5,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       224,
       160,
       160,
       160,
       208
-    ],
-    "Display": "{ 0, 8, 5, 5, 0, -4 }",
-    "Hex": "0x51"
+    ]
   },
   {
-    "Key": "R",
-    "AsciiCode": 82,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "R",
+    "asciiCode": 82,
+    "bitmapOffset": 220,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       224,
       160,
       192,
       160,
       160
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x52"
+    ]
   },
   {
-    "Key": "S",
-    "AsciiCode": 83,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "S",
+    "asciiCode": 83,
+    "bitmapOffset": 225,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       224,
       128,
       224,
       32,
       224
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x53"
+    ]
   },
   {
-    "Key": "T",
-    "AsciiCode": 84,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "T",
+    "asciiCode": 84,
+    "bitmapOffset": 230,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       224,
       64,
       64,
       64,
       64
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x54"
+    ]
   },
   {
-    "Key": "U",
-    "AsciiCode": 85,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "U",
+    "asciiCode": 85,
+    "bitmapOffset": 235,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       160,
       160,
       160,
       160,
       224
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x55"
+    ]
   },
   {
-    "Key": "V",
-    "AsciiCode": 86,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "V",
+    "asciiCode": 86,
+    "bitmapOffset": 240,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       160,
       160,
       160,
       160,
       64
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x56"
+    ]
   },
   {
-    "Key": "W",
-    "AsciiCode": 87,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "W",
+    "asciiCode": 87,
+    "bitmapOffset": 245,
+    "width": 8,
+    "height": 5,
     "xAdvance": 5,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       136,
       136,
       168,
       112,
       32
-    ],
-    "Display": "{ 0, 8, 5, 5, 0, -4 }",
-    "Hex": "0x57"
+    ]
   },
   {
-    "Key": "X",
-    "AsciiCode": 88,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "X",
+    "asciiCode": 88,
+    "bitmapOffset": 250,
+    "width": 8,
+    "height": 5,
     "xAdvance": 6,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       136,
       80,
       32,
       80,
       136
-    ],
-    "Display": "{ 0, 8, 5, 6, 0, -4 }",
-    "Hex": "0x58"
+    ]
   },
   {
-    "Key": "Y",
-    "AsciiCode": 89,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "Y",
+    "asciiCode": 89,
+    "bitmapOffset": 255,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       160,
       160,
       64,
       64,
       64
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x59"
+    ]
   },
   {
-    "Key": "Z",
-    "AsciiCode": 90,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "Z",
+    "asciiCode": 90,
+    "bitmapOffset": 260,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       224,
       32,
       64,
       128,
       224
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x5A"
+    ]
   },
   {
-    "Key": "[",
-    "AsciiCode": 91,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "[",
+    "asciiCode": 91,
+    "bitmapOffset": 265,
+    "width": 8,
+    "height": 5,
     "xAdvance": 3,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       192,
       128,
       128,
       128,
       192
-    ],
-    "Display": "{ 0, 8, 5, 3, 0, -4 }",
-    "Hex": "0x5B"
+    ]
   },
   {
-    "Key": "\\",
-    "AsciiCode": 92,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "\\",
+    "asciiCode": 92,
+    "bitmapOffset": 270,
+    "width": 8,
+    "height": 5,
     "xAdvance": 6,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       128,
       64,
       32,
       16,
       8
-    ],
-    "Display": "{ 0, 8, 5, 6, 0, -4 }",
-    "Hex": "0x5C"
+    ]
   },
   {
-    "Key": "]",
-    "AsciiCode": 93,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "]",
+    "asciiCode": 93,
+    "bitmapOffset": 275,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       192,
       64,
       64,
       64,
       192
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x5D"
+    ]
   },
   {
-    "Key": "^",
-    "AsciiCode": 94,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
-    "xAdvance": 5,
-    "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
-      64,
-      160,
-      0,
-      0,
-      0
-    ],
-    "Display": "{ 0, 8, 5, 5, 0, -4 }",
-    "Hex": "0x5E"
-  },
-  {
-    "Key": "_",
-    "AsciiCode": 95,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
-    "xAdvance": 5,
-    "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
-      0,
-      0,
-      224,
-      0,
-      0
-    ],
-    "Display": "{ 0, 8, 5, 5, 0, -4 }",
-    "Hex": "0x5F"
-  },
-  {
-    "Key": "`",
-    "AsciiCode": 96,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
-    "xAdvance": 5,
-    "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
-      64,
-      32,
-      0,
-      0,
-      0
-    ],
-    "Display": "{ 0, 8, 5, 5, 0, -4 }",
-    "Hex": "0x60"
-  },
-  {
-    "Key": "a",
-    "AsciiCode": 97,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "^",
+    "asciiCode": 94,
+    "bitmapOffset": 280,
+    "width": 8,
+    "height": 2,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
+      64,
+      160
+    ]
+  },
+  {
+    "key": "_",
+    "asciiCode": 95,
+    "bitmapOffset": 282,
+    "width": 8,
+    "height": 1,
+    "xAdvance": 3,
+    "xOffset": 0,
+    "yOffset": -3,
+    "fontBitmap": [
+      224
+    ]
+  },
+  {
+    "key": "`",
+    "asciiCode": 96,
+    "bitmapOffset": 283,
+    "width": 8,
+    "height": 2,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -5,
+    "fontBitmap": [
+      64,
+      32
+    ]
+  },
+  {
+    "key": "a",
+    "asciiCode": 97,
+    "bitmapOffset": 285,
+    "width": 8,
+    "height": 5,
+    "xAdvance": 4,
+    "xOffset": 0,
+    "yOffset": -5,
+    "fontBitmap": [
       64,
       160,
       96,
       160,
       224
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x61"
+    ]
   },
   {
-    "Key": "b",
-    "AsciiCode": 98,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "b",
+    "asciiCode": 98,
+    "bitmapOffset": 290,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       128,
       128,
       224,
       160,
       224
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x62"
+    ]
   },
   {
-    "Key": "c",
-    "AsciiCode": 99,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "c",
+    "asciiCode": 99,
+    "bitmapOffset": 295,
+    "width": 8,
+    "height": 3,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
-      0,
-      0,
+    "yOffset": -3,
+    "fontBitmap": [
       96,
       128,
       96
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x63"
+    ]
   },
   {
-    "Key": "d",
-    "AsciiCode": 100,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "d",
+    "asciiCode": 100,
+    "bitmapOffset": 298,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       32,
       32,
       224,
       160,
       224
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x64"
+    ]
   },
   {
-    "Key": "e",
-    "AsciiCode": 101,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "e",
+    "asciiCode": 101,
+    "bitmapOffset": 303,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       64,
       160,
       192,
       160,
       224
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x65"
+    ]
   },
   {
-    "Key": "f",
-    "AsciiCode": 102,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "f",
+    "asciiCode": 102,
+    "bitmapOffset": 308,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       64,
       160,
       192,
       128,
       128
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x66"
+    ]
   },
   {
-    "Key": "g",
-    "AsciiCode": 103,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "g",
+    "asciiCode": 103,
+    "bitmapOffset": 313,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       64,
       160,
       64,
       32,
       224
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x67"
+    ]
   },
   {
-    "Key": "h",
-    "AsciiCode": 104,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "h",
+    "asciiCode": 104,
+    "bitmapOffset": 318,
+    "width": 8,
+    "height": 4,
     "xAdvance": 4,
     "xOffset": 0,
     "yOffset": -4,
-    "FontBitmap": [
-      0,
+    "fontBitmap": [
       128,
       192,
       160,
       160
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x68"
+    ]
   },
   {
-    "Key": "i",
-    "AsciiCode": 105,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "i",
+    "asciiCode": 105,
+    "bitmapOffset": 322,
+    "width": 8,
+    "height": 5,
     "xAdvance": 3,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       64,
       0,
       64,
       64,
       64
-    ],
-    "Display": "{ 0, 8, 5, 3, 0, -4 }",
-    "Hex": "0x69"
+    ]
   },
   {
-    "Key": "j",
-    "AsciiCode": 106,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "j",
+    "asciiCode": 106,
+    "bitmapOffset": 327,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       32,
       0,
       32,
       160,
       96
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x6A"
+    ]
   },
   {
-    "Key": "k",
-    "AsciiCode": 107,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "k",
+    "asciiCode": 107,
+    "bitmapOffset": 332,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       128,
       128,
       160,
       192,
       160
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x6B"
+    ]
   },
   {
-    "Key": "l",
-    "AsciiCode": 108,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "l",
+    "asciiCode": 108,
+    "bitmapOffset": 337,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       128,
       64,
       64,
       64,
       224
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x6C"
+    ]
   },
   {
-    "Key": "m",
-    "AsciiCode": 109,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "m",
+    "asciiCode": 109,
+    "bitmapOffset": 342,
+    "width": 8,
+    "height": 3,
     "xAdvance": 6,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
-      0,
-      0,
+    "yOffset": -3,
+    "fontBitmap": [
       80,
       168,
       136
-    ],
-    "Display": "{ 0, 8, 5, 6, 0, -4 }",
-    "Hex": "0x6D"
+    ]
   },
   {
-    "Key": "n",
-    "AsciiCode": 110,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "n",
+    "asciiCode": 110,
+    "bitmapOffset": 345,
+    "width": 8,
+    "height": 4,
     "xAdvance": 4,
     "xOffset": 0,
     "yOffset": -4,
-    "FontBitmap": [
-      0,
+    "fontBitmap": [
       64,
       160,
       160,
       160
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x6E"
+    ]
   },
   {
-    "Key": "o",
-    "AsciiCode": 111,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "o",
+    "asciiCode": 111,
+    "bitmapOffset": 349,
+    "width": 8,
+    "height": 3,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
-      0,
-      0,
+    "yOffset": -3,
+    "fontBitmap": [
       64,
       160,
       64
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x6F"
+    ]
   },
   {
-    "Key": "p",
-    "AsciiCode": 112,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "p",
+    "asciiCode": 112,
+    "bitmapOffset": 352,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       64,
       160,
       224,
       128,
       128
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x70"
+    ]
   },
   {
-    "Key": "q",
-    "AsciiCode": 113,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "q",
+    "asciiCode": 113,
+    "bitmapOffset": 357,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       192,
       160,
       96,
       32,
       32
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x71"
+    ]
   },
   {
-    "Key": "r",
-    "AsciiCode": 114,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "r",
+    "asciiCode": 114,
+    "bitmapOffset": 362,
+    "width": 8,
+    "height": 4,
     "xAdvance": 4,
     "xOffset": 0,
     "yOffset": -4,
-    "FontBitmap": [
-      0,
+    "fontBitmap": [
       64,
       160,
       128,
       128
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x72"
+    ]
   },
   {
-    "Key": "s",
-    "AsciiCode": 115,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "s",
+    "asciiCode": 115,
+    "bitmapOffset": 366,
+    "width": 8,
+    "height": 4,
     "xAdvance": 4,
     "xOffset": 0,
     "yOffset": -4,
-    "FontBitmap": [
-      0,
+    "fontBitmap": [
       96,
       192,
       32,
       192
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x73"
+    ]
   },
   {
-    "Key": "t",
-    "AsciiCode": 116,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "t",
+    "asciiCode": 116,
+    "bitmapOffset": 370,
+    "width": 8,
+    "height": 4,
     "xAdvance": 4,
     "xOffset": 0,
     "yOffset": -4,
-    "FontBitmap": [
-      0,
+    "fontBitmap": [
       64,
       224,
       64,
       96
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x74"
+    ]
   },
   {
-    "Key": "u",
-    "AsciiCode": 117,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "u",
+    "asciiCode": 117,
+    "bitmapOffset": 374,
+    "width": 8,
+    "height": 3,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
-      0,
-      0,
+    "yOffset": -3,
+    "fontBitmap": [
       160,
       160,
       192
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x75"
+    ]
   },
   {
-    "Key": "v",
-    "AsciiCode": 118,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "v",
+    "asciiCode": 118,
+    "bitmapOffset": 377,
+    "width": 8,
+    "height": 3,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
-      0,
-      0,
+    "yOffset": -3,
+    "fontBitmap": [
       160,
       160,
       64
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x76"
+    ]
   },
   {
-    "Key": "w",
-    "AsciiCode": 119,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "w",
+    "asciiCode": 119,
+    "bitmapOffset": 380,
+    "width": 8,
+    "height": 3,
     "xAdvance": 6,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
-      0,
-      0,
+    "yOffset": -3,
+    "fontBitmap": [
       168,
       112,
       32
-    ],
-    "Display": "{ 0, 8, 5, 6, 0, -4 }",
-    "Hex": "0x77"
+    ]
   },
   {
-    "Key": "x",
-    "AsciiCode": 120,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "x",
+    "asciiCode": 120,
+    "bitmapOffset": 383,
+    "width": 8,
+    "height": 3,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
-      0,
-      0,
+    "yOffset": -3,
+    "fontBitmap": [
       160,
       64,
       160
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x78"
+    ]
   },
   {
-    "Key": "y",
-    "AsciiCode": 121,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "y",
+    "asciiCode": 121,
+    "bitmapOffset": 386,
+    "width": 8,
+    "height": 4,
     "xAdvance": 4,
     "xOffset": 0,
     "yOffset": -4,
-    "FontBitmap": [
-      0,
+    "fontBitmap": [
       160,
       224,
       32,
       224
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x79"
+    ]
   },
   {
-    "Key": "z",
-    "AsciiCode": 122,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "z",
+    "asciiCode": 122,
+    "bitmapOffset": 390,
+    "width": 8,
+    "height": 4,
     "xAdvance": 4,
     "xOffset": 0,
     "yOffset": -4,
-    "FontBitmap": [
-      0,
+    "fontBitmap": [
       224,
       64,
       32,
       224
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x7A"
+    ]
   },
   {
-    "Key": "{",
-    "AsciiCode": 123,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "{",
+    "asciiCode": 123,
+    "bitmapOffset": 394,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       96,
       64,
       128,
       64,
       96
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x7B"
+    ]
   },
   {
-    "Key": "|",
-    "AsciiCode": 124,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "|",
+    "asciiCode": 124,
+    "bitmapOffset": 399,
+    "width": 8,
+    "height": 5,
     "xAdvance": 3,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       64,
       64,
       0,
       64,
       64
-    ],
-    "Display": "{ 0, 8, 5, 3, 0, -4 }",
-    "Hex": "0x7C"
+    ]
   },
   {
-    "Key": "}",
-    "AsciiCode": 125,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "}",
+    "asciiCode": 125,
+    "bitmapOffset": 404,
+    "width": 8,
+    "height": 5,
     "xAdvance": 4,
     "xOffset": 0,
-    "yOffset": -4,
-    "FontBitmap": [
+    "yOffset": -5,
+    "fontBitmap": [
       192,
       64,
       32,
       64,
       192
-    ],
-    "Display": "{ 0, 8, 5, 4, 0, -4 }",
-    "Hex": "0x7D"
+    ]
   },
   {
-    "Key": "~",
-    "AsciiCode": 126,
-    "BitmapOffset": 0,
-    "Width": 8,
-    "Height": 5,
+    "key": "~",
+    "asciiCode": 126,
+    "bitmapOffset": 409,
+    "width": 8,
+    "height": 2,
     "xAdvance": 5,
     "xOffset": 0,
     "yOffset": -4,
-    "FontBitmap": [
-      0,
+    "fontBitmap": [
       160,
-      80,
-      0,
-      0
-    ],
-    "Display": "{ 0, 8, 5, 5, 0, -4 }",
-    "Hex": "0x7E"
+      80
+    ]
   }
 ]
