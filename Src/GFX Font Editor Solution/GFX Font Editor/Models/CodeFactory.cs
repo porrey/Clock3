@@ -47,8 +47,10 @@ namespace GfxFontEditor.Models
 			// ***
 			string header = resourceLoader.GetString("Header")
 								.Replace("{FontName}", className)
-								.Replace("{DateCreated}", DateTime.Now.ToLongDateString())
-								.Replace("{Version}", "1.0.0");
+								.Replace("{DateCreated}", $"{this.FontFile.DateTimeCreated.ToLongDateString()} {this.FontFile.DateTimeCreated.ToShortTimeString()}")
+								.Replace("{LastModified}", $"{this.FontFile.LastModifiedDateTime.ToLongDateString()} {this.FontFile.LastModifiedDateTime.ToShortTimeString()}")
+								.Replace("{Version}", $"{this.FontFile.MajorVersion}.{this.FontFile.MinorVersion:00}")
+								.Replace("{Description}", this.WordWrap(this.FontFile.Description, 72));
 
 			// ***
 			// *** Build the bitmap array items.
@@ -184,6 +186,37 @@ namespace GfxFontEditor.Models
 			{
 				returnValue = ", ";
 			}
+
+			return returnValue;
+		}
+
+		protected string WordWrap(string line, int maxWidth)
+		{
+			string returnValue = String.Empty;
+			IList<string> lines = new List<string>();
+
+			int position = 0;
+			int count = 0;
+			string currentLine = String.Empty;
+
+			foreach (char c in line)
+			{
+				if ((count >= maxWidth && c == ' ') || position == line.Length - 1)
+				{
+					lines.Add(currentLine);
+					count = 0;
+					currentLine = String.Empty;
+				}
+				else
+				{
+					currentLine += c;
+				}
+
+				count++;
+				position++;
+			}
+
+			returnValue = String.Join("\r\n", lines);
 
 			return returnValue;
 		}

@@ -142,6 +142,7 @@ This font was generated from GFX Font Editor.
 
 Font Name:		{FontName}
 Date Created:	{DateCreated}
+Last Modified:	{LastModified}
 Version:		{Version}
 License:		LGPL-3.0
 
@@ -152,6 +153,8 @@ This font is designed to work with the Adafruit_Gfx library.
 See https://learn.adafruit.com/creating-custom-symbol-font-for-adafruit-gfx-library/overview
 for information on creating fonts. The library source code can be found at
 https://github.com/adafruit/Adafruit-GFX-Library.
+
+{Description}
 
 */</value>
   </data>

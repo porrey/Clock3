@@ -21,5 +21,6 @@ namespace GfxFontEditor.Models
 		public int Row { get; set; }
 		public int Column { get; set; }
 		public bool IsOn { get; set; }
+		public bool ProtectedBit { get; set; }
 	}
 }

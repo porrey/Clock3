@@ -61,7 +61,7 @@ namespace GfxFontEditor
 			set
 			{
 				this.SetProperty(ref _selectedItem, value);
-				this.DrawGlyph(_selectedItem);
+				this.DrawGlyph(this.CurrentFile, _selectedItem);
 			}
 		}
 
@@ -142,40 +142,42 @@ namespace GfxFontEditor
 		{
 			if (sender is Border border)
 			{
-				if (!((BorderTag)border.Tag).IsOn)
+				if (!((BorderTag)border.Tag).ProtectedBit)
 				{
-					border.Background = new SolidColorBrush(Colors.Red);
-					((BorderTag)border.Tag).IsOn = true;
-				}
-				else
-				{
-					border.Background = new SolidColorBrush(Colors.White);
-					((BorderTag)border.Tag).IsOn = false;
-				}
+					if (!((BorderTag)border.Tag).IsOn)
+					{
+						border.Background = new SolidColorBrush(Colors.Red);
+						((BorderTag)border.Tag).IsOn = true;
+					}
+					else
+					{
+						border.Background = new SolidColorBrush(Colors.White);
+						((BorderTag)border.Tag).IsOn = false;
+					}
 
-				this.SelectedItem.FontBitmap = this.GetBitmapFromGrid(this.SelectedItem);
+					this.SelectedItem.FontBitmap = this.GetBitmapFromGrid(this.CurrentFile, this.SelectedItem);
+				}
 			}
 		}
 
-		protected void DrawGlyph(Glyph glyph)
+		protected void DrawGlyph(FontFile fontFile, Glyph glyph)
 		{
 			this.ClearGrid();
 
 			if (glyph != null)
 			{
 				// ***
-				// *** Simulate the GFS drawing of this glyph. The cursor starts
-				// *** at the bottom.
+				// *** Simulate the GFS drawing of this glyph. The cursor would
+				// *** be positioned in the bottom left corner of where the
+				// *** character would be drawn.
 				// ***
-				int baseline = this.CurrentFile.FontHeight - 1;
-				int top = baseline + glyph.yOffset + 1;
-				int bottom = top + glyph.Height - 1;
+				(int baseline, int topRow, int bottomRow) = this.GetGlyphParameters(fontFile, glyph);
 
-				for (int i = 0; i < this.CurrentFile.FontHeight; i++)
+				for (int i = 0; i < fontFile.FontHeight; i++)
 				{
-					if (i >= top && i <= bottom)
+					if (i >= topRow && i <= bottomRow)
 					{
-						int byteIndex = i - (this.CurrentFile.FontHeight + glyph.yOffset);
+						int byteIndex = i - (fontFile.FontHeight + glyph.yOffset);
 
 						if (byteIndex >= 0 && byteIndex < glyph.FontBitmap.Count())
 						{
@@ -199,13 +201,29 @@ namespace GfxFontEditor
 					{
 						for (int j = 0; j < glyph.Width; j++)
 						{
-							this.SetPixel(i, j, false, Colors.LightGray);
+							this.SetPixel(i, j, false, Colors.LightGray, true);
 						}
 					}
 				}
 
-				this.SetPixel(baseline, glyph.xOffset + glyph.xAdvance, false, Color.FromArgb(32, 0, 0, 255));
+				this.SetPixel(baseline, glyph.xOffset + glyph.xAdvance, false, Color.FromArgb(32, 0, 0, 255), true);
 			}
+		}
+
+		protected (int, int, int) GetGlyphParameters(FontFile fontFile, Glyph glyph)
+		{
+			(int baseline, int topRow, int bottomRow) = (0, 0, 0);
+
+			// ***
+			// *** Simulate the GFS drawing of this glyph. The cursor would
+			// *** be positioned in the bottom left corner of where the
+			// *** character would be drawn.
+			// ***
+			baseline = fontFile.FontHeight - 1;
+			topRow = baseline + glyph.yOffset + 1;
+			bottomRow = topRow + glyph.Height - 1;
+
+			return (baseline, topRow, bottomRow);
 		}
 
 		protected void ClearGrid()
@@ -220,7 +238,7 @@ namespace GfxFontEditor
 			}
 		}
 
-		protected void SetPixel(int row, int column, bool bitOn, Color color)
+		protected void SetPixel(int row, int column, bool bitOn, Color color, bool protectedBit = false)
 		{
 			Border border = this.GetBorderObject(row, column);
 
@@ -228,6 +246,7 @@ namespace GfxFontEditor
 			{
 				border.Background = new SolidColorBrush(color);
 				((BorderTag)border.Tag).IsOn = bitOn;
+				((BorderTag)border.Tag).ProtectedBit = protectedBit;
 			}
 		}
 
@@ -314,6 +333,8 @@ namespace GfxFontEditor
 			if (file != null)
 			{
 				this.CurrentFile.Items = this.Items.ToArray();
+				this.CurrentFile.IncrementVersion();
+				this.CurrentFile.LastModifiedDateTime = DateTime.Now;
 				string json = JsonConvert.SerializeObject(this.CurrentFile, Formatting.Indented);
 				await FileIO.WriteTextAsync(file, json);
 				this.FontName = file.Name;
@@ -383,13 +404,17 @@ namespace GfxFontEditor
 			this.RaisePropertyChanged(nameof(this.Items));
 		}
 
-		private List<byte> GetBitmapFromGrid(Glyph glyph)
+		private List<byte> GetBitmapFromGrid(FontFile fontFile, Glyph glyph)
 		{
 			List<byte> returnValue = new List<byte>();
 
 			if (glyph != null)
 			{
-				for (int row = 0; row < glyph.Height; row++)
+				int baseline = fontFile.FontHeight - 1;
+				int top = baseline + glyph.yOffset + 1;
+				int bottom = top + glyph.Height - 1;
+
+				for (int row = top; row <= bottom; row++)
 				{
 					byte b = 0;
 
@@ -433,25 +458,25 @@ namespace GfxFontEditor
 		private void HeightChanged(object sender, TextChangedEventArgs e)
 		{
 			this.Reindex();
-			this.DrawGlyph(this.SelectedItem);
+			this.DrawGlyph(this.CurrentFile, this.SelectedItem);
 			this.RaisePropertyChanged(nameof(this.SelectedItem.Height));
 		}
 
 		private void xAdvanceChanged(object sender, TextChangedEventArgs e)
 		{
-			this.DrawGlyph(this.SelectedItem);
+			this.DrawGlyph(this.CurrentFile, this.SelectedItem);
 			this.RaisePropertyChanged(nameof(this.SelectedItem.xAdvance));
 		}
 
 		private void xOffsetChanged(object sender, TextChangedEventArgs e)
 		{
-			this.DrawGlyph(this.SelectedItem);
+			this.DrawGlyph(this.CurrentFile, this.SelectedItem);
 			this.RaisePropertyChanged(nameof(this.SelectedItem.xOffset));
 		}
 
 		private void yOffsetChanged(object sender, TextChangedEventArgs e)
 		{
-			this.DrawGlyph(this.SelectedItem);
+			this.DrawGlyph(this.CurrentFile, this.SelectedItem);
 			this.RaisePropertyChanged(nameof(this.SelectedItem.yOffset));
 		}
 
