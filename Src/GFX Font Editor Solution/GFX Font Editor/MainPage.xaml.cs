@@ -47,6 +47,8 @@ namespace GfxFontEditor
 			//string daata = File.ReadAllText(file);
 		}
 
+		public FontFile CurrentFile { get; set; }
+
 		public ObservableCollection<Glyph> Items { get; } = new ObservableCollection<Glyph>();
 
 		private Glyph _selectedItem = null;
@@ -63,47 +65,45 @@ namespace GfxFontEditor
 			}
 		}
 
-		private string _fileName = "New Font";
-		public string FileName
+		private string _fontName = "New Font";
+		public string FontName
 		{
 			get
 			{
-				return _fileName;
+				return _fontName;
 			}
 			set
 			{
-				this.SetProperty(ref _fileName, Path.GetFileNameWithoutExtension(value));
+				this.SetProperty(ref _fontName, Path.GetFileNameWithoutExtension(value));
 			}
 		}
 
-		public StorageFile File { get; set; }
+		public StorageFile StorageFile { get; set; }
 
-		protected void CreateGrid(IEnumerable<Glyph> items)
+		protected void CreateGrid(FontFile font)
 		{
 			this.BitmapGrid.RowDefinitions.Clear();
 			this.BitmapGrid.ColumnDefinitions.Clear();
 			this.BitmapGrid.Children.Clear();
 
-			if (items != null && items.Count() > 0)
+			if (font != null && font.Items != null && font.Items.Count() > 0)
 			{
-				(int rows, int columns) = this.GetGridDimensions(items);
-
 				// ***
 				// *** Create the columns.
 				// ***
-				for (int c = 0; c <= columns; c++)
+				for (int c = 0; c < font.FontWidth; c++)
 				{
-					ColumnDefinition col = new ColumnDefinition() { Width = new GridLength(50) };
+					ColumnDefinition col = new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) };
 					this.BitmapGrid.ColumnDefinitions.Add(col);
 				}
 
 				// ***
 				// *** Create the rows.
 				// ***
-				for (int r = 0; r <= rows; r++)
+				for (int r = 0; r < font.FontHeight; r++)
 				{
-					RowDefinition col = new RowDefinition() { Height = new GridLength(50) };
-					this.BitmapGrid.RowDefinitions.Add(col);
+					RowDefinition row = new RowDefinition() { Height = new GridLength(1, GridUnitType.Star) };
+					this.BitmapGrid.RowDefinitions.Add(row);
 				}
 
 				// ***
@@ -111,13 +111,16 @@ namespace GfxFontEditor
 				// ***
 				int index = 0;
 
-				for (int r = 0; r < rows; r++)
+				for (int r = 0; r < font.FontHeight; r++)
 				{
-					for (int c = 0; c < columns; c++)
+					for (int c = 0; c < font.FontWidth; c++)
 					{
+						double left = c == 0 ? 0 : 1;
+						double top = r == 0 ? 0 : 1;
+
 						Border b = new Border()
 						{
-							BorderThickness = new Thickness(1, 1, c == columns - 1 ? 1 : 0, r == rows - 1 ? 1 : 0),
+							BorderThickness = new Thickness(left, top, 0, 0),
 							BorderBrush = new SolidColorBrush(Color.FromArgb(255, 0xaa, 0xaa, 0xaa))
 						};
 
@@ -160,36 +163,48 @@ namespace GfxFontEditor
 
 			if (glyph != null)
 			{
-				(int rows, int columns) = this.GetGridDimensions(this.Items);
-
 				// ***
 				// *** Simulate the GFS drawing of this glyph. The cursor starts
 				// *** at the bottom.
 				// ***
-				int baseline = rows - 1;
-				int x = glyph.xOffset;
-				int y = baseline + glyph.yOffset + 1;
+				int baseline = this.CurrentFile.FontHeight - 1;
+				int top = baseline + glyph.yOffset + 1;
+				int bottom = top + glyph.Height - 1;
 
-				foreach (byte b in glyph.FontBitmap)
+				for (int i = 0; i < this.CurrentFile.FontHeight; i++)
 				{
-					// ***
-					// *** Check each bit.
-					// ***
-					for (int i = glyph.Width - 1; i >= 0; i--)
+					if (i >= top && i <= bottom)
 					{
-						byte mask = (byte)(1 << i);
-						bool isOn = (byte)(b & mask) != 0;
-						this.SetPixel(y, x, isOn, isOn ? Colors.Red : Colors.White);
-						x++;
-					}
+						int byteIndex = i - (this.CurrentFile.FontHeight + glyph.yOffset);
 
-					y++;
-					x = glyph.xOffset;
+						if (byteIndex >= 0 && byteIndex < glyph.FontBitmap.Count())
+						{
+							byte b = glyph.FontBitmap[byteIndex];
+							int x = glyph.xOffset;
+
+							// ***
+							// *** Check each bit.
+							// ***
+							for (int bi = glyph.Width - 1; bi >= 0; bi--)
+							{
+								byte mask = (byte)(1 << bi);
+								bool isOn = (byte)(b & mask) != 0;
+								this.SetPixel(i, x, isOn, isOn ? Colors.Red : Colors.White);
+
+								x++;
+							}
+						}
+					}
+					else
+					{
+						for (int j = 0; j < glyph.Width; j++)
+						{
+							this.SetPixel(i, j, false, Colors.LightGray);
+						}
+					}
 				}
 
-				x = glyph.xOffset + glyph.xAdvance;
-				y = baseline;
-				this.SetPixel(y, x, false, Color.FromArgb(32, 0, 0, 255));
+				this.SetPixel(baseline, glyph.xOffset + glyph.xAdvance, false, Color.FromArgb(32, 0, 0, 255));
 			}
 		}
 
@@ -214,19 +229,6 @@ namespace GfxFontEditor
 				border.Background = new SolidColorBrush(color);
 				((BorderTag)border.Tag).IsOn = bitOn;
 			}
-		}
-
-		protected (int, int) GetGridDimensions(IEnumerable<Glyph> items)
-		{
-			(int rows, int columns) = (0, 0);
-
-			if (items != null && items.Count() > 0)
-			{
-				rows = items.Max(t => t.Height);
-				columns = items.Max(t => t.Width);
-			}
-
-			return (rows, columns);
 		}
 
 		protected Border GetBorderObject(int row, int column)
@@ -255,12 +257,12 @@ namespace GfxFontEditor
 			if (file != null)
 			{
 				this.Items.Clear();
-				FontFile fontFile = new FontFile(file);
-				IEnumerable<Glyph> items = await fontFile.Import();
-				this.CreateGrid(items);
-				this.Items.AddRange(items);
-				this.FileName = file.Name;
-				this.File = null;
+				CodeImport fontFile = new CodeImport(file);
+				this.CurrentFile = await fontFile.Import();
+				this.CreateGrid(this.CurrentFile);
+				this.Items.AddRange(this.CurrentFile.Items);
+				this.FontName = file.Name;
+				this.StorageFile = null;
 				this.RaisePropertyChanged(nameof(this.Items));
 			}
 		}
@@ -270,7 +272,7 @@ namespace GfxFontEditor
 			FileSavePicker picker = new FileSavePicker()
 			{
 				SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
-				SuggestedFileName = this.FileName,
+				SuggestedFileName = this.FontName,
 				DefaultFileExtension = ".h"
 			};
 
@@ -278,10 +280,11 @@ namespace GfxFontEditor
 
 			StorageFile file = await picker.PickSaveFileAsync();
 
-			if (this.File != null)
+			if (file != null)
 			{
-				CodeFactory codeFactory = new CodeFactory(this.Items);
-				string code = await codeFactory.CreateSourceCode(this.FileName);
+				this.CurrentFile.Items = this.Items.ToArray();
+				CodeFactory codeFactory = new CodeFactory(this.CurrentFile);
+				string code = await codeFactory.CreateSourceCode(this.FontName);
 				await FileIO.WriteTextAsync(file, code);
 			}
 		}
@@ -290,12 +293,12 @@ namespace GfxFontEditor
 		{
 			StorageFile file = null;
 
-			if (this.File == null)
+			if (this.StorageFile == null)
 			{
 				FileSavePicker picker = new FileSavePicker()
 				{
 					SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
-					SuggestedFileName = this.FileName,
+					SuggestedFileName = this.FontName,
 					DefaultFileExtension = ".json"
 				};
 
@@ -305,15 +308,16 @@ namespace GfxFontEditor
 			}
 			else
 			{
-				file = this.File;
+				file = this.StorageFile;
 			}
 
-			if (this.File != null)
+			if (file != null)
 			{
-				string json = JsonConvert.SerializeObject(this.Items.ToArray(), Formatting.Indented);
+				this.CurrentFile.Items = this.Items.ToArray();
+				string json = JsonConvert.SerializeObject(this.CurrentFile, Formatting.Indented);
 				await FileIO.WriteTextAsync(file, json);
-				this.FileName = file.Name;
-				this.File = file;
+				this.FontName = file.Name;
+				this.StorageFile = file;
 			}
 		}
 
@@ -333,11 +337,11 @@ namespace GfxFontEditor
 			{
 				this.Items.Clear();
 				string json = await FileIO.ReadTextAsync(file);
-				IEnumerable<Glyph> items = JsonConvert.DeserializeObject<IEnumerable<Glyph>>(json);
-				this.CreateGrid(items);
-				this.Items.AddRange(items);
-				this.FileName = file.Name;
-				this.File = file;
+				this.CurrentFile = JsonConvert.DeserializeObject<FontFile>(json);
+				this.CreateGrid(this.CurrentFile);
+				this.Items.AddRange(this.CurrentFile.Items);
+				this.FontName = file.Name;
+				this.StorageFile = file;
 				this.RaisePropertyChanged(nameof(this.Items));
 			}
 		}
@@ -345,6 +349,13 @@ namespace GfxFontEditor
 		private void NewFont(object sender, RoutedEventArgs e)
 		{
 			this.Items.Clear();
+
+			this.CurrentFile = new FontFile
+			{
+				FontWidth = 8,
+				FontHeight = 7,
+				ExtendedCharacters = false
+			};
 
 			for (int i = 32; i <= 0x7E; i++)
 			{
@@ -354,20 +365,21 @@ namespace GfxFontEditor
 				{
 					Key = Convert.ToString(c),
 					BitmapOffset = 0,
-					Width = 8,
-					Height = 5,
+					Width = this.CurrentFile.FontWidth,
+					Height = this.CurrentFile.FontHeight,
 					xAdvance = 5,
 					xOffset = 0,
-					yOffset = -4,
+					yOffset = -5,
 					AsciiCode = c,
 					FontBitmap = new List<byte>() { 0, 0, 0, 0, 0 }
 				});
 
-				this.File = null;
+				this.CurrentFile.Items = this.Items.ToArray();
+				this.StorageFile = null;
 			}
 
-			this.CreateGrid(this.Items);
-			this.FileName = "New Font";
+			this.CreateGrid(this.CurrentFile);
+			this.FontName = "New Font";
 			this.RaisePropertyChanged(nameof(this.Items));
 		}
 
@@ -377,8 +389,6 @@ namespace GfxFontEditor
 
 			if (glyph != null)
 			{
-				(int rows, int columns) = this.GetGridDimensions(this.Items);
-
 				for (int row = 0; row < glyph.Height; row++)
 				{
 					byte b = 0;
@@ -409,7 +419,7 @@ namespace GfxFontEditor
 				else
 				{
 					Glyph glyph = this.Items.ElementAt(i);
-					Glyph previousGlyph = this.Items.ElementAt(i-1);
+					Glyph previousGlyph = this.Items.ElementAt(i - 1);
 					glyph.BitmapOffset = previousGlyph.BitmapOffset + previousGlyph.Height;
 				}
 			}
@@ -420,19 +430,14 @@ namespace GfxFontEditor
 			this.RaisePropertyChanged(nameof(this.SelectedItem.Key));
 		}
 
-		private void WidthChanged(object sender, TextChangedEventArgs e)
-		{
-			this.Reindex();
-			this.RaisePropertyChanged(nameof(this.SelectedItem.Width));
-		}
-
 		private void HeightChanged(object sender, TextChangedEventArgs e)
 		{
 			this.Reindex();
+			this.DrawGlyph(this.SelectedItem);
 			this.RaisePropertyChanged(nameof(this.SelectedItem.Height));
 		}
 
-		private void xAdavanceChanged(object sender, TextChangedEventArgs e)
+		private void xAdvanceChanged(object sender, TextChangedEventArgs e)
 		{
 			this.DrawGlyph(this.SelectedItem);
 			this.RaisePropertyChanged(nameof(this.SelectedItem.xAdvance));
@@ -448,6 +453,70 @@ namespace GfxFontEditor
 		{
 			this.DrawGlyph(this.SelectedItem);
 			this.RaisePropertyChanged(nameof(this.SelectedItem.yOffset));
+		}
+
+		private void IncrementHeight(object sender, RoutedEventArgs e)
+		{
+			if (this.SelectedItem != null && this.SelectedItem.Height < this.CurrentFile.FontHeight)
+			{
+				this.SelectedItem.Height++;
+			}
+		}
+
+		private void DecrementHeight(object sender, RoutedEventArgs e)
+		{
+			if (this.SelectedItem != null && this.SelectedItem.Height > 1)
+			{
+				this.SelectedItem.Height--;
+			}
+		}
+
+		private void IncrementxOffset(object sender, RoutedEventArgs e)
+		{
+			if (this.SelectedItem != null && this.SelectedItem.xOffset < this.CurrentFile.FontWidth)
+			{
+				this.SelectedItem.xOffset++;
+			}
+		}
+
+		private void DecrementxOffset(object sender, RoutedEventArgs e)
+		{
+			if (this.SelectedItem != null && this.SelectedItem.xOffset > 0)
+			{
+				this.SelectedItem.xOffset--;
+			}
+		}
+
+		private void IncrementyOffset(object sender, RoutedEventArgs e)
+		{
+			if (this.SelectedItem != null)
+			{
+				this.SelectedItem.yOffset++;
+			}
+		}
+
+		private void DecrementyOffset(object sender, RoutedEventArgs e)
+		{
+			if (this.SelectedItem != null)
+			{
+				this.SelectedItem.yOffset--;
+			}
+		}
+
+		private void IncrementxAdvance(object sender, RoutedEventArgs e)
+		{
+			if (this.SelectedItem != null)
+			{
+				this.SelectedItem.xAdvance++;
+			}
+		}
+
+		private void DecrementxAdvance(object sender, RoutedEventArgs e)
+		{
+			if (this.SelectedItem != null)
+			{
+				this.SelectedItem.xAdvance--;
+			}
 		}
 	}
 }

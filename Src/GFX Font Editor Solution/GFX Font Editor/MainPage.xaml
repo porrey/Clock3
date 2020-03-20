@@ -8,6 +8,9 @@
 					 Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
 	<models:BindablePage.Resources>
+		<SolidColorBrush x:Key="BorderBrush">#aaaaaa</SolidColorBrush>
+		<SolidColorBrush x:Key="LightFontBrush">#aaaaaa</SolidColorBrush>
+		
 		<DataTemplate x:Key="Glyph">
 			<Grid>
 				<Grid.ColumnDefinitions>
@@ -31,7 +34,7 @@
 						   VerticalAlignment="Center"
 						   HorizontalAlignment="Left"
 						   Margin="5, 5, 0, 5"
-						   Foreground="#aaaaaa" />
+						   Foreground="{StaticResource LightFontBrush}" />
 
 				<TextBlock Grid.Column="2"
 						   Text="{Binding Hex}"
@@ -40,7 +43,7 @@
 						   VerticalAlignment="Center"
 						   HorizontalAlignment="Left"
 						   Margin="0, 5, 0, 5"
-						   Foreground="#aaaaaa" />
+						   Foreground="{StaticResource LightFontBrush}" />
 			</Grid>
 		</DataTemplate>
 	</models:BindablePage.Resources>
@@ -80,7 +83,7 @@
 						  Click="NewFont" />
 
 			<CommandBar.Content>
-				<TextBlock Text="{x:Bind FileName, Mode=TwoWay}"
+				<TextBlock Text="{x:Bind FontName, Mode=TwoWay}"
 						   Margin="12,14" />
 			</CommandBar.Content>
 		</CommandBar>
@@ -100,7 +103,7 @@
 
 				<Border Grid.Row="0"
 						BorderThickness="1"
-						BorderBrush="#aaaaaa"
+						BorderBrush="{StaticResource BorderBrush}"
 						Margin="2"
 						Background="SteelBlue">
 					<TextBlock Grid.Column="0"
@@ -115,7 +118,7 @@
 				<ListView Grid.Row="1"
 						  Margin="2"
 						  BorderThickness="1"
-						  BorderBrush="#aaaaaa"
+						  BorderBrush="{StaticResource BorderBrush}"
 						  ItemsSource="{x:Bind Items}"
 						  ItemTemplate="{StaticResource Glyph}"
 						  SelectedItem="{x:Bind SelectedItem, Mode=TwoWay}">
@@ -132,7 +135,7 @@
 			<Grid Grid.Column="1">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="60" />
-					<RowDefinition Height="150" />
+					<RowDefinition Height="100" />
 					<RowDefinition Height="60" />
 					<RowDefinition Height="*" />
 				</Grid.RowDefinitions>
@@ -140,7 +143,7 @@
 				<!-- Properties Header -->
 				<Border Grid.Row="0"
 						BorderThickness="1"
-						BorderBrush="#aaaaaa"
+						BorderBrush="{StaticResource BorderBrush}"
 						Margin="2"
 						Background="SteelBlue">
 					<TextBlock Text="Glyph Properties"
@@ -154,7 +157,7 @@
 				<!-- Properties -->
 				<Border Grid.Row="1"
 						BorderThickness="1"
-						BorderBrush="#aaaaaa"
+						BorderBrush="{StaticResource BorderBrush}"
 						Margin="2">
 					<Grid>
 						<Grid.ColumnDefinitions>
@@ -165,11 +168,6 @@
 							<ColumnDefinition Width="2*" />
 							<ColumnDefinition Width="3*" />
 						</Grid.ColumnDefinitions>
-						<Grid.RowDefinitions>
-							<RowDefinition Height="1*" />
-							<RowDefinition Height="1*" />
-							<RowDefinition Height="1*" />
-						</Grid.RowDefinitions>
 
 						<!-- Key -->
 						<TextBlock Grid.Row="0"
@@ -190,116 +188,22 @@
 								 IsEnabled="{x:Bind SelectedItem, Converter={StaticResource SelectedItemToBooleanConverter}, Mode=OneWay}" />
 
 						<!-- Index -->
-						<TextBlock Grid.Row="1"
-								   Grid.Column="0"
+						<TextBlock Grid.Row="0"
+								   Grid.Column="2"
 								   Text="Index"
 								   Margin="3"
 								   FontSize="14"
 								   VerticalAlignment="Center"
 								   HorizontalAlignment="Center" />
-						<TextBox Grid.Row="1"
-								 Grid.Column="1"
+						<TextBox Grid.Row="0"
+								 Grid.Column="3"
 								 Text="{x:Bind SelectedItem.BitmapOffset, Mode=TwoWay}"
 								 Margin="3, 3, 10, 3"
 								 FontSize="14"
+								 Background="#efefef"
 								 VerticalAlignment="Center"
 								 HorizontalAlignment="Stretch"
 								 IsReadOnly="True"
-								 IsEnabled="{x:Bind SelectedItem, Converter={StaticResource SelectedItemToBooleanConverter}, Mode=OneWay}" />
-
-						<!-- Width -->
-						<TextBlock Grid.Row="1"
-								   Grid.Column="2"
-								   Text="Width"
-								   Margin="3"
-								   FontSize="14"
-								   VerticalAlignment="Center"
-								   HorizontalAlignment="Center" />
-						<TextBox Grid.Row="1"
-								 Grid.Column="3"
-								 Text="{x:Bind SelectedItem.Width, Mode=TwoWay}"
-								 Margin="3, 3, 10, 3"
-								 FontSize="14"
-								 VerticalAlignment="Center"
-								 HorizontalAlignment="Stretch"
-								 TextChanged="WidthChanged"
-								 InputScope="Number"
-								 IsEnabled="{x:Bind SelectedItem, Converter={StaticResource SelectedItemToBooleanConverter}, Mode=OneWay}" />
-
-						<!-- Height -->
-						<TextBlock Grid.Row="1"
-								   Grid.Column="4"
-								   Text="Height"
-								   Margin="3"
-								   FontSize="14"
-								   VerticalAlignment="Center"
-								   HorizontalAlignment="Center" />
-						<TextBox Grid.Row="1"
-								 Grid.Column="5"
-								 Text="{x:Bind SelectedItem.Height, Mode=TwoWay}"
-								 Margin="3, 3, 10, 3"
-								 FontSize="14"
-								 VerticalAlignment="Center"
-								 HorizontalAlignment="Stretch"
-								 TextChanged="HeightChanged"
-								 InputScope="Number"
-								 IsEnabled="{x:Bind SelectedItem, Converter={StaticResource SelectedItemToBooleanConverter}, Mode=OneWay}" />
-
-						<!-- x Advance -->
-						<TextBlock Grid.Row="2"
-								   Grid.Column="0"
-								   Text="x Advance"
-								   Margin="3"
-								   FontSize="14"
-								   VerticalAlignment="Center"
-								   HorizontalAlignment="Center" />
-						<TextBox Grid.Row="2"
-								 Grid.Column="1"
-								 Text="{x:Bind SelectedItem.xAdvance, Mode=TwoWay}"
-								 Margin="3, 3, 10, 3"
-								 FontSize="14"
-								 VerticalAlignment="Center"
-								 HorizontalAlignment="Stretch"
-								 TextChanged="xAdavanceChanged"
-								 InputScope="Number"
-								 IsEnabled="{x:Bind SelectedItem, Converter={StaticResource SelectedItemToBooleanConverter}, Mode=OneWay}" />
-
-						<!-- x Offset -->
-						<TextBlock Grid.Row="2"
-								   Grid.Column="2"
-								   Text="x Offset"
-								   Margin="3"
-								   FontSize="14"
-								   VerticalAlignment="Center"
-								   HorizontalAlignment="Center" />
-						<TextBox Grid.Row="2"
-								 Grid.Column="3"
-								 Text="{x:Bind SelectedItem.xOffset, Mode=TwoWay}"
-								 Margin="3, 3, 10, 3"
-								 FontSize="14"
-								 VerticalAlignment="Center"
-								 HorizontalAlignment="Stretch"
-								 TextChanged="xOffsetChanged"
-								 InputScope="Number"
-								 IsEnabled="{x:Bind SelectedItem, Converter={StaticResource SelectedItemToBooleanConverter}, Mode=OneWay}" />
-
-						<!-- x Offset -->
-						<TextBlock Grid.Row="2"
-								   Grid.Column="4"
-								   Text="y Offset"
-								   Margin="3"
-								   FontSize="14"
-								   VerticalAlignment="Center"
-								   HorizontalAlignment="Center" />
-						<TextBox Grid.Row="2"
-								 Grid.Column="5"
-								 Text="{x:Bind SelectedItem.yOffset, Mode=TwoWay}"
-								 Margin="3, 3, 10, 3"
-								 FontSize="14"
-								 VerticalAlignment="Center"
-								 HorizontalAlignment="Stretch"
-								 TextChanged="yOffsetChanged"
-								 InputScope="Number"
 								 IsEnabled="{x:Bind SelectedItem, Converter={StaticResource SelectedItemToBooleanConverter}, Mode=OneWay}" />
 					</Grid>
 				</Border>
@@ -308,7 +212,7 @@
 				<Border Grid.Row="2"
 						BorderThickness="1"
 						Margin="2"
-						BorderBrush="#aaaaaa"
+						BorderBrush="{StaticResource BorderBrush}"
 						Background="SteelBlue">
 					<TextBlock Text="Bitmap Display"
 							   FontSize="28"
@@ -321,13 +225,217 @@
 				<!-- Bitmap Display -->
 				<Border Grid.Row="3"
 						BorderThickness="1"
-						BorderBrush="#aaaaaa"
+						BorderBrush="{StaticResource BorderBrush}"
 						Margin="2">
-					<Grid VerticalAlignment="Center"
-						  HorizontalAlignment="Center"
-						  BorderBrush="Azure"
-						  BorderThickness="1"
-						  x:Name="BitmapGrid">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="6*" />
+							<ColumnDefinition Width="6*" />
+							<ColumnDefinition Width="6*" />
+							<ColumnDefinition Width="6*" />
+							<ColumnDefinition Width="3*" />
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="2*" />
+							<RowDefinition Height="6*" />
+							<RowDefinition Height="6*" />
+							<RowDefinition Height="6*" />
+						</Grid.RowDefinitions>
+
+						<Grid Grid.Row="1"
+							  Grid.RowSpan="2"
+							  Grid.Column="1"
+							  Grid.ColumnSpan="3"
+							  VerticalAlignment="Stretch"
+							  HorizontalAlignment="Stretch"
+							  BorderBrush="{StaticResource BorderBrush}"
+							  BorderThickness="1"
+							  x:Name="BitmapGrid">
+						</Grid>
+
+						<!-- Height -->
+						<GroupItem Grid.Row="1"
+								   Grid.Column="0"
+								   Margin="0,0,10,0"
+								   HorizontalAlignment="Right"
+								   IsEnabled="{x:Bind SelectedItem, Converter={StaticResource SelectedItemToBooleanConverter}, Mode=OneWay}">
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="1*" />
+									<ColumnDefinition Width="1*" />
+									<ColumnDefinition Width="Auto" />
+									<ColumnDefinition Width="Auto" />
+								</Grid.ColumnDefinitions>
+								<TextBlock Grid.Column="0"
+										   Text="Height"
+										   Margin="3"
+										   FontSize="14"
+										   VerticalAlignment="Center"
+										   HorizontalAlignment="Center" />
+								<TextBox Grid.Column="1"
+										 Text="{x:Bind SelectedItem.Height, Mode=TwoWay}"
+										 FontSize="14"
+										 VerticalAlignment="Center"
+										 HorizontalAlignment="Stretch"
+										 TextChanged="HeightChanged"
+										 InputScope="Number"
+										 IsReadOnly="True" />
+								<Button Grid.Column="2"
+										BorderThickness="1"
+										Margin="2,0,0,0"
+										Click="IncrementHeight">
+									<Button.Content>
+										<FontIcon Glyph="&#xeddb;" />
+									</Button.Content>
+								</Button>
+								<Button Grid.Column="3"
+										BorderThickness="1"
+										Margin="2,0,0,0"
+										Click="DecrementHeight">
+									<Button.Content>
+										<FontIcon Glyph="&#xeddc;" />
+									</Button.Content>
+								</Button>
+							</Grid>
+						</GroupItem>
+
+						<!-- y Offset -->
+						<GroupItem Grid.Row="2"
+								   Grid.Column="0"
+								   Margin="0,0,10,0"
+								   HorizontalAlignment="Right"
+								   IsEnabled="{x:Bind SelectedItem, Converter={StaticResource SelectedItemToBooleanConverter}, Mode=OneWay}">
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="1*" />
+									<ColumnDefinition Width="1*" />
+									<ColumnDefinition Width="Auto" />
+									<ColumnDefinition Width="Auto" />
+								</Grid.ColumnDefinitions>
+								<TextBlock Grid.Column="0"
+										   Text="y Offset"
+										   Margin="3"
+										   FontSize="14"
+										   VerticalAlignment="Center"
+										   HorizontalAlignment="Center" />
+								<TextBox Grid.Column="1"
+										 Text="{x:Bind SelectedItem.yOffset, Mode=TwoWay}"
+										 FontSize="14"
+										 VerticalAlignment="Center"
+										 HorizontalAlignment="Stretch"
+										 TextChanged="yOffsetChanged"
+										 InputScope="Number"
+										 IsReadOnly="True" />
+								<Button Grid.Column="2"
+										BorderThickness="1"
+										Margin="2,0,0,0"
+										Click="IncrementyOffset">
+									<Button.Content>
+										<FontIcon Glyph="&#xeddb;" />
+									</Button.Content>
+								</Button>
+								<Button Grid.Column="3"
+										BorderThickness="1"
+										Margin="2,0,0,0"
+										Click="DecrementyOffset">
+									<Button.Content>
+										<FontIcon Glyph="&#xeddc;" />
+									</Button.Content>
+								</Button>
+							</Grid>
+						</GroupItem>
+
+						<!-- x Offset -->
+						<GroupItem Grid.Row="3"
+								   Grid.Column="1"
+								   Margin="0,10,0,0"
+								   VerticalAlignment="Top"
+								   IsEnabled="{x:Bind SelectedItem, Converter={StaticResource SelectedItemToBooleanConverter}, Mode=OneWay}">
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="1*" />
+									<ColumnDefinition Width="1*" />
+									<ColumnDefinition Width="Auto" />
+									<ColumnDefinition Width="Auto" />
+								</Grid.ColumnDefinitions>
+								<TextBlock Grid.Column="0"
+										   Text="x Offset"
+										   Margin="3"
+										   FontSize="14"
+										   VerticalAlignment="Center"
+										   HorizontalAlignment="Center" />
+								<TextBox Grid.Column="1"
+										 Text="{x:Bind SelectedItem.xOffset, Mode=TwoWay}"
+										 FontSize="14"
+										 VerticalAlignment="Center"
+										 HorizontalAlignment="Stretch"
+										 TextChanged="xOffsetChanged"
+										 InputScope="Number"
+										 IsReadOnly="True" />
+								<Button Grid.Column="2"
+										BorderThickness="1"
+										Margin="2,0,0,0"
+										Click="IncrementxOffset">
+									<Button.Content>
+										<FontIcon Glyph="&#xeddb;" />
+									</Button.Content>
+								</Button>
+								<Button Grid.Column="3"
+										BorderThickness="1"
+										Margin="2,0,0,0"
+										Click="DecrementxOffset">
+									<Button.Content>
+										<FontIcon Glyph="&#xeddc;" />
+									</Button.Content>
+								</Button>
+							</Grid>
+						</GroupItem>
+
+						<!-- x Advance -->
+						<GroupItem Grid.Row="3"
+								   Grid.Column="2"
+								   Margin="0,10,0,0"
+								   VerticalAlignment="Top"
+								   IsEnabled="{x:Bind SelectedItem, Converter={StaticResource SelectedItemToBooleanConverter}, Mode=OneWay}">
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="1*" />
+									<ColumnDefinition Width="1*" />
+									<ColumnDefinition Width="Auto" />
+									<ColumnDefinition Width="Auto" />
+								</Grid.ColumnDefinitions>
+								<TextBlock Grid.Column="0"
+										   Text="x Advance"
+										   Margin="3"
+										   FontSize="14"
+										   VerticalAlignment="Center"
+										   HorizontalAlignment="Center" />
+								<TextBox Grid.Column="1"
+										 Text="{x:Bind SelectedItem.xAdvance, Mode=TwoWay}"
+										 FontSize="14"
+										 VerticalAlignment="Center"
+										 HorizontalAlignment="Stretch"
+										 TextChanged="xAdvanceChanged"
+										 InputScope="Number"
+										 IsReadOnly="True" />
+								<Button Grid.Column="2"
+										BorderThickness="1"
+										Margin="2,0,0,0"
+										Click="IncrementxAdvance">
+									<Button.Content>
+										<FontIcon Glyph="&#xeddb;" />
+									</Button.Content>
+								</Button>
+								<Button Grid.Column="3"
+										BorderThickness="1"
+										Margin="2,0,0,0"
+										Click="DecrementxAdvance">
+									<Button.Content>
+										<FontIcon Glyph="&#xeddc;" />
+									</Button.Content>
+								</Button>
+							</Grid>
+						</GroupItem>
 					</Grid>
 				</Border>
 			</Grid>

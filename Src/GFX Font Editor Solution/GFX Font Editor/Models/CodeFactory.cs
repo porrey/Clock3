@@ -25,12 +25,12 @@ namespace GfxFontEditor.Models
 {
 	public class CodeFactory
 	{
-		public CodeFactory(IEnumerable<Glyph> items)
+		public CodeFactory(FontFile fontFile)
 		{
-			this.Items = items;
+			this.FontFile = fontFile;
 		}
 
-		protected IEnumerable<Glyph> Items { get; set; }
+		protected FontFile FontFile { get; set; }
 
 		public Task<string> CreateSourceCode(string className)
 		{
@@ -69,6 +69,7 @@ namespace GfxFontEditor.Models
 			// *** Get the max length for proper spacing.
 			// ***
 			int maxGlyphLength = glyphs.Select(t => t.Value).Max(t => t.Length);
+			string useExtended = this.FontFile.ExtendedCharacters ? "1" : "0";
 
 			// ***
 			// *** Assemble the code.
@@ -77,7 +78,7 @@ namespace GfxFontEditor.Models
 			returnValue.AppendLine();
 			returnValue.AppendLine(header);
 			returnValue.AppendLine();
-			returnValue.AppendLine($"#define {className.ToUpper()}_USE_EXTENDED 0");
+			returnValue.AppendLine($"#define {className.ToUpper()}_USE_EXTENDED {useExtended}");
 			returnValue.AppendLine();
 			returnValue.AppendLine($"const uint8_t {className}Bitmaps[] PROGMEM =");
 			returnValue.AppendLine("{");
@@ -121,9 +122,9 @@ namespace GfxFontEditor.Models
 			returnValue.AppendLine("{");
 			returnValue.AppendLine($"\t(uint8_t*){className}Bitmaps,");
 			returnValue.AppendLine($"\t(GFXglyph*){className}Glyphs,");
-			returnValue.AppendLine($"\t0x{this.Items.Min(t => t.AsciiCode):x2}, /* First ASCII Character */");
-			returnValue.AppendLine($"\t0x{this.Items.Max(t => t.AsciiCode):x2}, /* Last ASCII Character */");
-			returnValue.AppendLine($"\t0x{(this.Items.Max(t => t.Height) + 2):x2} /* Vertical Spacing */");
+			returnValue.AppendLine($"\t0x{this.FontFile.Items.Min(t => t.AsciiCode):x2}, /* First ASCII Character */");
+			returnValue.AppendLine($"\t0x{this.FontFile.Items.Max(t => t.AsciiCode):x2}, /* Last ASCII Character */");
+			returnValue.AppendLine($"\t0x{(this.FontFile.FontHeight):x2}  /* Vertical Spacing */");
 			returnValue.AppendLine("};");
 
 			return Task.FromResult(returnValue.ToString());
@@ -133,7 +134,7 @@ namespace GfxFontEditor.Models
 		{
 			IDictionary<int, string> returnValue = new Dictionary<int, string>();
 
-			foreach (Glyph item in this.Items.OrderBy(t => t.AsciiCode))
+			foreach (Glyph item in this.FontFile.Items.OrderBy(t => t.AsciiCode))
 			{
 				StringBuilder bitmap = new StringBuilder();
 
@@ -158,7 +159,7 @@ namespace GfxFontEditor.Models
 		{
 			IDictionary<int, string> returnValue = new Dictionary<int, string>();
 
-			foreach (Glyph item in this.Items)
+			foreach (Glyph item in this.FontFile.Items)
 			{
 				returnValue.Add(item.AsciiCode, $"{item.Display}");
 			}
@@ -168,7 +169,7 @@ namespace GfxFontEditor.Models
 
 		protected Glyph GetGlyph(int asciiCode)
 		{
-			return this.Items.OrderBy(t => t.AsciiCode).Where(t => t.AsciiCode == asciiCode).Single();
+			return this.FontFile.Items.OrderBy(t => t.AsciiCode).Where(t => t.AsciiCode == asciiCode).Single();
 		}
 
 		protected string CommaOrSpace<T>(IEnumerable<T> items, T item)

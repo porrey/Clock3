@@ -2,6 +2,14 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectView>ProjectFiles</ProjectView>
+    <Source>\\Mac\Home\Desktop\GfxFontEditor.png</Source>
+    <SmallTileSource>\\Mac\Home\Desktop\GfxFontEditor.png</SmallTileSource>
+    <MediumTileSource>\\Mac\Home\Desktop\GfxFontEditor.png</MediumTileSource>
+    <WideTileSource>\\Mac\Home\Desktop\GfxFontEditor.png</WideTileSource>
+    <LargeTileSource>\\Mac\Home\Desktop\GfxFontEditor.png</LargeTileSource>
+    <AppIconSource>\\Mac\Home\Desktop\GfxFontEditor.png</AppIconSource>
+    <SplashScreenSource>\\Mac\Home\Desktop\GfxFontEditor.png</SplashScreenSource>
+    <PackageLogoSource>\\Mac\Home\Desktop\GfxFontEditor.png</PackageLogoSource>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <UseSimulator>false</UseSimulator>

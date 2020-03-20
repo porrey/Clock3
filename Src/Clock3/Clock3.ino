@@ -238,7 +238,7 @@ void loop()
   // *** from the GPS data. We will update every hour
   // *** (3600 seconds).
   // ***
-  if (checkIfTimeForRtcUpdateFromGps(_lastGpsUpdate, _gps, _rtc, 3600))
+  if (updateRtcFromGps(_lastGpsUpdate, _gps, _rtc, 3600))
   {
     _lastGpsUpdate = _rtc.now();
     _gpsFix = true;
@@ -540,7 +540,7 @@ void updateAmPmDisplay(DateTime* now)
   _display.drawPixel(18, 5, pm ? 1 : 0);
 }
 
-bool checkIfTimeForRtcUpdateFromGps(DateTime lastGpsUpdate, const TinyGPS& gps, const RTC_DS1307& rtc, uint64_t updateInterval)
+bool updateRtcFromGps(DateTime lastGpsUpdate, const TinyGPS& gps, const RTC_DS1307& rtc, uint64_t updateInterval)
 {
   bool returnValue = false;
 

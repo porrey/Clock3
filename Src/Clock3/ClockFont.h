@@ -243,7 +243,7 @@ const GFXfont ClockFont PROGMEM =
 {
 	(uint8_t*)ClockFontBitmaps,
 	(GFXglyph*)ClockFontGlyphs,
-	0x20,
-	0x7e,
-	0x05
+	0x20, /* First ASCII Character */
+	0x7e, /* Last ASCII Character */
+	0x07  /* Vertical Spacing */
 };
