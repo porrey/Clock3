@@ -10,7 +10,7 @@ This firmware has been written from scratch using standard Arduino libraries.
 - A font was created for the clock that works with the GFX library.
 - Support for capturing time from a GPS has been added using the TinyGPS library. I'm using the [Adafruit Ultimate GPS Breakout - 66 channel w/10 Hz updates - Version 3](https://www.adafruit.com/product/746) in my clock. This code will work with any standard GPS.
 - The buttons are managed using the AceButton library. This library provides support for more than one event type on a button such as press, release, long press and repeated press. This allows the buttons to provide more creative capabilities.
-- The original TimerOne library has been kept for refreshing the display
+- The original TimerOne library has been kept for refreshing the display.
 
 # GFX Font Editor
 
