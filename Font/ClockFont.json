@@ -4,9 +4,9 @@
   "extendedCharacters": false,
   "description": "This is a 7 point font created for the Spikenzie Labs Solder:Time Desk Clock designed to be used with the new rewritten firmware called Clock3. See the source at https://github.com/porrey/Clock3.",
   "majorVersion": 1,
-  "minorVersion": 5,
+  "minorVersion": 9,
   "dateTimeCreated": "2020-03-17T22:45:23.9960077-05:00",
-  "lastModifiedDateTime": "2020-03-19T22:47:31.7677027-05:00",
+  "lastModifiedDateTime": "2020-03-20T18:34:42.1478656-05:00",
   "items": [
     {
       "key": " Space",
@@ -1054,7 +1054,7 @@
       "height": 1,
       "xAdvance": 3,
       "xOffset": 0,
-      "yOffset": -4,
+      "yOffset": -2,
       "fontBitmap": [
         224
       ]
@@ -1065,12 +1065,12 @@
       "bitmapOffset": 283,
       "width": 8,
       "height": 2,
-      "xAdvance": 4,
+      "xAdvance": 3,
       "xOffset": 0,
       "yOffset": -6,
       "fontBitmap": [
-        64,
-        32
+        128,
+        64
       ]
     },
     {
@@ -1268,7 +1268,7 @@
       "xOffset": 0,
       "yOffset": -6,
       "fontBitmap": [
-        128,
+        192,
         64,
         64,
         64,
@@ -1280,12 +1280,13 @@
       "asciiCode": 109,
       "bitmapOffset": 343,
       "width": 8,
-      "height": 3,
+      "height": 4,
       "xAdvance": 6,
       "xOffset": 0,
-      "yOffset": -4,
+      "yOffset": -5,
       "fontBitmap": [
-        80,
+        136,
+        216,
         168,
         136
       ]
@@ -1293,7 +1294,7 @@
     {
       "key": "n",
       "asciiCode": 110,
-      "bitmapOffset": 346,
+      "bitmapOffset": 347,
       "width": 8,
       "height": 4,
       "xAdvance": 4,
@@ -1309,7 +1310,7 @@
     {
       "key": "o",
       "asciiCode": 111,
-      "bitmapOffset": 350,
+      "bitmapOffset": 351,
       "width": 8,
       "height": 3,
       "xAdvance": 4,
@@ -1324,7 +1325,7 @@
     {
       "key": "p",
       "asciiCode": 112,
-      "bitmapOffset": 353,
+      "bitmapOffset": 354,
       "width": 8,
       "height": 5,
       "xAdvance": 4,
@@ -1341,7 +1342,7 @@
     {
       "key": "q",
       "asciiCode": 113,
-      "bitmapOffset": 358,
+      "bitmapOffset": 359,
       "width": 8,
       "height": 5,
       "xAdvance": 4,
@@ -1358,7 +1359,7 @@
     {
       "key": "r",
       "asciiCode": 114,
-      "bitmapOffset": 363,
+      "bitmapOffset": 364,
       "width": 8,
       "height": 4,
       "xAdvance": 4,
@@ -1374,31 +1375,32 @@
     {
       "key": "s",
       "asciiCode": 115,
-      "bitmapOffset": 367,
+      "bitmapOffset": 368,
       "width": 8,
       "height": 4,
-      "xAdvance": 4,
+      "xAdvance": 3,
       "xOffset": 0,
       "yOffset": -5,
       "fontBitmap": [
-        96,
         192,
-        32,
+        128,
+        64,
         192
       ]
     },
     {
       "key": "t",
       "asciiCode": 116,
-      "bitmapOffset": 371,
+      "bitmapOffset": 372,
       "width": 8,
-      "height": 4,
+      "height": 5,
       "xAdvance": 4,
       "xOffset": 0,
-      "yOffset": -5,
+      "yOffset": -6,
       "fontBitmap": [
         64,
         224,
+        64,
         64,
         96
       ]
@@ -1406,7 +1408,7 @@
     {
       "key": "u",
       "asciiCode": 117,
-      "bitmapOffset": 375,
+      "bitmapOffset": 377,
       "width": 8,
       "height": 3,
       "xAdvance": 4,
@@ -1421,7 +1423,7 @@
     {
       "key": "v",
       "asciiCode": 118,
-      "bitmapOffset": 378,
+      "bitmapOffset": 380,
       "width": 8,
       "height": 3,
       "xAdvance": 4,
@@ -1436,7 +1438,7 @@
     {
       "key": "w",
       "asciiCode": 119,
-      "bitmapOffset": 381,
+      "bitmapOffset": 383,
       "width": 8,
       "height": 3,
       "xAdvance": 6,
@@ -1451,7 +1453,7 @@
     {
       "key": "x",
       "asciiCode": 120,
-      "bitmapOffset": 384,
+      "bitmapOffset": 386,
       "width": 8,
       "height": 3,
       "xAdvance": 4,
@@ -1466,7 +1468,7 @@
     {
       "key": "y",
       "asciiCode": 121,
-      "bitmapOffset": 387,
+      "bitmapOffset": 389,
       "width": 8,
       "height": 4,
       "xAdvance": 4,
@@ -1482,7 +1484,7 @@
     {
       "key": "z",
       "asciiCode": 122,
-      "bitmapOffset": 391,
+      "bitmapOffset": 393,
       "width": 8,
       "height": 4,
       "xAdvance": 4,
@@ -1498,7 +1500,7 @@
     {
       "key": "{",
       "asciiCode": 123,
-      "bitmapOffset": 395,
+      "bitmapOffset": 397,
       "width": 8,
       "height": 5,
       "xAdvance": 4,
@@ -1515,24 +1517,24 @@
     {
       "key": "|",
       "asciiCode": 124,
-      "bitmapOffset": 400,
+      "bitmapOffset": 402,
       "width": 8,
       "height": 5,
-      "xAdvance": 3,
+      "xAdvance": 2,
       "xOffset": 0,
       "yOffset": -6,
       "fontBitmap": [
-        64,
-        64,
-        0,
-        64,
-        64
+        128,
+        128,
+        128,
+        128,
+        128
       ]
     },
     {
       "key": "}",
       "asciiCode": 125,
-      "bitmapOffset": 405,
+      "bitmapOffset": 407,
       "width": 8,
       "height": 5,
       "xAdvance": 4,
@@ -1549,7 +1551,7 @@
     {
       "key": "~",
       "asciiCode": 126,
-      "bitmapOffset": 410,
+      "bitmapOffset": 412,
       "width": 8,
       "height": 2,
       "xAdvance": 5,

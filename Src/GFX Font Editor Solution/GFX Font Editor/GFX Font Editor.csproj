@@ -120,6 +120,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\ItemsCountToBooleanConverter.cs" />
+    <Compile Include="Converters\CurrentFileToBooleanConverter.cs" />
     <Compile Include="Converters\SelectedItemToBooleanConverter.cs" />
     <Compile Include="Decorators\ObservableCollectionDecorator.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -210,9 +211,6 @@
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
-    </PackageReference>
-    <PackageReference Include="Telerik.UI.for.UniversalWindowsPlatform">
-      <Version>1.0.1.8</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />

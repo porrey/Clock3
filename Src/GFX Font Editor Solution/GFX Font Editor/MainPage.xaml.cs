@@ -36,18 +36,20 @@ namespace GfxFontEditor
 		public MainPage()
 		{
 			this.InitializeComponent();
-
-			//this.Items.Add(new Glyph() { Key = "A", BitmapOffset = 135, Width = 8, Height = 5, xAdvance = 4, xOffset = 0, yOffset = -5, FontBitmap = new List<byte>() { 0x40, 0xA0, 0xE0, 0xA0, 0xA0 } });
-			//this.Items.Add(new Glyph() { Key = "B", BitmapOffset = 140, Width = 8, Height = 5, xAdvance = 4, xOffset = 0, yOffset = -5, FontBitmap = new List<byte>() { 0xC0, 0xA0, 0xC0, 0xA0, 0xC0 } });
-			//this.Items.Add(new Glyph() { Key = "C", BitmapOffset = 145, Width = 8, Height = 5, xAdvance = 4, xOffset = 0, yOffset = -5, FontBitmap = new List<byte>() { 0x60, 0x80, 0x80, 0x80, 0x60 } });
-			//this.Items.Add(new Glyph() { Key = "D", BitmapOffset = 150, Width = 8, Height = 5, xAdvance = 4, xOffset = 0, yOffset = -5, FontBitmap = new List<byte>() { 0xC0, 0xA0, 0xA0, 0xA0, 0xC0 } });
-			//this.Items.Add(new Glyph() { Key = ":", BitmapOffset = 150, Width = 8, Height = 3, xAdvance = 2, xOffset = 0, yOffset = -4, FontBitmap = new List<byte>() { 0x80, 0x00, 0x80 } });
-
-			//string file = @"C:\Users\porrd0bl\Downloads\Adafruit-GFX-Library-master\Adafruit-GFX-Library-master\Fonts\TomThumb.h";
-			//string daata = File.ReadAllText(file);
 		}
 
-		public FontFile CurrentFile { get; set; }
+		private FontFile _currentFile = null;
+		public FontFile CurrentFile
+		{
+			get
+			{
+				return _currentFile;
+			}
+			set
+			{
+				this.SetProperty(ref _currentFile, value);
+			}
+		}
 
 		public ObservableCollection<Glyph> Items { get; } = new ObservableCollection<Glyph>();
 
@@ -542,6 +544,41 @@ namespace GfxFontEditor
 			{
 				this.SelectedItem.xAdvance--;
 			}
+		}
+
+		private void FontProperties(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void FontHeightChanged(object sender, TextChangedEventArgs e)
+		{
+
+		}
+
+		private void IncrementFontHeight(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void DecrementFontHeight(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void FontWidthChanged(object sender, TextChangedEventArgs e)
+		{
+
+		}
+
+		private void IncrementFontWidth(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void DecrementFontWidth(object sender, RoutedEventArgs e)
+		{
+
 		}
 	}
 }
