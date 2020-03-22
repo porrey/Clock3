@@ -31,17 +31,17 @@ void ClockLedMatrix::begin()
   // ***
   // *** Set the column select pins up for output.
   // ***
-  DECODER_REGISTER = (1 << DECODER_C) | (1 << DECODER_B) | (1 << DECODER_A);
+  DECODER_REGISTER = (DECODER_REGISTER & B11111111) | (BV(DECODER_C) | BV(DECODER_B) | BV(DECODER_A));
 
   // ***
-  // *** Set the row selection pins up for output.
+  // *** Set the row select pins up for output.
   // ***
-  ROW_REGISTER = (1 << ROW_7) | (1 << ROW_6) | (1 << ROW_5) | (1 << ROW_4) | (1 << ROW_3) | (1 << ROW_2) | (1 << ROW_1);
+  ROW_REGISTER = (ROW_REGISTER & B11111111) | (BV(ROW_7) | BV(ROW_6) | BV(ROW_5) | BV(ROW_4) | BV(ROW_3) | BV(ROW_2) | BV(ROW_1));
 
   // ***
   // *** Set the chip select pins up for output.
   // ***
-  CHIP_SELECT_REGISTER = (1 << CS_S2) | (1 << CS_S1);
+  CHIP_SELECT_REGISTER = (CHIP_SELECT_REGISTER & B11111111) | (BV(CS_S2) | BV(CS_S1));
 
   // ***
   // *** Reset the display matrix.
@@ -55,14 +55,13 @@ uint16_t ClockLedMatrix::refreshDelay()
 
   if (this->refreshMode == FULL_COLUMN)
   {
-    returnValue = 1000;
+    //returnValue = 1000;
+    returnValue = 300;
   }
   else
   {
     returnValue = 150;
   }
-
-  Serial.print("Refresh rate = "); Serial.println(returnValue);
 
   return returnValue;
 }
@@ -276,4 +275,60 @@ uint16_t ClockLedMatrix::getTextWidth(String text)
   }
 
   return returnValue;
+}
+
+void ClockLedMatrix::drawTextCentered(String text)
+{
+  this->reset();
+
+  // ***
+  // *** Calculate the width of the text. Remove the
+  // *** 1 pixel space at the end of the last character.
+  // ***
+  float textWidth = this->getTextWidth(text) - 1;
+
+  // ***
+  // *** Calculate the left position by dividing the difference
+  // *** between the screen width and the text width by 2.
+  // ***
+  float left = (this->width() - textWidth) / 2.0;
+
+  // ***
+  // *** Set the cursor at the calculated left position and the
+  // *** bottom of the display.
+  // ***
+  this->setCursor(left, this->height() - 1);
+
+  // ***
+  // *** Display the text.
+  // ***
+  this->print(text);
+}
+
+void ClockLedMatrix::testDisplay(uint16_t delayTime)
+{
+  // ***
+  // *** Loop through hours 1 to 24;
+  // ***
+  for (uint8_t hour = 1; hour <= 24; hour++)
+  {
+    bool pm = hour >= 12;
+    uint8_t h = hour > 12 ? hour - 12 : hour;
+
+    // ***
+    // *** Lop through minutes 0 to 59.
+    // **
+    for (uint8_t minute = 0; minute < 60; minute++)
+    {
+      char buffer[5];
+      sprintf(buffer, "%01d:%02d", h, minute);
+      String time = String(buffer);
+
+      this->reset();
+      this->drawTextCentered(time);
+      this->drawPixel(18, 5, pm ? 1 : 0);
+
+      delay(delayTime);
+    }
+  }
 }

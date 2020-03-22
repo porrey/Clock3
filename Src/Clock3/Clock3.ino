@@ -14,7 +14,6 @@
 // *** You should have received a copy of the GNU Lesser General Public License
 // *** along with this program. If not, see http://www.gnu.org/licenses/.
 // ***
-#include "Tests.h"
 #include "ClockMatrix.h"
 #include "ClockFont.h"
 #include <TimerOne.h>
@@ -32,16 +31,17 @@ using namespace ace_button;
 // *** EEPROM addresses for settings that need to be saved
 // *** when the clock is not powered on.
 // ***
-#define EEPROM_ADR_TZ   0
-#define EEPROM_ADR_DST  2
+#define EEPROM_ADR_INIT   0
+#define EEPROM_ADR_TZ     1
+#define EEPROM_ADR_DST    2
+#define INIT_VALUE     0xaa
 
 // ***
 // *** Define the serial port for displaying debug messages. When debugging
 // *** on an Arduino, this should be the standard Serial port. Note we specify
-// *** RX of 0 since we only send data and do not expect to receive any data.
+// *** RX of -1 since we only send data and do not expect to receive any data.
 // ***
-SoftwareSerial Debug(0, 7); // RX, TX
-//#define Debug Serial
+SoftwareSerial  Debug(-1, 7); // RX, TX
 
 // ***
 // *** Define the Serial port used by the GPS. For the clock this should be the standard
@@ -50,7 +50,6 @@ SoftwareSerial Debug(0, 7); // RX, TX
 // *** as long as the buttons are not connected (the mode and setup buttons use these pins).
 // ***
 #define GpsSerial Serial
-//SoftwareSerial GpsSerial(2, 3); // RX, TX
 
 // ***
 // *** An instance of the TinyGPS interface.
@@ -61,8 +60,9 @@ TinyGPS _gps;
 // *** Create an instance of the Clock LED Display Matrix that is part
 // *** of the Spikenzielabs clock kit found at
 // *** https://www.spikenzielabs.com/Catalog/watches-clocks/solder-time-desk-clock.
+// ***
 // *** Although the use INDIVIDUAL_LED mode would look nicer, it requires so
-// *** much CPU time that it interferres with the serial port and stops the GPS
+// *** much CPU time that it interferes with the serial port and stops the GPS
 // *** from working. We will use FULL_COLUMN mode instead.
 // ***
 ClockLedMatrix _display = ClockLedMatrix(ClockLedMatrix::FULL_COLUMN);
@@ -76,12 +76,12 @@ RTC_DS1307 _rtc;
 // ***
 // *** The time zone offset.
 // ***
-int16_t _tz_offset = 0;
+int8_t _tz_offset = 0;
 
 // ***
 // ***
 // ***
-bool _isDst = true;
+bool _isDst = false;
 
 // ***
 // *** Tracks the last minute displayed so the display can
@@ -96,17 +96,20 @@ DateTime _lastGpsUpdate = DateTime(1900, 1, 1, 0, 0, 0);
 bool _gpsFix = false;
 
 // ***
-// *** Mode
+// *** Mode parameters.
 // ***
 bool _modeChanged = true;
 uint8_t _mode = 0;
 
-#define MODE_DISPLAY_TIME 0
-#define MODE_TZ 1
-#define MODE_DST 2
+#define MODE_DISPLAY_TIME       0
+#define MODE_TZ                 1
+#define MODE_DST                2
+#define MODE_BATTERY            3
+#define MODE_MAX                4
+#define MODE_DISPLAY_DELAY    650
 
 // ***
-// *** Setup
+// *** Indicates/triggers a setupvalue change.
 // ***
 bool _setupChanged = false;
 
@@ -126,7 +129,7 @@ void setup()
   // ***
   // *** Initialize the default serial port.
   // ***
-  Debug.begin(115200);
+  Debug.begin(57600);
   Debug.println(F("Serial has been initialized."));
 
   // ***
@@ -164,7 +167,7 @@ void setup()
   GpsSerial.println(PMTK_API_SET_FIX_CTL_1HZ); delay(250);
   GpsSerial.println(PMTK_SET_NMEA_OUTPUT_RMCGGA); delay(250);
   GpsSerial.println(PMTK_ENABLE_WAAS); delay(250);
-  GpsSerial.println(PGCMD_NOANTENNA); delay(250);
+  GpsSerial.println(PGCMD_ANTENNA); delay(250);
 
   // ***
   // *** Check the RTC.
@@ -181,8 +184,7 @@ void setup()
     // *** Read the date and time and display it
     // *** on the serial device.
     // ***
-    DateTime time = _rtc.now();
-    Debug.print(F("DateTime::TIMESTAMP_FULL: ")); Serial.println(time.timestamp(DateTime::TIMESTAMP_FULL));
+    debugDisplayDateTime(F("UTC Date/Time from RTC: "), _rtc.now());
   }
 
   // ***
@@ -215,10 +217,22 @@ void setup()
   _buttons[BUTTON_ID_SETUP].init(buttonConfig, SETUP_BUTTON, HIGH, BUTTON_ID_SETUP);
 
   // ***
-  // *** Restore time zone offset and DST values from EEPROM.
+  // *** Restore saved property values from EEPROM.
   // ***
-  EEPROM.get(EEPROM_ADR_TZ, _tz_offset);
-  EEPROM.get(EEPROM_ADR_DST, _isDst);
+  byte isInitialized = EEPROM.read(EEPROM_ADR_INIT);
+  Debug.print(F("isInitialized from EEPROM is ")); Debug.println(isInitialized);
+
+  if (isInitialized == INIT_VALUE)
+  {
+    _tz_offset = EEPROM.read(EEPROM_ADR_TZ); Debug.print(F("TZ Offset from EEPROM is ")); Debug.println(_tz_offset);
+    _isDst = EEPROM.read(EEPROM_ADR_DST); Debug.print(F("DST from EEPROM is ")); Debug.println(_isDst ? F("Yes") : F("No"));
+  }
+  else
+  {
+    EEPROM.write(EEPROM_ADR_INIT, INIT_VALUE);
+    _tz_offset = 0; Debug.print(F("TZ Offset has been initialized to ")); Debug.println(_tz_offset);
+    _isDst = false; Debug.print(F("DST has been initialized to ")); Debug.println(_isDst ? F("Yes") : F("No"));
+  }
 
   // ***
   // *** Power on display test.
@@ -228,7 +242,13 @@ void setup()
   // ***
   // *** Show version number.
   // ***
-  drawMomentaryTextCentered(_display, "clk 3", 2500, true);
+  drawMomentaryTextCentered(_display, F("clk 3"), 2500, true);
+
+  // ***
+  // *** This will cause the battery voltage to
+  // *** be written to the debug serial port.
+  // ***
+  batteryVoltage();
 
   // ***
   // *** Display a message indicating that setup has completed.
@@ -248,7 +268,7 @@ void loop()
   {
     _lastGpsUpdate = _rtc.now();
     _gpsFix = true;
-    Debug.println("GPS Fix = Yes");
+    Debug.println(F("GPS Fix = Yes"));
   }
 
   // ***
@@ -285,7 +305,7 @@ void loop()
         // ***
         if (_modeChanged)
         {
-          drawMomentaryTextCentered(_display, "TZ", 1000, true);
+          drawMomentaryTextCentered(_display, F("TZ"), MODE_DISPLAY_DELAY, true);
         }
 
         if (_modeChanged || _setupChanged)
@@ -301,12 +321,26 @@ void loop()
         // ***
         if (_modeChanged)
         {
-          drawMomentaryTextCentered(_display, "DST", 1000, true);
+          drawMomentaryTextCentered(_display, F("DST"), MODE_DISPLAY_DELAY, true);
         }
 
         if (_modeChanged || _setupChanged)
         {
           displayDst(_display, _isDst);
+        }
+      }
+      break;
+    case MODE_BATTERY:
+      {
+        if (_modeChanged)
+        {
+          drawMomentaryTextCentered(_display, F("BAT V"), MODE_DISPLAY_DELAY, true);
+        }
+
+        if (_modeChanged || _setupChanged)
+        {
+          float voltage = batteryVoltage();
+          displayBatteryVoltage(_display, voltage);
         }
       }
       break;
@@ -381,7 +415,7 @@ void buttonEventHandler(AceButton* button, uint8_t eventType, uint8_t state)
               // *** A long press of the mode button will cause the time
               // *** to update from the GPS.
               // ***
-              drawMomentaryTextCentered(_display, "GPS", 1500, true);
+              drawMomentaryTextCentered(_display, F("GPS"), 1500, true);
               _gpsFix = false;
               _lastGpsUpdate = DateTime(1900, 1, 1, 0, 0, 0);
               _modeChanged = true;
@@ -393,7 +427,7 @@ void buttonEventHandler(AceButton* button, uint8_t eventType, uint8_t state)
               // *** Increment the mode and set the mode
               // *** changed flag.
               // ***
-              _mode = (++_mode) % 3;
+              _mode = (++_mode) % MODE_MAX;
               _modeChanged = true;
               Debug.print(F("Mode = ")); Debug.println(_mode);
             }
@@ -420,16 +454,20 @@ void buttonEventHandler(AceButton* button, uint8_t eventType, uint8_t state)
                     // *** Save the value to EEPROM only
                     // *** when the button is released.
                     // ***
-                    EEPROM.put(EEPROM_ADR_TZ, _tz_offset);
+                    Debug.println(F("Saving TZ Offset to EEPROM."));
+                    EEPROM.write(EEPROM_ADR_TZ, _tz_offset);
                   }
+                  break;
                 case MODE_DST:
                   {
                     // ***
                     // *** Save the value to EEPROM only
                     // *** when the button is released.
                     // ***
-                    EEPROM.put(EEPROM_ADR_DST, _isDst);
+                    Debug.println(F("Saving DST to EEPROM."));
+                    EEPROM.write(EEPROM_ADR_DST, (byte)_isDst);
                   }
+                  break;
               }
             }
             break;
@@ -451,12 +489,15 @@ void buttonEventHandler(AceButton* button, uint8_t eventType, uint8_t state)
                       _tz_offset = -14;
                     }
 
+                    // ***
+                    // *** Trigger setup change.
+                    // ***
                     _setupChanged = true;
 
                     // ***
                     // *** Write the new value to the serial port.
                     // ***
-                    Debug.print(F("TZ = ")); Debug.println(_tz_offset);
+                    Debug.print(F("Changed TZ to ")); Debug.println(_tz_offset);
                   }
                   break;
                 case MODE_DST:
@@ -464,13 +505,22 @@ void buttonEventHandler(AceButton* button, uint8_t eventType, uint8_t state)
                     // ***
                     // *** Toggle the DST flag.
                     // ***
-                    _isDst = _isDst ? false : true;
+                    _isDst = !_isDst;
+
+                    // ***
+                    // *** Trigger setup change.
+                    // ***
                     _setupChanged = true;
 
                     // ***
                     // *** Write the new value to the serial port.
                     // ***
-                    Debug.print(F("DST = ")); Debug.println(_isDst);
+                    Debug.print(F("Changed DST to ")); Debug.println(_isDst ? "Yes" : "No");
+                  }
+                  break;
+                case MODE_BATTERY:
+                  {
+                    _setupChanged = true;
                   }
                   break;
               }
@@ -490,7 +540,7 @@ bool updateTimeDisplay(const ClockLedMatrix& display, const RTC_DS1307& rtc, int
 
   if (force | lastMinuteDisplayed != now.minute())
   {
-    Debug.print(F("RTC Date/Time: ")); Serial.println(now.timestamp(DateTime::TIMESTAMP_FULL));
+    debugDisplayDateTime("UTC Date/Time from RTC: ", now);
 
     // ***
     // *** Clear the display.
@@ -500,10 +550,10 @@ bool updateTimeDisplay(const ClockLedMatrix& display, const RTC_DS1307& rtc, int
     // ***
     // *** Adjust for the current time zone.
     // ***
-    Debug.print(F("Time Zone Offset: ")); Serial.println(tz_offset);
-    Debug.print(F("DST: ")); Serial.println(isDst ? F("Yes") : F("No"));
+    Debug.print(F("Time Zone Offset: ")); Debug.println(tz_offset);
+    Debug.print(F("DST: ")); Debug.println(isDst ? F("Yes") : F("No"));
     DateTime localNow = DateTime(now.unixtime() + (tz_offset * 3600) + (isDst ? 3600 : 0));
-    Debug.print(F("Local Date/Time: ")); Serial.println(localNow.timestamp(DateTime::TIMESTAMP_FULL));
+    debugDisplayDateTime("Local Date/Time from RTC: ", localNow);
 
     // ***
     // *** Get a string version of the time.
@@ -514,7 +564,7 @@ bool updateTimeDisplay(const ClockLedMatrix& display, const RTC_DS1307& rtc, int
     // ***
     // *** Update the time on the display.
     // ***
-    drawTextCentered(display, time);
+    display.drawTextCentered(time);
 
     // ***
     // *** Update the AM/PM mark on the display.
@@ -578,6 +628,9 @@ bool updateRtcFromGps(DateTime lastGpsUpdate, const TinyGPS& gps, const RTC_DS13
   return returnValue;
 }
 
+// ***
+// *** Called by the timer.
+// ***
 void refreshDisplay()
 {
   // ***
@@ -635,7 +688,7 @@ bool setDateAndTimeFromGps(const TinyGPS& gps, const RTC_DS1307& rtc)
     // *** Create  UTC date and time instance.
     // ***
     DateTime dt = DateTime(year, month, day, hour, minute, second);
-    Debug.print(F("GPS/UTC Date/Time: ")); Serial.println(dt.timestamp(DateTime::TIMESTAMP_FULL));
+    debugDisplayDateTime(F("UTC Date/Time from GPS: "), dt);
 
     // ***
     // *** Set the time on the RTC.
@@ -668,11 +721,31 @@ String dateTimeToTimeString(DateTime* now)
   return String(buffer);
 }
 
+void displayBatteryVoltage(const ClockLedMatrix& display, float voltage)
+{
+  // ***
+  // *** Convert the float value to a string.
+  // ***
+  char buffer[3];
+  dtostrf(voltage, 3, 1, buffer);
+
+  // ***
+  // *** Format the string for display.
+  // ***
+  char str[4];
+  sprintf(str, "%sv", buffer);
+
+  // ***
+  // *** Display the string.
+  // ***
+  display.drawTextCentered(String(str));
+}
+
 void displayOffset(const ClockLedMatrix& display, int16_t tz_offset)
 {
   char buffer[3];
   sprintf(buffer, "%d", tz_offset);
-  drawTextCentered(display, String(buffer));
+  display.drawTextCentered(String(buffer));
 }
 
 void displayDst(const ClockLedMatrix& display, bool isDst)
@@ -683,35 +756,7 @@ void displayDst(const ClockLedMatrix& display, bool isDst)
   // ***
   // *** Update the time on the display.
   // ***
-  drawTextCentered(display, String(buffer));
-}
-
-void drawTextCentered(const ClockLedMatrix& display, String text)
-{
-  display.reset();
-
-  // ***
-  // *** Calculate the width of the text. Remove the
-  // *** 1 pixel space at the end of the last character.
-  // ***
-  float textWidth = display.getTextWidth(text) - 1;
-
-  // ***
-  // *** Calculate the left position by dividing the difference
-  // *** between the screen width and the text width by 2.
-  // ***
-  float left = (display.width() - textWidth) / 2.0;
-
-  // ***
-  // *** Set the cursor at the calculated left position and the
-  // *** bottom of the display.
-  // ***
-  display.setCursor(left, display.height() - 1);
-
-  // ***
-  // *** Display the text.
-  // ***
-  display.print(text);
+  display.drawTextCentered(String(buffer));
 }
 
 void drawMomentaryTextCentered(const ClockLedMatrix& display, String text, uint64_t displayTime, bool resetAfter)
@@ -719,7 +764,7 @@ void drawMomentaryTextCentered(const ClockLedMatrix& display, String text, uint6
   // ***
   // *** Draw the text centered.
   // ***
-  drawTextCentered(display, text);
+  display.drawTextCentered(text);
 
   // ***
   // *** Use smart delay to twait the specified
@@ -734,4 +779,24 @@ void drawMomentaryTextCentered(const ClockLedMatrix& display, String text, uint6
   {
     display.reset();
   }
+}
+
+void debugDisplayDateTime(String label, DateTime dt)
+{
+  char buffer[] = "MM-DD-YYYY hh:mm:ss";
+  Debug.print(label); Debug.println(dt.toString(buffer));
+}
+
+float batteryVoltage()
+{
+  float returnValue = 0.0;
+
+  // ***
+  // *** Get the GPS battery voltage.
+  // ***
+  uint16_t value = analogRead(A0);
+  returnValue = 0.0049 * value;
+  Debug.print("GPS Battery = "); Debug.print(returnValue); Debug.println("v");
+
+  return returnValue;
 }
