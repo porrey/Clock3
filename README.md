@@ -1,7 +1,7 @@
 # Clock3
 New firmware for the Spikenzie Labs Solder:Time Desk Clock ([https://www.spikenzielabs.com/Catalog/watches-clocks/solder-time-desk-clock](https://www.spikenzielabs.com/Catalog/watches-clocks/solder-time-desk-clock)).
 
-![Clock](https://github.com/porrey/Clock3/raw/master/Images/Clock.jpg)
+![Clock](https://github.com/porrey/Clock3/raw/master/Images/Clock-small.jpg)
 
 This firmware has been written from scratch using standard Arduino libraries. In doing this, I'm hoping this firmware makes it easier to allow other developers and makers to customize thier own clock.
 
