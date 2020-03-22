@@ -3,7 +3,7 @@ New firmware for the Spikenzie Labs Solder:Time Desk Clock ([https://www.spikenz
 
 ![Clock](https://github.com/porrey/Clock3/raw/master/Images/Clock.jpg)
 
-This firmware has been written from scratch using standard Arduino libraries.
+This firmware has been written from scratch using standard Arduino libraries. In doing this, I'm hoping this firmware makes it easier to allow other developers and makers to customize thier own clock.
 
 - A driver has been created for the LED matrix, so it is compatible with the Adafruit GXF library.
 - The Adafruit RTCLib library has been used for the DS1337 RTC.
