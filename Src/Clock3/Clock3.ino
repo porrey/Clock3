@@ -1,30 +1,31 @@
 // ***
 // *** Copyright(C) 2020, Daniel M. Porrey. All rights reserved.
-// *** 
+// ***
 // *** This program is free software: you can redistribute it and/or modify
 // *** it under the terms of the GNU Lesser General Public License as published
 // *** by the Free Software Foundation, either version 3 of the License, or
 // *** (at your option) any later version.
-// *** 
+// ***
 // *** This program is distributed in the hope that it will be useful,
 // *** but WITHOUT ANY WARRANTY; without even the implied warranty of
 // *** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // *** GNU Lesser General Public License for more details.
-// *** 
+// ***
 // *** You should have received a copy of the GNU Lesser General Public License
 // *** along with this program. If not, see http://www.gnu.org/licenses/.
 // ***
 #include "Tests.h"
 #include "ClockMatrix.h"
 #include "ClockFont.h"
-#include "TimerOne.h"
+#include <TimerOne.h>
 #include <Wire.h>
 #include <RTClib.h>
 #include <SoftwareSerial.h>
 #include <TinyGPS.h>
-#include "Gps.h"
 #include <EEPROM.h>
 #include <AceButton.h>
+#include "Gps.h"
+
 using namespace ace_button;
 
 // ***
@@ -75,7 +76,7 @@ RTC_DS1307 _rtc;
 // ***
 // *** The time zone offset.
 // ***
-int16_t _tz_offset = -6;
+int16_t _tz_offset = 0;
 
 // ***
 // ***
@@ -110,11 +111,14 @@ uint8_t _mode = 0;
 bool _setupChanged = false;
 
 // ***
+// *** Define the IDs for the the mode and setup buttons.
+// ***
+#define BUTTON_ID_MODE 0
+#define BUTTON_ID_SETUP 1
+
+// ***
 // *** Create button objects for the mode and setup buttons.
 // ***
-#define MODE_BUTTON_ID 0
-#define SETUP_BUTTON_ID 1
-
 AceButton _buttons[2];
 
 void setup()
@@ -151,17 +155,9 @@ void setup()
   Debug.println(F("The display has been initialized."));
 
   // ***
-  // *** Set up the timer for display refresh. Use the recommended
-  // *** values based on refresh mode.
-  // ***
-  Timer1.initialize(_display.refreshDelay());
-  Timer1.attachInterrupt(refreshDisplay);
-
-  // ***
   // *** Initialize the GPS.
   // ***
   GpsSerial.begin(9600);
-
 
   GpsSerial.println(PMTK_SET_BAUD_9600); delay(250);
   GpsSerial.println(PMTK_SET_NMEA_UPDATE_200_MILLIHERTZ); delay(250);
@@ -196,6 +192,13 @@ void setup()
   pinMode(SETUP_BUTTON, INPUT_PULLUP);
 
   // ***
+  // *** Set up the timer for display refresh. Use the recommended
+  // *** values based on refresh mode.
+  // ***
+  Timer1.initialize(_display.refreshDelay());
+  Timer1.attachInterrupt(refreshDisplay);
+
+  // ***
   // *** Configure the ButtonConfig with the event handler and
   // *** and the required features.
   // ***
@@ -208,8 +211,8 @@ void setup()
   // ***
   // *** Initialize the buttons.
   // ***
-  _buttons[MODE_BUTTON_ID].init(buttonConfig, MODE_BUTTON, HIGH, MODE_BUTTON_ID);
-  _buttons[SETUP_BUTTON_ID].init(buttonConfig, SETUP_BUTTON, HIGH, SETUP_BUTTON_ID);
+  _buttons[BUTTON_ID_MODE].init(buttonConfig, MODE_BUTTON, HIGH, BUTTON_ID_MODE);
+  _buttons[BUTTON_ID_SETUP].init(buttonConfig, SETUP_BUTTON, HIGH, BUTTON_ID_SETUP);
 
   // ***
   // *** Restore time zone offset and DST values from EEPROM.
@@ -225,8 +228,11 @@ void setup()
   // ***
   // *** Show version number.
   // ***
-  drawMomentaryTextCentered(_display, "clk 3", 2000, true);
+  drawMomentaryTextCentered(_display, "clk 3", 2500, true);
 
+  // ***
+  // *** Display a message indicating that setup has completed.
+  // ***
   Debug.println(F("Setup completed."));
   Debug.println(F(""));
 }
@@ -350,8 +356,8 @@ void smartDelay(uint64_t delayTime)
     // ***
     // *** Check the buttons to update their state.
     // ***
-    _buttons[MODE_BUTTON_ID].check();
-    _buttons[SETUP_BUTTON_ID].check();
+    _buttons[BUTTON_ID_MODE].check();
+    _buttons[BUTTON_ID_SETUP].check();
 
   } while (millis() - start < delayTime);
 }
@@ -365,7 +371,7 @@ void buttonEventHandler(AceButton* button, uint8_t eventType, uint8_t state)
 
   switch (id)
   {
-    case MODE_BUTTON_ID:
+    case BUTTON_ID_MODE:
       {
         switch (eventType)
         {
@@ -375,7 +381,6 @@ void buttonEventHandler(AceButton* button, uint8_t eventType, uint8_t state)
               // *** A long press of the mode button will cause the time
               // *** to update from the GPS.
               // ***
-              Debug.println(F("GPS"));
               drawMomentaryTextCentered(_display, "GPS", 1500, true);
               _gpsFix = false;
               _lastGpsUpdate = DateTime(1900, 1, 1, 0, 0, 0);
@@ -396,7 +401,7 @@ void buttonEventHandler(AceButton* button, uint8_t eventType, uint8_t state)
         }
       }
       break;
-    case SETUP_BUTTON_ID:
+    case BUTTON_ID_SETUP:
       {
         switch (eventType)
         {
@@ -412,7 +417,7 @@ void buttonEventHandler(AceButton* button, uint8_t eventType, uint8_t state)
                 case MODE_TZ:
                   {
                     // ***
-                    // *** Save the value to EEPROM only 
+                    // *** Save the value to EEPROM only
                     // *** when the button is released.
                     // ***
                     EEPROM.put(EEPROM_ADR_TZ, _tz_offset);
@@ -420,7 +425,7 @@ void buttonEventHandler(AceButton* button, uint8_t eventType, uint8_t state)
                 case MODE_DST:
                   {
                     // ***
-                    // *** Save the value to EEPROM only 
+                    // *** Save the value to EEPROM only
                     // *** when the button is released.
                     // ***
                     EEPROM.put(EEPROM_ADR_DST, _isDst);
@@ -447,6 +452,10 @@ void buttonEventHandler(AceButton* button, uint8_t eventType, uint8_t state)
                     }
 
                     _setupChanged = true;
+
+                    // ***
+                    // *** Write the new value to the serial port.
+                    // ***
                     Debug.print(F("TZ = ")); Debug.println(_tz_offset);
                   }
                   break;
@@ -455,8 +464,12 @@ void buttonEventHandler(AceButton* button, uint8_t eventType, uint8_t state)
                     // ***
                     // *** Toggle the DST flag.
                     // ***
-                    _isDst = !_isDst;
+                    _isDst = _isDst ? false : true;
                     _setupChanged = true;
+
+                    // ***
+                    // *** Write the new value to the serial port.
+                    // ***
                     Debug.print(F("DST = ")); Debug.println(_isDst);
                   }
                   break;
@@ -657,9 +670,9 @@ String dateTimeToTimeString(DateTime* now)
 
 void displayOffset(const ClockLedMatrix& display, int16_t tz_offset)
 {
-  display.reset();
-  display.setCursor(0, 6);
-  display.println(tz_offset);
+  char buffer[3];
+  sprintf(buffer, "%d", tz_offset);
+  drawTextCentered(display, String(buffer));
 }
 
 void displayDst(const ClockLedMatrix& display, bool isDst)
@@ -678,21 +691,45 @@ void drawTextCentered(const ClockLedMatrix& display, String text)
   display.reset();
 
   // ***
-  // *** Calculate the width and left position.
+  // *** Calculate the width of the text. Remove the
+  // *** 1 pixel space at the end of the last character.
   // ***
-  int len = text.length();
-  int width = len * 3;
-  int16_t left = ((int16_t)((display.width() - width) / 2.0)) - 1;
+  float textWidth = display.getTextWidth(text) - 1;
+
+  // ***
+  // *** Calculate the left position by dividing the difference
+  // *** between the screen width and the text width by 2.
+  // ***
+  float left = (display.width() - textWidth) / 2.0;
+
+  // ***
+  // *** Set the cursor at the calculated left position and the
+  // *** bottom of the display.
+  // ***
   display.setCursor(left, display.height() - 1);
-  display.println(text);
+
+  // ***
+  // *** Display the text.
+  // ***
+  display.print(text);
 }
 
 void drawMomentaryTextCentered(const ClockLedMatrix& display, String text, uint64_t displayTime, bool resetAfter)
 {
+  // ***
+  // *** Draw the text centered.
+  // ***
   drawTextCentered(display, text);
 
-  delay(displayTime);
+  // ***
+  // *** Use smart delay to twait the specified
+  // *** amount of time.
+  // ***
+  smartDelay(displayTime);
 
+  // ***
+  // *** Clear the display if specified.
+  // ***
   if (resetAfter)
   {
     display.reset();

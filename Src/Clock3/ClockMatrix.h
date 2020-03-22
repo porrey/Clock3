@@ -21,6 +21,33 @@
 #include <Adafruit_GFX.h>
 #include "MyPins.h"
 #include "Bitwise.h"
+#include "gfxfont.h"
+
+// **************************************************************************** //
+// ******************** Borrowed from Adafruit GFX library ******************** //
+// Pointers are a peculiar case...typically 16-bit on AVR boards,
+// 32 bits elsewhere.  Try to accommodate both...
+
+#if !defined(__INT_MAX__) || (__INT_MAX__ > 0xFFFF)
+#define pgm_read_pointer(addr) ((void *)pgm_read_dword(addr))
+#else
+#define pgm_read_pointer(addr) ((void *)pgm_read_word(addr))
+#endif
+
+inline GFXglyph *pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c) {
+#ifdef __AVR__
+  return &(((GFXglyph *)pgm_read_pointer(&gfxFont->glyph))[c]);
+#else
+  // expression in __AVR__ section may generate "dereferencing type-punned
+  // pointer will break strict-aliasing rules" warning In fact, on other
+  // platforms (such as STM32) there is no need to do this pointer magic as
+  // program memory may be read in a usual way So expression may be simplified
+  return gfxFont->glyph + c;
+#endif //__AVR__
+}
+// **************************************************************************** //
+// **************************************************************************** //
+
 
 // ***
 // *** This device is fixed at 7 rows and 20 columns.
@@ -93,7 +120,12 @@ class ClockLedMatrix : public Adafruit_GFX
     // ***
     // ***
     void reset();
-
+    
+    // ***
+    // *** Get the width of text for this display.
+    // ***
+    uint16_t getTextWidth(String text);
+    
   protected:
     // ***
     // *** Each byte is used to represent the rows for the given column (the

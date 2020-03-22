@@ -1,16 +1,16 @@
 // ***
 // *** Copyright(C) 2020, Daniel M. Porrey. All rights reserved.
-// *** 
+// ***
 // *** This program is free software: you can redistribute it and/or modify
 // *** it under the terms of the GNU Lesser General Public License as published
 // *** by the Free Software Foundation, either version 3 of the License, or
 // *** (at your option) any later version.
-// *** 
+// ***
 // *** This program is distributed in the hope that it will be useful,
 // *** but WITHOUT ANY WARRANTY; without even the implied warranty of
 // *** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // *** GNU Lesser General Public License for more details.
-// *** 
+// ***
 // *** You should have received a copy of the GNU Lesser General Public License
 // *** along with this program. If not, see http://www.gnu.org/licenses/.
 // ***
@@ -61,6 +61,9 @@ uint16_t ClockLedMatrix::refreshDelay()
   {
     returnValue = 150;
   }
+
+  Serial.print("Refresh rate = "); Serial.println(returnValue);
+
   return returnValue;
 }
 
@@ -245,4 +248,32 @@ void ClockLedMatrix::refresh()
     // ***
     this->drawLed(this->_currentColumn, this->_currentRow);
   }
+}
+
+uint16_t ClockLedMatrix::getTextWidth(String text)
+{
+  // ***
+  // *** Since this display is one line onyl and is using a
+  // *** specially designed font. This is a simplified calculation
+  // *** that only uses the xAdvance value in each character
+  // *** to determine width.
+  // ***
+  uint16_t returnValue = 0;
+
+  uint8_t first = pgm_read_byte(&gfxFont->first);
+  uint8_t last = pgm_read_byte(&gfxFont->last);
+  char c;
+  const char *str = const_cast<char *>(text.c_str());
+
+  while ((c = *str++))
+  {
+    if ((c >= first) && (c <= last))
+    {
+      GFXglyph *glyph = pgm_read_glyph_ptr(gfxFont, c - first);
+      uint8_t xa = pgm_read_byte(&glyph->xAdvance);
+      returnValue += xa;
+    }
+  }
+
+  return returnValue;
 }
