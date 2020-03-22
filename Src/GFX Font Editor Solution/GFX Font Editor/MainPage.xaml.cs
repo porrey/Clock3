@@ -179,7 +179,7 @@ namespace GfxFontEditor
 				{
 					if (i >= topRow && i <= bottomRow)
 					{
-						int byteIndex = i - (fontFile.FontHeight + glyph.yOffset);
+						int byteIndex = i - (fontFile.FontHeight + glyph.yOffset - 1);
 
 						if (byteIndex >= 0 && byteIndex < glyph.FontBitmap.Count())
 						{
@@ -222,7 +222,7 @@ namespace GfxFontEditor
 			// *** character would be drawn.
 			// ***
 			baseline = fontFile.FontHeight - 1;
-			topRow = baseline + glyph.yOffset + 1;
+			topRow = baseline + glyph.yOffset;
 			bottomRow = topRow + glyph.Height - 1;
 
 			return (baseline, topRow, bottomRow);
@@ -412,11 +412,9 @@ namespace GfxFontEditor
 
 			if (glyph != null)
 			{
-				int baseline = fontFile.FontHeight - 1;
-				int top = baseline + glyph.yOffset + 1;
-				int bottom = top + glyph.Height - 1;
+				(int baseline, int topRow, int bottomRow) = this.GetGlyphParameters(fontFile, glyph);
 
-				for (int row = top; row <= bottom; row++)
+				for (int row = topRow; row <= bottomRow; row++)
 				{
 					byte b = 0;
 
