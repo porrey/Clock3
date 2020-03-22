@@ -4,9 +4,9 @@
   "extendedCharacters": false,
   "description": "This is a 7 point font created for the Spikenzie Labs Solder:Time Desk Clock designed to be used with the new rewritten firmware called Clock3. See the source at https://github.com/porrey/Clock3.",
   "majorVersion": 1,
-  "minorVersion": 17,
+  "minorVersion": 19,
   "dateTimeCreated": "2020-03-17T22:45:23.9960077-05:00",
-  "lastModifiedDateTime": "2020-03-21T20:45:30.2185896-05:00",
+  "lastModifiedDateTime": "2020-03-22T09:15:16.6378686-05:00",
   "items": [
     {
       "key": " Space",

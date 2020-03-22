@@ -21,8 +21,8 @@ This font was generated from GFX Font Editor.
 
 Font Name:		ClockFont
 Date Created:	Tuesday, March 17, 2020 10:45 PM
-Last Modified:	Saturday, March 21, 2020 8:45 PM
-Version:		1.17
+Last Modified:	Sunday, March 22, 2020 9:15 AM
+Version:		1.19
 License:		LGPL-3.0
 
 https://github.com/porrey/Clock3
