@@ -18,8 +18,8 @@
 #define BITWISE_H
 
 #define BV(bit) (1 << (bit))
-#define setBit(byte, bit) (byte |= BV(bit))
-#define clearBit(byte, bit) (byte &= ~BV(bit))
-#define toggleBit(byte, bit) (byte ^= BV(bit))
+#define SET_BIT(byte, bit) (byte |= BV(bit))
+#define CLEAR_BIT(byte, bit) (byte &= ~BV(bit))
+#define TOGGLE_BIT(byte, bit) (byte ^= BV(bit))
 
 #endif
