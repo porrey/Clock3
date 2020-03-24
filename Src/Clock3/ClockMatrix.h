@@ -48,6 +48,21 @@ inline GFXglyph *pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c) {
 // **************************************************************************** //
 // **************************************************************************** //
 
+// ***
+// *** Define the default refresh interval in microseconds. 50 seems
+// *** to be the sweet spot.
+// ***
+#define DEFAULT_REFRESH_RATE 50
+
+// ***
+// *** Define the compensation delay per bit in microseconds.
+// ***
+#define COMP_DELAY_PER_BIT 100
+
+// ***
+// *** The maximum delay to apply when brigtness is 0.
+// ***
+#define MAX_PWM_DELAY 500
 
 // ***
 // *** This device is fixed at 7 rows and 20 columns.
@@ -59,33 +74,9 @@ class ClockLedMatrix : public Adafruit_GFX
 {
   public:
     // ***
-    // *** Specifies how the display is refreshed.
-    // ***
-    enum RefreshMode
-    {
-      // ***
-      // *** FULL_COLUMN mode updates the display
-      // *** a full column at a time. This mode is faster and can use a lower refresh rate
-      // *** but individual LED brightness can vary depending onhow many LEDs are on in a
-      // *** given column.
-      // ***
-      FULL_COLUMN  = 0,
-      // ***
-      // *** INDIVIDUAL_LED mode is slower and requires a higher refresh rate
-      // *** but results in consistent LED brightness.
-      // ***
-      INDIVIDUAL_LED = 1
-    };
-
-    // ***
     // *** Create a default instance.
     // ***
     ClockLedMatrix();
-
-    // ***
-    // *** Crate an instance with the specified refresh mode.
-    // ***
-    ClockLedMatrix(RefreshMode refreshMode);
 
     // ***
     // *** Initialize the display.
@@ -93,19 +84,16 @@ class ClockLedMatrix : public Adafruit_GFX
     void begin();
 
     // ***
+    // *** Get/set the refresh of the display.
+    // ***
+    uint8_t getRefreshRate();
+    void setRefreshRate(uint8_t);
+
+    // ***
     // *** Implements drawPixel for this display enabling all of the GFX
     // *** capabilities.
     // ***
-    void drawPixel(int16_t x, int16_t y, uint16_t color);
-
-    // ***
-    // *** Indicates how the display is refreshed. FULL_COLUMN mode updates the display
-    // *** a full column at a time. This mode is faster and can use a lower refresh rate
-    // *** but individual LED brightness can vary depending onhow many LEDs are on in a
-    // *** given column. INDIVIDUAL_LED mode is slower and requires a higher refresh rate
-    // *** but results in consistent LED brightness.
-    // ***
-    RefreshMode refreshMode;
+    void drawPixel(int16_t, int16_t, uint16_t);
 
     // ***
     // *** Performs a single LED write. In FULL_COLUMN mode this will turn
@@ -117,9 +105,9 @@ class ClockLedMatrix : public Adafruit_GFX
     void refresh();
 
     // ***
-    // *** Gets the recommned time between refreshes based on the selected mode.
+    // *** Gets the recommended time between refreshes based on the selected mode.
     // ***
-    uint16_t refreshDelay();
+    uint32_t getRefreshDelay();
 
     // ***
     // *** Resets and clears the entire display.
@@ -127,21 +115,38 @@ class ClockLedMatrix : public Adafruit_GFX
     void reset();
 
     // ***
+    // *** Clears the rows and columns by settign all colos to 0.
+    // ***
+    void clear();
+
+    // ***
     // *** Get the width of text for this display.
     // ***
-    uint16_t getTextWidth(String text);
+    uint16_t getTextWidth(String);
 
     // ***
     // *** Draws a string centered on the display.
     // ***
-    void drawTextCentered(String text);
+    void drawTextCentered(String);
 
     // ***
     // *** This routine will lop through the time of day.
     // ***
-    void testDisplay(uint16_t delayTime);
+    void testDisplay(uint16_t);
 
   protected:
+    // ***
+    // *** This specifies the number of times per second the
+    // *** entire screen is refreshed.
+    // ***
+    uint8_t _refreshRate = DEFAULT_REFRESH_RATE;
+
+    // ***
+    // *** Number of microseconds of delay between each column draw to simulate
+    // *** the specified refresh rate. This is used by the external timer.
+    // ***
+    uint64_t _refreshDelay;
+
     // ***
     // *** Each byte is used to represent the rows for the given column (the
     // *** index of the array). eacg bit represents the row. The LSB is row 1,
@@ -163,14 +168,20 @@ class ClockLedMatrix : public Adafruit_GFX
     uint8_t _currentRow;
 
     // ***
-    // *** Draws the specified column where the bits rows determine
-    // *** which LEDs in the row are on.
+    // *** The amount of compensation needed for a particular column based on
+    // *** the number of LEDs in the column that are turned on.
     // ***
-    void drawColumn(uint8_t column, uint8_t rows);
+    uint64_t _compensationDelay[COLUMNS];
 
     // ***
-    // *** Draws the specified LED for the given column and row.
+    // *** Draws the specified column where the bits in the second
+    // *** paramter determine which LEDs in the row are on.
     // ***
-    void drawLed(uint8_t column, uint8_t row);
+    void drawColumn(uint8_t, uint8_t);
+
+    // ***
+    // *** Counts the number of bits that are '1'.
+    // ***
+    uint8_t getBitCount(uint8_t);
 };
 #endif

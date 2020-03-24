@@ -18,12 +18,9 @@
 
 ClockLedMatrix::ClockLedMatrix() : Adafruit_GFX(COLUMNS, ROWS)
 {
-  this->refreshMode = ClockLedMatrix::FULL_COLUMN;
-}
-
-ClockLedMatrix::ClockLedMatrix(RefreshMode refreshMode) : Adafruit_GFX(COLUMNS, ROWS)
-{
-  this->refreshMode = refreshMode;
+  this->setRefreshRate(DEFAULT_REFRESH_RATE);
+  this->setTextSize(1);
+  this->setTextWrap(false);
 }
 
 void ClockLedMatrix::begin()
@@ -49,74 +46,80 @@ void ClockLedMatrix::begin()
   this->reset();
 }
 
-uint16_t ClockLedMatrix::refreshDelay()
+uint8_t ClockLedMatrix::getRefreshRate()
 {
-  uint16_t returnValue = 0;
-
-  if (this->refreshMode == FULL_COLUMN)
-  {
-    //returnValue = 1000;
-    returnValue = 300;
-  }
-  else
-  {
-    returnValue = 150;
-  }
-
-  return returnValue;
+  return this->_refreshRate;
 }
 
-void ClockLedMatrix::drawPixel(int16_t x, int16_t y, uint16_t color)
+void ClockLedMatrix::setRefreshRate(uint8_t refreshRate)
+{
+  this->_refreshRate = refreshRate;
+
+  // ***
+  // *** Returns number of microseconds.
+  // ***
+  // *** 1. Refresh rate = x screen updates per second
+  // *** 2. Multiple refresh rate by number of columns to get columns per second.
+  // *** 3. Divide 1 by columns per second to get seconds per column
+  // *** 4. Multiple by 1000 to get milliseconds per column.
+  // *** 5. Multiple by 1000 to microseconds per column.
+  // ***
+  this->_refreshDelay = (uint64_t)(1.0 / ((float)this->_refreshRate * (float)this->width()) * 1000.0 * 1000.0);
+}
+
+uint32_t ClockLedMatrix::getRefreshDelay()
+{
+  return this->_refreshDelay;
+}
+
+void ClockLedMatrix::drawPixel(int16_t column, int16_t row, uint16_t color)
 {
   if (color == 0)
   {
-    clearBit(this->_matrixBuffer[x], y);
+    // ***
+    // *** Clear the bit for the given row.
+    // ***
+    CLEAR_BIT(this->_matrixBuffer[column], row);
   }
   else
   {
-    setBit(this->_matrixBuffer[x], y);
+    // ***
+    // *** Set the bit for the given row.
+    // ***
+    SET_BIT(this->_matrixBuffer[column], row);
+  }
+
+  // ***
+  // *** Calculate the column compensation delay.
+  // ***
+  if (this->_matrixBuffer[column] != 0)
+  {
+    // ***
+    // *** Get the count of bits that are set to 1 for the
+    // *** column y.
+    // ***
+    uint8_t bitCount = this->getBitCount(this->_matrixBuffer[column]);
+
+    // ***
+    // *** Compensate COMP_DELAY_PER_BIT microseconds
+    // *** per row NOT displayed.
+    // ***
+    uint64_t compensationDelay = (8 * COMP_DELAY_PER_BIT) - (COMP_DELAY_PER_BIT * bitCount);
+
+    // ***
+    // *** Store the value so the refresh routine does not have to
+    // *** do this work during the refresh cycle.
+    // ***
+    this->_compensationDelay[column] = compensationDelay;
   }
 }
 
-void ClockLedMatrix::drawColumn(uint8_t column, uint8_t rows)
+void ClockLedMatrix::refresh()
 {
-  if (column >= 0 && column < this->width())
-  {
-    // ***
-    // *** Disable all decoders.
-    // ***
-    CHIP_SELECT_PORT = DECODERS_OFF;
-
-    // ***
-    // *** Set the rows. The correct bits are already set
-    // ***
-    ROW_PORT = (ROW_PORT & B10000000) | rows;
-
-    // ***
-    // *** Select the correct column. After taking the modulo of
-    // *** the column number with 8, the last 3 bits give the value of
-    // *** of the A, B and C channels. These 3 bits need to be
-    // *** shifted into the correction positions for the decorder
-    // *** port.
-    // ***
-    DECODER_PORT = (DECODER_PORT & B10001111) | ((column % 8) << 4);
-
-    // ***
-    // *** Select the correct column bank.
-    // ***
-    if (column <= 7)
-    {
-      CHIP_SELECT_PORT = DECODER_1;
-    }
-    else if (column <= 15)
-    {
-      CHIP_SELECT_PORT = DECODER_2;
-    }
-    else if (column <= 19)
-    {
-      CHIP_SELECT_PORT = DECODER_3;
-    }
-  }
+  // ***
+  // *** Draw the current column.
+  // ***
+  this->drawColumn(this->_currentColumn, this->_matrixBuffer[this->_currentColumn]);
 
   // ***
   // *** Increment the current column.
@@ -132,74 +135,66 @@ void ClockLedMatrix::drawColumn(uint8_t column, uint8_t rows)
   }
 }
 
-void ClockLedMatrix::drawLed(uint8_t column, uint8_t row)
+void ClockLedMatrix::drawColumn(uint8_t column, uint8_t rows)
 {
-  if (column >= 0 && column < this->width())
+  // ***
+  // *** Disable all decoders. This turn all LEDs off.
+  // ***
+  CHIP_SELECT_PORT = DECODERS_OFF;
+
+  // ***
+  // *** Since this method is called in rapid succession, we can use a delay here to simulate
+  // *** PWM on the display. A longer delay here makes the display look dimmer. Depending on
+  // *** the numbr of rows that are turned on, a delay is calculatedd to compensate for when
+  // *** a column has less LEDs lit up and therefore looks brighter. The less rows displayed,
+  // *** the longer the delay (more time spent off).
+  // ***
+  delayMicroseconds(this->_compensationDelay[column]);
+
+  // ***
+  // *** Set the rows. The correct bits are already set
+  // *** in the rows parameter when the drawPixel method
+  // *** was called.
+  // ***
+  ROW_PORT = (ROW_PORT & B10000000) | rows;
+
+  // ***
+  // *** Select the correct column. After taking the modulo of
+  // *** the column number with 8, the last 3 bits give the value of
+  // *** of the A, B and C channels. These 3 bits need to be
+  // *** shifted into the correction positions for the decorder
+  // *** port.
+  // ***
+  DECODER_PORT = (DECODER_PORT & B10001111) | ((column % 8) << 4);
+
+  // ***
+  // *** Select the correct column bank.
+  // ***
+  if (column <= 7)
   {
-    // ***
-    // *** Disable all decoders.
-    // ***
-    CHIP_SELECT_PORT = DECODERS_OFF;
+    CHIP_SELECT_PORT = DECODER_1;
+  }
+  else if (column <= 15)
+  {
+    CHIP_SELECT_PORT = DECODER_2;
+  }
+  else if (column <= 19)
+  {
+    CHIP_SELECT_PORT = DECODER_3;
+  }
+}
 
-    // ***
-    // *** Set the rows. The mask selects the current bit.
-    // ***
-    uint8_t mask = (1 << row);
-    uint8_t bits = this->_matrixBuffer[this->_currentColumn] & mask;
-    ROW_PORT = (ROW_PORT & B10000000) | bits;
+uint8_t ClockLedMatrix::getBitCount(uint8_t rows)
+{
+  uint8_t returnValue = 0;
 
-    // ***
-    // *** Select the correct column. After taking the modulo of
-    // *** the column number with 8, the last 3 bits give the value of
-    // *** of the A, B and C channels. These 3 bits need to be
-    // *** shifted into the correction positions for the decorder
-    // *** port.
-    // ***
-    DECODER_PORT = (DECODER_PORT & B10001111) | ((column % 8) << 4);
-
-    // ***
-    // *** Select the correct column bank.
-    // ***
-    if (column <= 7)
-    {
-      CHIP_SELECT_PORT = DECODER_1;
-    }
-    else if (column <= 15)
-    {
-      CHIP_SELECT_PORT = DECODER_2;
-    }
-    else if (column <= 19)
-    {
-      CHIP_SELECT_PORT = DECODER_3;
-    }
+  for (int b = 0; b < 8; b++)
+  {
+    returnValue += (B00000001 & rows);
+    rows = rows >> 1;
   }
 
-  // ***
-  // *** Increment the current row.
-  // ***
-  this->_currentRow++;
-
-  // ***
-  // *** Check if the last row has been updated.
-  // ***
-  if (this->_currentRow == this->height())
-  {
-    this->_currentRow = 0;
-
-    // ***
-    // *** Increment the current column.
-    // ***
-    this->_currentColumn++;
-
-    // ***
-    // ***
-    // ***
-    if (this->_currentColumn == this->width())
-    {
-      this->_currentColumn = 0;
-      this->_currentRow = 0;
-    }
-  }
+  return returnValue;
 }
 
 void ClockLedMatrix::reset()
@@ -214,10 +209,10 @@ void ClockLedMatrix::reset()
   // ***
   ROW_PORT = ROW_PORT & 0b1000000;
 
-  for (uint8_t column = 0; column < COLUMNS; column++)
-  {
-    this->_matrixBuffer[column] = 0;
-  }
+  // ***
+  // *** Reset all row bits.
+  // ***
+  this->clear();
 
   // ***
   // *** Reset the row and column counter for the refresh.
@@ -231,21 +226,15 @@ void ClockLedMatrix::reset()
   this->setCursor(0, 0);
 }
 
-void ClockLedMatrix::refresh()
+void ClockLedMatrix::clear()
 {
-  if (this->refreshMode == ClockLedMatrix::FULL_COLUMN)
+  // ***
+  // *** Reset all row bits.
+  // ***
+  for (uint8_t column = 0; column < COLUMNS; column++)
   {
-    // ***
-    // *** Draw the current column.
-    // ***
-    this->drawColumn(this->_currentColumn, this->_matrixBuffer[this->_currentColumn]);
-  }
-  else
-  {
-    // ***
-    // *** Draw the current column.
-    // ***
-    this->drawLed(this->_currentColumn, this->_currentRow);
+    this->_matrixBuffer[column] = 0;
+    this->_compensationDelay[column] = 0;
   }
 }
 

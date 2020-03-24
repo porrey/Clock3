@@ -41,7 +41,7 @@ using namespace ace_button;
 // *** on an Arduino, this should be the standard Serial port. Note we specify
 // *** RX of -1 since we only send data and do not expect to receive any data.
 // ***
-SoftwareSerial  Debug(-1, 7); // RX, TX
+SoftwareSerial Debug(-1, 7); // RX, TX
 
 // ***
 // *** Define the Serial port used by the GPS. For the clock this should be the standard
@@ -61,11 +61,7 @@ TinyGPS _gps;
 // *** of the Spikenzielabs clock kit found at
 // *** https://www.spikenzielabs.com/Catalog/watches-clocks/solder-time-desk-clock.
 // ***
-// *** Although the use INDIVIDUAL_LED mode would look nicer, it requires so
-// *** much CPU time that it interferes with the serial port and stops the GPS
-// *** from working. We will use FULL_COLUMN mode instead.
-// ***
-ClockLedMatrix _display = ClockLedMatrix(ClockLedMatrix::FULL_COLUMN);
+ClockLedMatrix _display = ClockLedMatrix();
 
 // ***
 // *** An instance of the the RTC_DS1307 library. The RTC in the Spikenzielabs clock
@@ -152,9 +148,7 @@ void setup()
   // ***
   // *** Set the font.
   // ***
-  _display.setTextWrap(false);
   _display.setFont(&ClockFont);
-  _display.setTextSize(1);
   Debug.println(F("The display has been initialized."));
 
   // ***
@@ -197,9 +191,11 @@ void setup()
   // *** Set up the timer for display refresh. Use the recommended
   // *** values based on refresh mode.
   // ***
-  Timer1.initialize(_display.refreshDelay());
+  Timer1.initialize(_display.getRefreshDelay());
   Timer1.attachInterrupt(refreshDisplay);
-
+  //Timer1.setPeriod(refreshDisplay);
+  Debug.println(F("Timer1 has been initialized."));
+  
   // ***
   // *** Configure the ButtonConfig with the event handler and
   // *** and the required features.
@@ -237,7 +233,7 @@ void setup()
   // ***
   // *** Power on display test.
   // ***
-  powerOnDisplayTest();
+  powerOnDisplayTest(_display);
 
   // ***
   // *** Show version number.
@@ -295,7 +291,7 @@ void loop()
         // ***
         // *** Display the GPS fix indicator.
         // ***
-        updateGpsFixDisplay(_gpsFix);
+        updateGpsFixDisplay(_display, _gpsFix);
       }
       break;
     case MODE_TZ:
@@ -545,7 +541,7 @@ bool updateTimeDisplay(const ClockLedMatrix& display, const RTC_DS1307& rtc, int
     // ***
     // *** Clear the display.
     // ***
-    display.reset();
+    display.clear();
 
     // ***
     // *** Adjust for the current time zone.
@@ -569,7 +565,7 @@ bool updateTimeDisplay(const ClockLedMatrix& display, const RTC_DS1307& rtc, int
     // ***
     // *** Update the AM/PM mark on the display.
     // ***
-    updateAmPmDisplay(&localNow);
+    updateAmPmDisplay(_display, &localNow);
 
     Debug.println(F(""));
 
@@ -579,16 +575,16 @@ bool updateTimeDisplay(const ClockLedMatrix& display, const RTC_DS1307& rtc, int
   return returnValue;
 }
 
-void updateGpsFixDisplay(bool gpsHasTime)
+void updateGpsFixDisplay(const ClockLedMatrix & display, bool gpsHasTime)
 {
   // ***
   // *** Highlight the LED at x = 18 and y = 5
   // *** when the time is PM.
   // ***
-  _display.drawPixel(18, 1, gpsHasTime ? 1 : 0);
+  display.drawPixel(18, 1, gpsHasTime ? 1 : 0);
 }
 
-void updateAmPmDisplay(DateTime* now)
+void updateAmPmDisplay(const ClockLedMatrix & display, DateTime* now)
 {
   // ***
   // ** Check if it is PM.
@@ -600,7 +596,7 @@ void updateAmPmDisplay(DateTime* now)
   // *** Highlight the LED at x = 18 and y = 5
   // *** when the time is PM.
   // ***
-  _display.drawPixel(18, 5, pm ? 1 : 0);
+  display.drawPixel(18, 5, pm ? 1 : 0);
 }
 
 bool updateRtcFromGps(DateTime lastGpsUpdate, const TinyGPS& gps, const RTC_DS1307& rtc, uint64_t updateInterval)
@@ -639,17 +635,17 @@ void refreshDisplay()
   _display.refresh();
 }
 
-void powerOnDisplayTest()
+void powerOnDisplayTest(const ClockLedMatrix & display)
 {
   // ***
   // *** Light each LED.
   // ***
-  for (uint8_t y = 0; y < _display.height(); y++)
+  for (uint8_t x = 0; x < display.width(); x++)
   {
-    for (uint8_t x = 0; x < _display.width(); x++)
+    for (uint8_t y = 0; y < display.height(); y++)
     {
-      _display.drawPixel(x, y, 1);
-      smartDelay(1);
+      display.drawPixel(x, y, 1);
+      smartDelay(10);
     }
   }
 
@@ -659,12 +655,12 @@ void powerOnDisplayTest()
   smartDelay(2000);
 
   // ***
-  // *** Reset the display.
+  // *** Clear the display.
   // ***
-  _display.reset();
+  display.clear();
 }
 
-bool setDateAndTimeFromGps(const TinyGPS& gps, const RTC_DS1307& rtc)
+bool setDateAndTimeFromGps(const TinyGPS & gps, const RTC_DS1307 & rtc)
 {
   bool returnValue = false;
 
@@ -713,7 +709,7 @@ bool setDateAndTimeFromGps(const TinyGPS& gps, const RTC_DS1307& rtc)
   return returnValue;
 }
 
-String dateTimeToTimeString(DateTime* now)
+String dateTimeToTimeString(DateTime * now)
 {
   uint8_t hour = now->hour() > 12 ? now->hour() - 12 : now->hour();
   char buffer[5];
@@ -721,7 +717,7 @@ String dateTimeToTimeString(DateTime* now)
   return String(buffer);
 }
 
-void displayBatteryVoltage(const ClockLedMatrix& display, float voltage)
+void displayBatteryVoltage(const ClockLedMatrix & display, float voltage)
 {
   // ***
   // *** Convert the float value to a string.
@@ -741,14 +737,14 @@ void displayBatteryVoltage(const ClockLedMatrix& display, float voltage)
   display.drawTextCentered(String(str));
 }
 
-void displayOffset(const ClockLedMatrix& display, int16_t tz_offset)
+void displayOffset(const ClockLedMatrix & display, int16_t tz_offset)
 {
   char buffer[3];
   sprintf(buffer, "%d", tz_offset);
   display.drawTextCentered(String(buffer));
 }
 
-void displayDst(const ClockLedMatrix& display, bool isDst)
+void displayDst(const ClockLedMatrix & display, bool isDst)
 {
   char buffer[3];
   sprintf(buffer, "%s", isDst ? "Yes" : "No");
@@ -759,7 +755,7 @@ void displayDst(const ClockLedMatrix& display, bool isDst)
   display.drawTextCentered(String(buffer));
 }
 
-void drawMomentaryTextCentered(const ClockLedMatrix& display, String text, uint64_t displayTime, bool resetAfter)
+void drawMomentaryTextCentered(const ClockLedMatrix & display, String text, uint64_t displayTime, bool resetAfter)
 {
   // ***
   // *** Draw the text centered.
@@ -777,7 +773,7 @@ void drawMomentaryTextCentered(const ClockLedMatrix& display, String text, uint6
   // ***
   if (resetAfter)
   {
-    display.reset();
+    display.clear();
   }
 }
 
