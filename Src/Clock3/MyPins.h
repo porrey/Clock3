@@ -24,7 +24,7 @@
 #define SETUP_BUTTON 3
 
 // ***
-// *** Defines the register and port for the 74LS138N 3 to 8 decoders. The three
+// *** Defines the register and port for the three 74LS138N 3 to 8 decoders. The three
 // *** input pins are on PD4 (A), PD5 (B) and PD6 (C). A, B and C are all tied
 // *** together on on three decoder chips.
 // ***
@@ -51,6 +51,7 @@
 // ***
 // *** The enable pins of the 74LS138N decoder chips are tied to
 // *** pins 2 and 3 of Port C.
+// ***
 // *** CS_S1 = 1, CS_S2 = 0 (enables columns 0 to 7)
 // *** CS_S1 = 0, CS_S2 = 1 (enables columns 8 to 15)
 // *** CS_S1 = 0, CS_S2 = 0 (enables columns 16 to 19)
