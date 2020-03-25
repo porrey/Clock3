@@ -21,7 +21,7 @@
 // ***
 // *** Low:       0xE2
 // *** High:      0xDA
-// *** Extended:  0xFD
+// *** Extended:  0xFD (0r 0x05)
 // ***
 // *** -U lfuse:w:0xe2:m -U hfuse:w:0xda:m -U efuse:w:0xfd:m
 // ***
@@ -37,6 +37,7 @@
 #include <EEPROM.h>
 #include <AceButton.h>
 #include "Gps.h"
+#include "SharedPinTone.h"
 
 using namespace ace_button;
 
@@ -133,6 +134,11 @@ bool _setupChanged = false;
 // ***
 AceButton _buttons[2];
 
+// ***
+// *** The built-in speaker is on the same pin as the setup button.
+// ***
+SharedPinTone _tone = SharedPinTone();
+
 void setup()
 {
   // ***
@@ -206,9 +212,8 @@ void setup()
   // ***
   Timer1.initialize(_display.getRefreshDelay());
   Timer1.attachInterrupt(refreshDisplay);
-  //Timer1.setPeriod(refreshDisplay);
   Debug.println(F("Timer1 has been initialized."));
-  
+
   // ***
   // *** Configure the ButtonConfig with the event handler and
   // *** and the required features.
@@ -258,6 +263,12 @@ void setup()
   // *** be written to the debug serial port.
   // ***
   batteryVoltage();
+
+  // ***
+  // *** Set up the tone generator.
+  // ***
+  _tone.begin(SETUP_BUTTON, INPUT_PULLUP);
+  _tone.startUpSound();
 
   // ***
   // *** Display a message indicating that setup has completed.
@@ -319,7 +330,7 @@ void loop()
 
         if (_modeChanged || _setupChanged)
         {
-          displayOffset(_display, _tz_offset);
+          displayTzOffset(_display, _tz_offset);
         }
       }
       break;
@@ -335,7 +346,7 @@ void loop()
 
         if (_modeChanged || _setupChanged)
         {
-          displayDst(_display, _isDst);
+          displayBoolean(_display, _isDst);
         }
       }
       break;
@@ -349,7 +360,7 @@ void loop()
         if (_modeChanged || _setupChanged)
         {
           float voltage = batteryVoltage();
-          displayBatteryVoltage(_display, voltage);
+          displayVoltage(_display, voltage);
         }
       }
       break;
@@ -730,18 +741,18 @@ String dateTimeToTimeString(DateTime * now)
   return String(buffer);
 }
 
-void displayBatteryVoltage(const ClockLedMatrix & display, float voltage)
+void displayVoltage(const ClockLedMatrix & display, float value)
 {
   // ***
   // *** Convert the float value to a string.
   // ***
   char buffer[3];
-  dtostrf(voltage, 3, 1, buffer);
+  dtostrf(value, 3, 1, buffer);
 
   // ***
   // *** Format the string for display.
   // ***
-  char str[4];
+  char str[3];
   sprintf(str, "%sv", buffer);
 
   // ***
@@ -750,17 +761,24 @@ void displayBatteryVoltage(const ClockLedMatrix & display, float voltage)
   display.drawTextCentered(String(str));
 }
 
-void displayOffset(const ClockLedMatrix & display, int16_t tz_offset)
+void displayTzOffset(const ClockLedMatrix & display, int16_t value)
 {
+  // ***
+  // *** Format the string for display.
+  // ***
   char buffer[3];
-  sprintf(buffer, "%d", tz_offset);
+  sprintf(buffer, "%d", value);
+
+  // ***
+  // *** Display the string.
+  // ***
   display.drawTextCentered(String(buffer));
 }
 
-void displayDst(const ClockLedMatrix & display, bool isDst)
+void displayBoolean(const ClockLedMatrix & display, bool value)
 {
   char buffer[3];
-  sprintf(buffer, "%s", isDst ? "Yes" : "No");
+  sprintf(buffer, "%s", value ? "Yes" : "No");
 
   // ***
   // *** Update the time on the display.
