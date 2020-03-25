@@ -14,6 +14,19 @@
 // *** You should have received a copy of the GNU Lesser General Public License
 // *** along with this program. If not, see http://www.gnu.org/licenses/.
 // ***
+
+// ******************************************************************
+// ***
+// *** Required fuses:
+// ***
+// *** Low:       0xE2
+// *** High:      0xDA
+// *** Extended:  0xFD
+// ***
+// *** -U lfuse:w:0xe2:m -U hfuse:w:0xda:m -U efuse:w:0xfd:m
+// ***
+// ******************************************************************
+
 #include "ClockMatrix.h"
 #include "ClockFont.h"
 #include <TimerOne.h>
@@ -330,7 +343,7 @@ void loop()
       {
         if (_modeChanged)
         {
-          drawMomentaryTextCentered(_display, F("BAT V"), MODE_DISPLAY_DELAY, true);
+          drawMomentaryTextCentered(_display, F("Bat V"), MODE_DISPLAY_DELAY, true);
         }
 
         if (_modeChanged || _setupChanged)
