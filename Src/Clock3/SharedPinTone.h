@@ -2,7 +2,7 @@
 #define SHARED_PIN_TONE_H
 
 #include <Arduino.h>
-#include "Notes.h"
+#include "MusicNotes.h"
 
 class SharedPinTone
 {
