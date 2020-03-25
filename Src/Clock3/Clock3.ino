@@ -37,7 +37,7 @@
 #include <AceButton.h>
 #include "Gps.h"
 #include "SharedPinTone.h"
-#include "EEPROM-Storage.h"
+#include <EEPROM-Storage.h>
 
 using namespace ace_button;
 
@@ -48,8 +48,8 @@ using namespace ace_button;
 // *** variable requires enough bytes to hold the data type plus one additional
 // *** byte for a checksum.
 // ***
-EEPROMStorage<int8_t> _tz_offset(0, 0);   // This variable is stored in EEPROM at positions 0 and 1 (2 bytes).
-EEPROMStorage<uint8_t> _isDst(2, 0);      // This variable is stored in EEPROM at positions 2 and 3 (2 bytes).
+EEPROMStorage<int16_t> _tz_offset(0, 0);    // This variable is stored in EEPROM at positions 0, 1 and 2 (3 bytes).
+EEPROMStorage<bool> _isDst(3, 0);           // This variable is stored in EEPROM at positions 3 and 4 (2 bytes).
 
 // ***
 // *** Define the serial port for displaying debug messages. When debugging
@@ -110,7 +110,7 @@ uint8_t _mode = 0;
 #define MODE_DISPLAY_DELAY    650
 
 // ***
-// *** Indicates/triggers a setupvalue change.
+// *** Indicates/triggers a setup value change.
 // ***
 bool _setupChanged = false;
 
@@ -450,7 +450,7 @@ void buttonEventHandler(AceButton* button, uint8_t eventType, uint8_t state)
                     // ***
                     _tz_offset++;
 
-                    if (_tz_offset.get() > 14)
+                    if (_tz_offset > 14)
                     {
                       _tz_offset = -14;
                     }
