@@ -21,7 +21,7 @@
 // ***
 // *** Low:       0xE2
 // *** High:      0xDA
-// *** Extended:  0xFD (0r 0x05)
+// *** Extended:  0xFD (or 0x05)
 // ***
 // *** -U lfuse:w:0xe2:m -U hfuse:w:0xda:m -U efuse:w:0xfd:m
 // ***
