@@ -34,21 +34,22 @@
 #include <RTClib.h>
 #include <SoftwareSerial.h>
 #include <TinyGPS.h>
-#include <EEPROM.h>
 #include <AceButton.h>
 #include "Gps.h"
 #include "SharedPinTone.h"
+#include "EEPROM-Storage.h"
 
 using namespace ace_button;
 
 // ***
-// *** EEPROM addresses for settings that need to be saved
-// *** when the clock is not powered on.
+// *** Create variables to be stored in EEPROM. The first parameter is the
+// *** address or location in EEPROM. The second parameter is the default
+// *** value to return when the variable has not been initialized. Each
+// *** variable requires enough bytes to hold the data type plus one additional
+// *** byte for a checksum.
 // ***
-#define EEPROM_ADR_INIT   0
-#define EEPROM_ADR_TZ     1
-#define EEPROM_ADR_DST    2
-#define INIT_VALUE     0xaa
+EEPROMStorage<int8_t> _tz_offset(0, 0);   // This variable is stored in EEPROM at positions 0 and 1 (2 bytes).
+EEPROMStorage<uint8_t> _isDst(2, 0);      // This variable is stored in EEPROM at positions 2 and 3 (2 bytes).
 
 // ***
 // *** Define the serial port for displaying debug messages. When debugging
@@ -82,16 +83,6 @@ ClockLedMatrix _display = ClockLedMatrix();
 // *** is a DS1337 but the interface for DS1307 works just as well.
 // ***
 RTC_DS1307 _rtc;
-
-// ***
-// *** The time zone offset.
-// ***
-int8_t _tz_offset = 0;
-
-// ***
-// ***
-// ***
-bool _isDst = false;
 
 // ***
 // *** Tracks the last minute displayed so the display can
@@ -229,24 +220,6 @@ void setup()
   // ***
   _buttons[BUTTON_ID_MODE].init(buttonConfig, MODE_BUTTON, HIGH, BUTTON_ID_MODE);
   _buttons[BUTTON_ID_SETUP].init(buttonConfig, SETUP_BUTTON, HIGH, BUTTON_ID_SETUP);
-
-  // ***
-  // *** Restore saved property values from EEPROM.
-  // ***
-  byte isInitialized = EEPROM.read(EEPROM_ADR_INIT);
-  Debug.print(F("isInitialized from EEPROM is ")); Debug.println(isInitialized);
-
-  if (isInitialized == INIT_VALUE)
-  {
-    _tz_offset = EEPROM.read(EEPROM_ADR_TZ); Debug.print(F("TZ Offset from EEPROM is ")); Debug.println(_tz_offset);
-    _isDst = EEPROM.read(EEPROM_ADR_DST); Debug.print(F("DST from EEPROM is ")); Debug.println(_isDst ? F("Yes") : F("No"));
-  }
-  else
-  {
-    EEPROM.write(EEPROM_ADR_INIT, INIT_VALUE);
-    _tz_offset = 0; Debug.print(F("TZ Offset has been initialized to ")); Debug.println(_tz_offset);
-    _isDst = false; Debug.print(F("DST has been initialized to ")); Debug.println(_isDst ? F("Yes") : F("No"));
-  }
 
   // ***
   // *** Power on display test.
@@ -464,33 +437,6 @@ void buttonEventHandler(AceButton* button, uint8_t eventType, uint8_t state)
               Debug.println(F("NOT USED YET"));
             }
             break;
-          case AceButton::kEventReleased:
-            {
-              switch (_mode)
-              {
-                case MODE_TZ:
-                  {
-                    // ***
-                    // *** Save the value to EEPROM only
-                    // *** when the button is released.
-                    // ***
-                    Debug.println(F("Saving TZ Offset to EEPROM."));
-                    EEPROM.write(EEPROM_ADR_TZ, _tz_offset);
-                  }
-                  break;
-                case MODE_DST:
-                  {
-                    // ***
-                    // *** Save the value to EEPROM only
-                    // *** when the button is released.
-                    // ***
-                    Debug.println(F("Saving DST to EEPROM."));
-                    EEPROM.write(EEPROM_ADR_DST, (byte)_isDst);
-                  }
-                  break;
-              }
-            }
-            break;
           case AceButton::kEventPressed:
           case AceButton::kEventRepeatPressed:
             {
@@ -504,7 +450,7 @@ void buttonEventHandler(AceButton* button, uint8_t eventType, uint8_t state)
                     // ***
                     _tz_offset++;
 
-                    if (_tz_offset > 14)
+                    if (_tz_offset.get() > 14)
                     {
                       _tz_offset = -14;
                     }
