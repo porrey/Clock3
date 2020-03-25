@@ -28,17 +28,17 @@ void ClockLedMatrix::begin()
   // ***
   // *** Set the column select pins up for output.
   // ***
-  DECODER_REGISTER = (DECODER_REGISTER & B11111111) | (BV(DECODER_C) | BV(DECODER_B) | BV(DECODER_A));
+  DECODER_REGISTER = (DECODER_REGISTER & B11111111) | (_BV(DECODER_C) | _BV(DECODER_B) | _BV(DECODER_A));
 
   // ***
   // *** Set the row select pins up for output.
   // ***
-  ROW_REGISTER = (ROW_REGISTER & B11111111) | (BV(ROW_7) | BV(ROW_6) | BV(ROW_5) | BV(ROW_4) | BV(ROW_3) | BV(ROW_2) | BV(ROW_1));
+  ROW_REGISTER = (ROW_REGISTER & B11111111) | (_BV(ROW_7) | _BV(ROW_6) | _BV(ROW_5) | _BV(ROW_4) | _BV(ROW_3) | _BV(ROW_2) | _BV(ROW_1));
 
   // ***
   // *** Set the chip select pins up for output.
   // ***
-  CHIP_SELECT_REGISTER = (CHIP_SELECT_REGISTER & B11111111) | (BV(CS_S2) | BV(CS_S1));
+  CHIP_SELECT_REGISTER = (CHIP_SELECT_REGISTER & B11111111) | (_BV(CS_S2) | _BV(CS_S1));
 
   // ***
   // *** Reset the display matrix.

@@ -17,9 +17,8 @@
 #ifndef BITWISE_H
 #define BITWISE_H
 
-#define BV(bit) (1 << (bit))
-#define SET_BIT(byte, bit) (byte |= BV(bit))
-#define CLEAR_BIT(byte, bit) (byte &= ~BV(bit))
-#define TOGGLE_BIT(byte, bit) (byte ^= BV(bit))
+#define SET_BIT(byte, bit) (byte |= _BV(bit))
+#define CLEAR_BIT(byte, bit) (byte &= ~_BV(bit))
+#define TOGGLE_BIT(byte, bit) (byte ^= _BV(bit))
 
 #endif
