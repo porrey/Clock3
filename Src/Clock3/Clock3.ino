@@ -36,7 +36,7 @@
 #include <TinyGPS.h>
 #include <AceButton.h>
 #include "Gps.h"
-#include "SharedPinTone.h"
+#include "BackgroundTone.h"
 #include <EEPROM-Storage.h>
 
 using namespace ace_button;
@@ -128,7 +128,7 @@ AceButton _buttons[2];
 // ***
 // *** The built-in speaker is on the same pin as the setup button.
 // ***
-SharedPinTone _tone = SharedPinTone();
+BackgroundTone _tone = BackgroundTone();
 
 void setup()
 {
@@ -238,16 +238,54 @@ void setup()
   batteryVoltage();
 
   // ***
-  // *** Set up the tone generator.
+  // *** Set up the background tone generator.
   // ***
-  _tone.begin(SETUP_BUTTON, INPUT_PULLUP);
-  _tone.startUpSound();
+  _tone.begin(SETUP_BUTTON, backgroundToneEvent);
+  _tone.play(BackgroundTone::STARTUP);
 
   // ***
   // *** Display a message indicating that setup has completed.
   // ***
   Debug.println(F("Setup completed."));
   Debug.println(F(""));
+
+  delay(1000);
+}
+
+// ***
+// *** yield() is defined in th Arduino core and is called
+// *** by various parts of the code such as delay(). This allows
+// *** code to be run while other code is aiting for something to
+// *** prevent valuable CPU cycls from being wasted.
+// ***
+void yield()
+{
+  // ***
+  // *** Keep the background tone generator rolling...
+  // ***
+  _tone.tick();
+
+  // ***
+  // *** If there is a tone playinng, the serial port will interfere
+  // *** with it and the buttons do not need to work.
+  // ***
+  if (!_tone.isPlaying())
+  {
+    // ***
+    // *** Read data from the GPS while
+    // *** it is available.
+    // ***
+    while (GpsSerial.available())
+    {
+      _gps.encode(GpsSerial.read());
+    }
+
+    // ***
+    // *** Check the buttons to update their state.
+    // ***
+    _buttons[BUTTON_ID_MODE].check();
+    _buttons[BUTTON_ID_SETUP].check();
+  }
 }
 
 void loop()
@@ -257,11 +295,14 @@ void loop()
   // *** from the GPS data. We will update every hour
   // *** (3600 seconds).
   // ***
-  if (updateRtcFromGps(_lastGpsUpdate, _gps, _rtc, 3600))
+  if (!_tone.isPlaying())
   {
-    _lastGpsUpdate = _rtc.now();
-    _gpsFix = true;
-    Debug.println(F("GPS Fix = Yes"));
+    if (updateRtcFromGps(_lastGpsUpdate, _gps, _rtc, 3600))
+    {
+      _lastGpsUpdate = _rtc.now();
+      _gpsFix = true;
+      Debug.println(F("GPS Fix = Yes"));
+    }
   }
 
   // ***
@@ -346,50 +387,26 @@ void loop()
   _setupChanged = false;
 
   // ***
-  // *** Use smartDelay() instead of delay().
+  // *** Use delay to allow some backround processing.
   // ***
-  smartDelay(250);
+  delay(250);
 }
 
-// ***
-// *** In this application, every CPU tick is critical. Instead
-// *** of using delay() in the application, this routine simulates
-// *** a delay but puts the microcontroller to work while
-// *** the delay is in affect. This should not be used when the
-// *** delay time needs to be accurate. The loop could run longer
-// *** depending on the amount of data available on the serial port.
-// ***
-void smartDelay(uint64_t delayTime)
+void backgroundToneEvent(BackgroundTone::SEQUENCE_EVENT_ID eventId)
 {
-  // ***
-  // *** Mark the start time.
-  // ***
-  uint64_t start = millis();
-
-  // ***
-  // *** Enter a loop.
-  // ***
-  do
+  switch (eventId)
   {
-    // ***
-    // *** Read data from the GPS while
-    // *** it is available.
-    // ***
-    while (GpsSerial.available())
-    {
-      _gps.encode(GpsSerial.read());
-    }
-
-    // ***
-    // *** Check the buttons to update their state.
-    // ***
-    _buttons[BUTTON_ID_MODE].check();
-    _buttons[BUTTON_ID_SETUP].check();
-
-  } while (millis() - start < delayTime);
+    case BackgroundTone::SEQUENCE_STARTED:
+      Debug.println(F("Track started. Buttons are temporarily disabled."));
+      break;
+    case BackgroundTone::SEQUENCE_COMPLETED:
+      Debug.println(F("Track completed. Restoring buttons."));
+      pinMode(SETUP_BUTTON, INPUT_PULLUP);
+      break;
+  }
 }
 
-void buttonEventHandler(AceButton* button, uint8_t eventType, uint8_t state)
+void buttonEventHandler(AceButton * button, uint8_t eventType, uint8_t state)
 {
   // ***
   // *** Get the ID of the button that was pressed.
@@ -498,7 +515,7 @@ void buttonEventHandler(AceButton* button, uint8_t eventType, uint8_t state)
   }
 }
 
-bool updateTimeDisplay(const ClockLedMatrix& display, const RTC_DS1307& rtc, int16_t lastMinuteDisplayed, int16_t tz_offset, bool isDst, bool force)
+bool updateTimeDisplay(const ClockLedMatrix & display, const RTC_DS1307 & rtc, int16_t lastMinuteDisplayed, int16_t tz_offset, bool isDst, bool force)
 {
   bool returnValue = false;
 
@@ -554,7 +571,7 @@ void updateGpsFixDisplay(const ClockLedMatrix & display, bool gpsHasTime)
   display.drawPixel(18, 1, gpsHasTime ? 1 : 0);
 }
 
-void updateAmPmDisplay(const ClockLedMatrix & display, DateTime* now)
+void updateAmPmDisplay(const ClockLedMatrix & display, DateTime * now)
 {
   // ***
   // ** Check if it is PM.
@@ -569,7 +586,7 @@ void updateAmPmDisplay(const ClockLedMatrix & display, DateTime* now)
   display.drawPixel(18, 5, pm ? 1 : 0);
 }
 
-bool updateRtcFromGps(DateTime lastGpsUpdate, const TinyGPS& gps, const RTC_DS1307& rtc, uint64_t updateInterval)
+bool updateRtcFromGps(DateTime lastGpsUpdate, const TinyGPS & gps, const RTC_DS1307 & rtc, uint64_t updateInterval)
 {
   bool returnValue = false;
 
@@ -615,14 +632,15 @@ void powerOnDisplayTest(const ClockLedMatrix & display)
     for (uint8_t y = 0; y < display.height(); y++)
     {
       display.drawPixel(x, y, 1);
-      smartDelay(10);
+      delay(10);
     }
   }
 
   // ***
-  // *** Pause for 2 seconds by reading GPS data.
+  // *** Pause for 2 seconds to show each
+  // *** LED is working.
   // ***
-  smartDelay(2000);
+  delay(2000);
 
   // ***
   // *** Clear the display.
@@ -740,10 +758,9 @@ void drawMomentaryTextCentered(const ClockLedMatrix & display, String text, uint
   display.drawTextCentered(text);
 
   // ***
-  // *** Use smart delay to twait the specified
-  // *** amount of time.
+  // *** Use delay to pause the text.
   // ***
-  smartDelay(displayTime);
+  delay(displayTime);
 
   // ***
   // *** Clear the display if specified.
