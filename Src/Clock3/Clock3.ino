@@ -256,7 +256,7 @@ void setup()
 // *** yield() is defined in th Arduino core and is called
 // *** by various parts of the code such as delay(). This allows
 // *** code to be run while other code is aiting for something to
-// *** prevent valuable CPU cycls from being wasted.
+// *** prevent valuable CPU cycls from being wasted. See hooks.c.
 // ***
 void yield()
 {
