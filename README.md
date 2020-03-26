@@ -27,3 +27,4 @@ The font used in Clock3 was developed using this software.
 3. [https://github.com/adafruit/RTClib](https://github.com/adafruit/RTClib)
 4. [https://github.com/bxparks/AceButton](https://github.com/bxparks/AceButton)
 5. [https://github.com/neosarchizo/TinyGPS](https://github.com/neosarchizo/TinyGPS)
+6. [https://github.com/porrey/EEPROM-Storage](https://github.com/porrey/EEPROM-Storage)
