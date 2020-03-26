@@ -60,7 +60,7 @@ inline GFXglyph *pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c) {
 #define COMP_DELAY_PER_BIT 100
 
 // ***
-// *** The maximum delay to apply when brigtness is 0.
+// *** The maximum delay to apply when brightness is 0.
 // ***
 #define MAX_PWM_DELAY 500
 
@@ -115,7 +115,7 @@ class ClockLedMatrix : public Adafruit_GFX
     void reset();
 
     // ***
-    // *** Clears the rows and columns by settign all colos to 0.
+    // *** Clears the rows and columns by settign all colors to 0.
     // ***
     void clear();
 
@@ -149,7 +149,7 @@ class ClockLedMatrix : public Adafruit_GFX
 
     // ***
     // *** Each byte is used to represent the rows for the given column (the
-    // *** index of the array). eacg bit represents the row. The LSB is row 1,
+    // *** index of the array). each bit represents the row. The LSB is row 1,
     // *** the second bit is row 2 and so on. The MSB is not used since there
     // *** 8 bits and only 7 rows.
     // ***

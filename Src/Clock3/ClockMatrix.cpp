@@ -241,7 +241,7 @@ void ClockLedMatrix::clear()
 uint16_t ClockLedMatrix::getTextWidth(String text)
 {
   // ***
-  // *** Since this display is one line onyl and is using a
+  // *** Since this display is one line only and is using a
   // *** specially designed font. This is a simplified calculation
   // *** that only uses the xAdvance value in each character
   // *** to determine width.

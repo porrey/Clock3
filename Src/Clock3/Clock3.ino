@@ -27,17 +27,17 @@
 // ***
 // ******************************************************************
 
-#include "ClockMatrix.h"
-#include "ClockFont.h"
 #include <TimerOne.h>
 #include <Wire.h>
 #include <RTClib.h>
 #include <SoftwareSerial.h>
-#include <TinyGPS.h>
 #include <AceButton.h>
-#include "Gps.h"
-#include "BackgroundTone.h"
 #include <EEPROM-Storage.h>
+#include "ClockMatrix.h"
+#include "ClockFont.h"
+#include "GpsManager.h"
+#include "BackgroundTone.h"
+
 
 using namespace ace_button;
 
@@ -52,31 +52,22 @@ EEPROMStorage<int16_t> _tz_offset(0, 0);    // This variable is stored in EEPROM
 EEPROMStorage<bool> _isDst(3, 0);           // This variable is stored in EEPROM at positions 3 and 4 (2 bytes).
 
 // ***
-// *** Define the serial port for displaying debug messages. When debugging
-// *** on an Arduino, this should be the standard Serial port. Note we specify
+// *** Define the serial port for displaying debug messages. Note we specify
 // *** RX of -1 since we only send data and do not expect to receive any data.
 // ***
 SoftwareSerial Debug(-1, 7); // RX, TX
 
 // ***
-// *** Define the Serial port used by the GPS. For the clock this should be the standard
-// *** serial port. If debugging on an Arduino, this should use the soft serial port. When
-// *** debugging on an UNO, only digital ports 2 and 3 will work for the SoftwareSerial
-// *** as long as the buttons are not connected (the mode and setup buttons use these pins).
+// *** An instance of the GpsManager interface.
 // ***
-#define GpsSerial Serial
-
-// ***
-// *** An instance of the TinyGPS interface.
-// ***
-TinyGPS _gps;
+GpsManager _gps = GpsManager(&Serial);
 
 // ***
 // *** Create an instance of the Clock LED Display Matrix that is part
 // *** of the Spikenzielabs clock kit found at
 // *** https://www.spikenzielabs.com/Catalog/watches-clocks/solder-time-desk-clock.
 // ***
-ClockLedMatrix _display = ClockLedMatrix();
+ClockLedMatrix _display;
 
 // ***
 // *** An instance of the the RTC_DS1307 library. The RTC in the Spikenzielabs clock
@@ -91,10 +82,9 @@ RTC_DS1307 _rtc;
 int16_t _lastMinuteDisplayed = -1;
 
 // ***
-// *** The time of the last GPS update.
+// *** The last the RTC was updated by the GPS.
 // ***
 DateTime _lastGpsUpdate = DateTime(1900, 1, 1, 0, 0, 0);
-bool _gpsFix = false;
 
 // ***
 // *** Mode parameters.
@@ -128,7 +118,7 @@ AceButton _buttons[2];
 // ***
 // *** The built-in speaker is on the same pin as the setup button.
 // ***
-BackgroundTone _tone = BackgroundTone();
+BackgroundTone _tone;
 
 void setup()
 {
@@ -160,18 +150,6 @@ void setup()
   // ***
   _display.setFont(&ClockFont);
   Debug.println(F("The display has been initialized."));
-
-  // ***
-  // *** Initialize the GPS.
-  // ***
-  GpsSerial.begin(9600);
-
-  GpsSerial.println(PMTK_SET_BAUD_9600); delay(250);
-  GpsSerial.println(PMTK_SET_NMEA_UPDATE_200_MILLIHERTZ); delay(250);
-  GpsSerial.println(PMTK_API_SET_FIX_CTL_1HZ); delay(250);
-  GpsSerial.println(PMTK_SET_NMEA_OUTPUT_RMCGGA); delay(250);
-  GpsSerial.println(PMTK_ENABLE_WAAS); delay(250);
-  GpsSerial.println(PGCMD_ANTENNA); delay(250);
 
   // ***
   // *** Check the RTC.
@@ -244,19 +222,23 @@ void setup()
   _tone.play(BackgroundTone::STARTUP);
 
   // ***
+  // *** Initialize the GPS.
+  // ***
+  GpsSerial.begin(9600);
+  _gps.begin(gpsEvent);
+
+  // ***
   // *** Display a message indicating that setup has completed.
   // ***
   Debug.println(F("Setup completed."));
   Debug.println(F(""));
-
-  delay(1000);
 }
 
 // ***
-// *** yield() is defined in th Arduino core and is called
+// *** yield() is defined in the Arduino core and is called
 // *** by various parts of the code such as delay(). This allows
 // *** code to be run while other code is aiting for something to
-// *** prevent valuable CPU cycls from being wasted. See hooks.c.
+// *** prevent valuable CPU cycles from being wasted. See hooks.c.
 // ***
 void yield()
 {
@@ -266,19 +248,15 @@ void yield()
   _tone.tick();
 
   // ***
-  // *** If there is a tone playinng, the serial port will interfere
+  // *** If there is a tone playing, the serial port will interfere
   // *** with it and the buttons do not need to work.
   // ***
   if (!_tone.isPlaying())
   {
     // ***
-    // *** Read data from the GPS while
-    // *** it is available.
+    // *** Process the GPS.
     // ***
-    while (GpsSerial.available())
-    {
-      _gps.encode(GpsSerial.read());
-    }
+    _gps.process();
 
     // ***
     // *** Check the buttons to update their state.
@@ -291,17 +269,24 @@ void yield()
 void loop()
 {
   // ***
-  // *** Check to see if it is time to update the RTC time
-  // *** from the GPS data. We will update every hour
-  // *** (3600 seconds).
+  // *** Get the number of seconds since the last time the
+  // *** RTC was updated from GPS update.
   // ***
-  if (!_tone.isPlaying())
+  uint32_t secondsSinceLastGpsUpdate = _rtc.now().unixtime() - _lastGpsUpdate.unixtime();
+
+  // ***
+  // *** Check if the time needs to be set from the GPS signal. We are
+  // *** updating the RTC every hour.
+  // ***
+  if (secondsSinceLastGpsUpdate > 3600)
   {
-    if (updateRtcFromGps(_lastGpsUpdate, _gps, _rtc, 3600))
+    if (_gps.hasFix())
     {
+      Debug.println(F("Updating RTC from GPS."));
+      debugDisplayDateTime("UTC Date/Time from GPS: ", _gps.dateTime());
+      
+      _rtc.adjust(_gps.dateTime());
       _lastGpsUpdate = _rtc.now();
-      _gpsFix = true;
-      Debug.println(F("GPS Fix = Yes"));
     }
   }
 
@@ -327,9 +312,9 @@ void loop()
         }
 
         // ***
-        // *** Display the GPS fix indicator.
+        // *** Update the GPS fix mark on the display.
         // ***
-        updateGpsFixDisplay(_display, _gpsFix);
+        updateGpsFixDisplay(_display, _gps);
       }
       break;
     case MODE_TZ:
@@ -397,11 +382,29 @@ void backgroundToneEvent(BackgroundTone::SEQUENCE_EVENT_ID eventId)
   switch (eventId)
   {
     case BackgroundTone::SEQUENCE_STARTED:
-      Debug.println(F("Track started. Buttons are temporarily disabled."));
+      Debug.println(F("Track started. Buttons are temporarily disabled.")); Debug.println();
       break;
     case BackgroundTone::SEQUENCE_COMPLETED:
-      Debug.println(F("Track completed. Restoring buttons."));
+      Debug.println(F("Track completed. Restoring buttons.")); Debug.println();
       pinMode(SETUP_BUTTON, INPUT_PULLUP);
+      break;
+  }
+}
+
+void gpsEvent(GpsManager::GPS_EVENT_ID eventId)
+{
+  switch (eventId)
+  {
+    case GpsManager::GPS_INITIALIZED:
+      Debug.println("GPS initialized.");
+      break;
+    case GpsManager::GPS_FIX_CHANGED:
+      // ***
+      // *** Highlight the LED at x = 18 and y = 5
+      // *** when the time is PM.
+      // ***
+      updateGpsFixDisplay(_display, _gps);
+      Debug.print("GPS Fix has changed: "); Debug.println(_gps.hasFix() ? F("Yes") : F("No")); Debug.println();
       break;
   }
 }
@@ -425,10 +428,9 @@ void buttonEventHandler(AceButton * button, uint8_t eventType, uint8_t state)
               // *** A long press of the mode button will cause the time
               // *** to update from the GPS.
               // ***
-              drawMomentaryTextCentered(_display, F("GPS"), 1500, true);
-              _gpsFix = false;
               _lastGpsUpdate = DateTime(1900, 1, 1, 0, 0, 0);
               _modeChanged = true;
+              drawMomentaryTextCentered(_display, F("GPS"), 1500, true);
             }
             break;
           case AceButton::kEventReleased:
@@ -515,7 +517,18 @@ void buttonEventHandler(AceButton * button, uint8_t eventType, uint8_t state)
   }
 }
 
-bool updateTimeDisplay(const ClockLedMatrix & display, const RTC_DS1307 & rtc, int16_t lastMinuteDisplayed, int16_t tz_offset, bool isDst, bool force)
+// ***
+// *** Called by the Timer1 to refresh the display.
+// ***
+void refreshDisplay()
+{
+  // ***
+  // *** Refresh the LED matrix.
+  // ***
+  _display.refresh();
+}
+
+bool updateTimeDisplay(const ClockLedMatrix& display, const RTC_DS1307 & rtc, int16_t lastMinuteDisplayed, int16_t tz_offset, bool isDst, bool force)
 {
   bool returnValue = false;
 
@@ -562,16 +575,7 @@ bool updateTimeDisplay(const ClockLedMatrix & display, const RTC_DS1307 & rtc, i
   return returnValue;
 }
 
-void updateGpsFixDisplay(const ClockLedMatrix & display, bool gpsHasTime)
-{
-  // ***
-  // *** Highlight the LED at x = 18 and y = 5
-  // *** when the time is PM.
-  // ***
-  display.drawPixel(18, 1, gpsHasTime ? 1 : 0);
-}
-
-void updateAmPmDisplay(const ClockLedMatrix & display, DateTime * now)
+void updateAmPmDisplay(const ClockLedMatrix& display, DateTime * now)
 {
   // ***
   // ** Check if it is PM.
@@ -586,43 +590,7 @@ void updateAmPmDisplay(const ClockLedMatrix & display, DateTime * now)
   display.drawPixel(18, 5, pm ? 1 : 0);
 }
 
-bool updateRtcFromGps(DateTime lastGpsUpdate, const TinyGPS & gps, const RTC_DS1307 & rtc, uint64_t updateInterval)
-{
-  bool returnValue = false;
-
-  // ***
-  // *** Get the number of seconds since the last GPS update.
-  // ***
-  uint32_t secondsSinceLastGpsUpdate = rtc.now().unixtime() - lastGpsUpdate.unixtime();
-
-  // ***
-  // *** Check if the time needs to be set from the GPS signal.
-  // ***
-  if (secondsSinceLastGpsUpdate > updateInterval)
-  {
-    Debug.println(F("Triggering RTC update from GPS."));
-
-    // ***
-    // *** Try to get the time from GPS and set the clock.
-    // ***
-    returnValue = setDateAndTimeFromGps(gps, rtc);
-  }
-
-  return returnValue;
-}
-
-// ***
-// *** Called by the timer.
-// ***
-void refreshDisplay()
-{
-  // ***
-  // *** Refresh the LED matrix.
-  // ***
-  _display.refresh();
-}
-
-void powerOnDisplayTest(const ClockLedMatrix & display)
+void powerOnDisplayTest(const ClockLedMatrix& display)
 {
   // ***
   // *** Light each LED.
@@ -648,55 +616,6 @@ void powerOnDisplayTest(const ClockLedMatrix & display)
   display.clear();
 }
 
-bool setDateAndTimeFromGps(const TinyGPS & gps, const RTC_DS1307 & rtc)
-{
-  bool returnValue = false;
-
-  Debug.println(F("Getting time from GPS."));
-
-  int year;
-  byte month, day, hour, minute, second, hundredths;
-  unsigned long age;
-
-  // ***
-  // *** Get the date and time from the GPS data.
-  // ***
-  gps.crack_datetime(&year, &month, &day, &hour, &minute, &second, &hundredths, &age);
-
-  // ***
-  // *** Check the age to make sure the date and time are valid.
-  // ***
-  if (age != TinyGPS::GPS_INVALID_AGE)
-  {
-    // ***
-    // *** Create  UTC date and time instance.
-    // ***
-    DateTime dt = DateTime(year, month, day, hour, minute, second);
-    debugDisplayDateTime(F("UTC Date/Time from GPS: "), dt);
-
-    // ***
-    // *** Set the time on the RTC.
-    // ***
-    // ***
-    Debug.println(F("RTC time has been set."));
-    rtc.adjust(dt);
-
-    // ***
-    // *** Return true to indicate the clock was set.
-    // ***
-    returnValue = true;
-  }
-  else
-  {
-    Debug.print(F("Date and Time not available. Age = ")); Debug.println(age);
-    returnValue = false;
-  }
-
-  Debug.println(F(""));
-
-  return returnValue;
-}
-
 String dateTimeToTimeString(DateTime * now)
 {
   uint8_t hour = now->hour() > 12 ? now->hour() - 12 : now->hour();
@@ -705,7 +624,7 @@ String dateTimeToTimeString(DateTime * now)
   return String(buffer);
 }
 
-void displayVoltage(const ClockLedMatrix & display, float value)
+void displayVoltage(const ClockLedMatrix& display, float value)
 {
   // ***
   // *** Convert the float value to a string.
@@ -725,7 +644,16 @@ void displayVoltage(const ClockLedMatrix & display, float value)
   display.drawTextCentered(String(str));
 }
 
-void displayTzOffset(const ClockLedMatrix & display, int16_t value)
+void updateGpsFixDisplay(const ClockLedMatrix& display, const GpsManager& gps)
+{
+  // ***
+  // *** Highlight the LED at x = 18 and y = 5
+  // *** when the time is PM.
+  // ***
+  display.drawPixel(18, 1, gps.hasFix() ? 1 : 0);
+}
+
+void displayTzOffset(const ClockLedMatrix& display, int16_t value)
 {
   // ***
   // *** Format the string for display.
@@ -739,7 +667,7 @@ void displayTzOffset(const ClockLedMatrix & display, int16_t value)
   display.drawTextCentered(String(buffer));
 }
 
-void displayBoolean(const ClockLedMatrix & display, bool value)
+void displayBoolean(const ClockLedMatrix& display, bool value)
 {
   char buffer[3];
   sprintf(buffer, "%s", value ? "Yes" : "No");
@@ -750,7 +678,7 @@ void displayBoolean(const ClockLedMatrix & display, bool value)
   display.drawTextCentered(String(buffer));
 }
 
-void drawMomentaryTextCentered(const ClockLedMatrix & display, String text, uint64_t displayTime, bool resetAfter)
+void drawMomentaryTextCentered(const ClockLedMatrix& display, String text, uint64_t displayTime, bool resetAfter)
 {
   // ***
   // *** Draw the text centered.
