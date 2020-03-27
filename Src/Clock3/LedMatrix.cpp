@@ -14,16 +14,16 @@
 // *** You should have received a copy of the GNU Lesser General Public License
 // *** along with this program. If not, see http://www.gnu.org/licenses/.
 // ***
-#include "ClockMatrix.h"
+#include "LedMatrix.h"
 
-ClockLedMatrix::ClockLedMatrix() : Adafruit_GFX(COLUMNS, ROWS)
+LedMatrix::LedMatrix() : Adafruit_GFX(COLUMNS, ROWS)
 {
   this->setRefreshRate(DEFAULT_REFRESH_RATE);
   this->setTextSize(1);
   this->setTextWrap(false);
 }
 
-void ClockLedMatrix::begin()
+void LedMatrix::begin()
 {
   // ***
   // *** Set the column select pins up for output.
@@ -46,12 +46,18 @@ void ClockLedMatrix::begin()
   this->reset();
 }
 
-uint8_t ClockLedMatrix::getRefreshRate()
+void LedMatrix::begin(const GFXfont* f)
+{
+  this->setFont(f);
+  this->begin();
+}
+
+uint8_t LedMatrix::getRefreshRate()
 {
   return this->_refreshRate;
 }
 
-void ClockLedMatrix::setRefreshRate(uint8_t refreshRate)
+void LedMatrix::setRefreshRate(uint8_t refreshRate)
 {
   this->_refreshRate = refreshRate;
 
@@ -67,12 +73,12 @@ void ClockLedMatrix::setRefreshRate(uint8_t refreshRate)
   this->_refreshDelay = (uint64_t)(1.0 / ((float)this->_refreshRate * (float)this->width()) * 1000.0 * 1000.0);
 }
 
-uint32_t ClockLedMatrix::getRefreshDelay()
+uint32_t LedMatrix::getRefreshDelay()
 {
   return this->_refreshDelay;
 }
 
-void ClockLedMatrix::drawPixel(int16_t column, int16_t row, uint16_t color)
+void LedMatrix::drawPixel(int16_t column, int16_t row, uint16_t color)
 {
   if (color == 0)
   {
@@ -114,7 +120,7 @@ void ClockLedMatrix::drawPixel(int16_t column, int16_t row, uint16_t color)
   }
 }
 
-void ClockLedMatrix::refresh()
+void LedMatrix::refresh()
 {
   // ***
   // *** Draw the current column.
@@ -135,7 +141,7 @@ void ClockLedMatrix::refresh()
   }
 }
 
-void ClockLedMatrix::drawColumn(uint8_t column, uint8_t rows)
+void LedMatrix::drawColumn(uint8_t column, uint8_t rows)
 {
   // ***
   // *** Disable all decoders. This turn all LEDs off.
@@ -184,7 +190,7 @@ void ClockLedMatrix::drawColumn(uint8_t column, uint8_t rows)
   }
 }
 
-uint8_t ClockLedMatrix::getBitCount(uint8_t rows)
+uint8_t LedMatrix::getBitCount(uint8_t rows)
 {
   uint8_t returnValue = 0;
 
@@ -197,7 +203,7 @@ uint8_t ClockLedMatrix::getBitCount(uint8_t rows)
   return returnValue;
 }
 
-void ClockLedMatrix::reset()
+void LedMatrix::reset()
 {
   // ***
   // *** Disable all decoders.
@@ -226,7 +232,7 @@ void ClockLedMatrix::reset()
   this->setCursor(0, 0);
 }
 
-void ClockLedMatrix::clear()
+void LedMatrix::clear()
 {
   // ***
   // *** Reset all row bits.
@@ -238,7 +244,7 @@ void ClockLedMatrix::clear()
   }
 }
 
-uint16_t ClockLedMatrix::getTextWidth(String text)
+uint16_t LedMatrix::getTextWidth(String text)
 {
   // ***
   // *** Since this display is one line only and is using a
@@ -266,7 +272,7 @@ uint16_t ClockLedMatrix::getTextWidth(String text)
   return returnValue;
 }
 
-void ClockLedMatrix::drawTextCentered(String text)
+void LedMatrix::drawTextCentered(String text)
 {
   this->reset();
 
@@ -294,7 +300,7 @@ void ClockLedMatrix::drawTextCentered(String text)
   this->print(text);
 }
 
-void ClockLedMatrix::testDisplay(uint16_t delayTime)
+void LedMatrix::testDisplay(uint16_t delayTime)
 {
   // ***
   // *** Loop through hours 1 to 24;

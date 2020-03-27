@@ -14,8 +14,8 @@
 // *** You should have received a copy of the GNU Lesser General Public License
 // *** along with this program. If not, see http://www.gnu.org/licenses/.
 // ***
-#ifndef CLOCK_MATRIX_H
-#define CLOCK_MATRIX_H
+#ifndef LED_MATRIX_H
+#define LED_MATRIX_H
 
 #include <Arduino.h>
 #include <Adafruit_GFX.h>
@@ -70,18 +70,23 @@ inline GFXglyph *pgm_read_glyph_ptr(const GFXfont *gfxFont, uint8_t c) {
 #define ROWS       7
 #define COLUMNS   20
 
-class ClockLedMatrix : public Adafruit_GFX
+class LedMatrix : public Adafruit_GFX
 {
   public:
     // ***
     // *** Create a default instance.
     // ***
-    ClockLedMatrix();
+    LedMatrix();
 
     // ***
     // *** Initialize the display.
     // ***
     void begin();
+
+    // ***
+    // *** Initialize the display with a font.
+    // ***
+    void begin(const GFXfont*);
 
     // ***
     // *** Get/set the refresh of the display.
