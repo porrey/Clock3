@@ -54,13 +54,13 @@ using namespace ace_button;
 // ***
 #ifdef DEBUG
   #include <SoftwareSerial.h>
-
+  
   // ***
   // *** Define the serial port for displaying debug messages. Note we specify
   // *** RX of -1 since we only send data and do not expect to receive any data.
   // ***
   SoftwareSerial Debug(-1, 7); // RX, TX
-
+  
   #define TRACE(x) Debug.print(x)
   #define TRACELN(x) Debug.println(x)
   #define TRACE_DATE(l, d) TraceDateTime(l, d);
@@ -89,14 +89,16 @@ GpsManager _gpsManager = GpsManager(&Serial);
 // ***
 // *** Create an instance of the TimeManager.
 // ***
-TimeManager _timeManager;
+TimeManager _timeManager = TimeManager();
 
 // ***
 // *** Create an instance of the Clock LED Display Matrix that is part
 // *** of the Spikenzielabs clock kit found at
 // *** https://www.spikenzielabs.com/Catalog/watches-clocks/solder-time-desk-clock.
 // ***
-LedMatrix _display;
+// *** The instance is created using a refresh of 50hz.
+// ***
+LedMatrix _display = LedMatrix(50);
 
 // ***
 // *** Mode parameters.
@@ -452,6 +454,11 @@ void timeEvent(TimeManager::TIME_EVENT_ID eventId)
         {
           if (_chime && _mode == MODE_DISPLAY_TIME)
           {
+            // ***
+            // *** Clear the display.
+            // ***
+            _display.clear();
+
             // ***
             // *** The top of every hour.
             // ***
