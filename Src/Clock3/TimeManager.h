@@ -39,7 +39,12 @@ class TimeManager
     using TimeEvent = void (*)(TIME_EVENT_ID);
 
     // ***
+    // *** Default constructor.
     // ***
+    TimeManager() { };
+
+    // ***
+    // *** Initializes this instance.
     // ***
     void begin(TimeEvent);
     void begin(int16_t, bool, TimeEvent);
