@@ -20,6 +20,11 @@
 class BatteryMonitor
 {
   public:
+    // ***
+    // *** Default constructor.
+    // ***
+    BatteryMonitor() { };
+
     void begin(uint16_t pin)
     {
       this->_pin = pin;
