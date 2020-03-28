@@ -94,7 +94,7 @@ class BackgroundTone
       {NOTE_A5, 50}, {NOTE_REST, 50},
       {NOTE_A5, 50}, {NOTE_REST, 750},
       {NOTE_REST, REPEAT_SEQUENCE},
-      /* Chime -> start : 101 */
+      /* Chime -> start : 10 */
       {NOTE_F4, 800}, {NOTE_A4, 800}, {NOTE_G4, 800}, {NOTE_C4, 1600}, {NOTE_REST, 200},
       {NOTE_F4, 800}, {NOTE_G4, 800}, {NOTE_A4, 800}, {NOTE_F4, 1600}, {NOTE_REST, 200},
       {NOTE_A4, 800}, {NOTE_F4, 800}, {NOTE_G4, 800}, {NOTE_C4, 1600}, {NOTE_REST, 200},
