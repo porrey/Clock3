@@ -87,20 +87,21 @@ class BackgroundTone
     void stop();
 
   protected:
-    const NOTE _sequences[32] = { /* Buzz -> start : 0 */
-      {NOTE_A2, 500}, {NOTE_REST, 300}, {NOTE_REST, REPEAT_SEQUENCE},
-      /* Classic -> start : 3 */
-      {NOTE_A5, 50}, {NOTE_REST, 50},
-      {NOTE_A5, 50}, {NOTE_REST, 50},
-      {NOTE_A5, 50}, {NOTE_REST, 750},
-      {NOTE_REST, REPEAT_SEQUENCE},
-      /* Chime -> start : 10 */
-      {NOTE_F4, 800}, {NOTE_A4, 800}, {NOTE_G4, 800}, {NOTE_C4, 1600}, {NOTE_REST, 200},
-      {NOTE_F4, 800}, {NOTE_G4, 800}, {NOTE_A4, 800}, {NOTE_F4, 1600}, {NOTE_REST, 200},
-      {NOTE_A4, 800}, {NOTE_F4, 800}, {NOTE_G4, 800}, {NOTE_C4, 1600}, {NOTE_REST, 200},
-      {NOTE_C4, 800}, {NOTE_G4, 800}, {NOTE_A4, 800}, {NOTE_F4, 1600}, {NOTE_REST, 200},
-      {NOTE_REST, END_OF_SEQUENCE}
-    };
+    const NOTE _sequences[32] = {
+                                  /* Buzz -> start : 0 */
+                                  {NOTE_A2, 500}, {NOTE_REST, 300}, {NOTE_REST, REPEAT_SEQUENCE},
+                                  /* Classic -> start : 3 */
+                                  {NOTE_A5, 50}, {NOTE_REST, 50},
+                                  {NOTE_A5, 50}, {NOTE_REST, 50},
+                                  {NOTE_A5, 50}, {NOTE_REST, 750},
+                                  {NOTE_REST, REPEAT_SEQUENCE},
+                                  /* Chime -> start : 10 */
+                                  {NOTE_F4, 800}, {NOTE_A4, 800}, {NOTE_G4, 800}, {NOTE_C4, 1600}, {NOTE_REST, 200},
+                                  {NOTE_F4, 800}, {NOTE_G4, 800}, {NOTE_A4, 800}, {NOTE_F4, 1600}, {NOTE_REST, 200},
+                                  {NOTE_A4, 800}, {NOTE_F4, 800}, {NOTE_G4, 800}, {NOTE_C4, 1600}, {NOTE_REST, 200},
+                                  {NOTE_C4, 800}, {NOTE_G4, 800}, {NOTE_A4, 800}, {NOTE_F4, 1600}, {NOTE_REST, 200},
+                                  {NOTE_REST, END_OF_SEQUENCE}
+                                };
 
     // ***
     // *** This is the current sequence being played. This is
