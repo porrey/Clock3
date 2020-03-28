@@ -36,6 +36,7 @@
 #include "BackgroundTone.h"
 #include "TimeManager.h"
 #include "BatteryMonitor.h"
+#include "Mode.h"
 #include "Strings.en-US.h"
 
 using namespace ace_button;
@@ -45,7 +46,7 @@ using namespace ace_button;
 // *** port. Connect RX from a TTL or FTDI cable to D7 (PD7). Note, this
 // *** will use more program memory and mor dynamic memory.
 // ***
-//#define DEBUG
+#define DEBUG
 
 // ***
 // *** If debugging is enabled, The software serial port is created
@@ -63,7 +64,7 @@ using namespace ace_button;
   
   #define TRACE(x) Debug.print(x)
   #define TRACELN(x) Debug.println(x)
-  #define TRACE_DATE(l, d) TraceDateTime(l, d);
+  #define TRACE_DATE(l, d) TraceDateTime(l, d)
 #else
   #define TRACE(x)
   #define TRACELN(x)
@@ -101,22 +102,9 @@ TimeManager _timeManager = TimeManager();
 LedMatrix _display = LedMatrix(50);
 
 // ***
-// *** Mode parameters.
+// *** Create an instance of Mode to track the clock mode.
 // ***
-bool _modeChanged = true;
-uint8_t _mode = 0;
-
-#define MODE_DISPLAY_TIME       0
-#define MODE_TZ                 1
-#define MODE_DST                2
-#define MODE_CHIME              3
-#define MODE_BATTERY            4
-#define MODE_MAX                5
-
-// ***
-// *** Indicates/triggers a setup value change.
-// ***
-bool _setupChanged = false;
+Mode _mode = Mode(Mode::MODE_DISPLAY_TIME);
 
 // ***
 // *** Define the IDs for the the mode and setup buttons.
@@ -277,85 +265,94 @@ void loop()
   // ***
   // *** Check the current mode.
   // ***
-  switch (_mode)
+  switch (_mode.getMode())
   {
     // ***
     // *** Display the time.
     // ***
-    case MODE_DISPLAY_TIME:
+    case Mode::MODE_DISPLAY_TIME:
       {
-        if (_modeChanged || _setupChanged)
+        if (_mode.anyChanged())
         {
           // ***
-          // *** Update the displayed time.
+          // *** Update the displayed time. Format the date and
+          // *** time as time only.
           // ***
-          updateTimeDisplay(_display);
+          char buffer[5];
+          sprintf(buffer, FORMAT_TIME, _timeManager.localHour(), _timeManager.localMinute());
+          _display.drawTextCentered(buffer);
+          TRACE(F("Display Time: ")); TRACELN(buffer);
 
           // ***
           // *** Update the AM/PM mark on the display.
+          // *** Highlight the LED at x = 18 and y = 5
+          // *** when the time is PM.
           // ***
-          updateAmPmDisplay(_display, _timeManager);
+          _display.drawPixel(18, 5, _timeManager.isPm() ? 1 : 0);
+          TRACE(F("AM/PM => ")); TRACELN(_timeManager.isPm() ? F("PM") : F("AM"));
 
           // ***
           // *** Update the GPS fix mark on the display.
+          // *** Highlight the LED at x = 18 and y = 5
+          // *** when the time is PM.
           // ***
-          updateGpsFixDisplay(_display, _gpsManager);
+          _display.drawPixel(18, 1, gps.hasFix() ? 1 : 0);
         }
       }
       break;
-    case MODE_TZ:
+    case Mode::MODE_TZ:
       {
         // ***
         // *** Display the current offset.
         // ***
-        if (_modeChanged)
+        if (_mode.modeChanged())
         {
           _display.drawMomentaryTextCentered(STRING_DISPLAY_TZ, DISPLAY_TEXT_DELAY, true);
         }
 
-        if (_modeChanged || _setupChanged)
+        if (_mode.anyChanged())
         {
           displayTzOffset(_display, _tzOffset);
         }
       }
       break;
-    case MODE_DST:
+    case Mode::MODE_DST:
       {
         // ***
         // *** Display the current DST mode.
         // ***
-        if (_modeChanged)
+        if (_mode.modeChanged())
         {
           _display.drawMomentaryTextCentered(STRING_DISPLAY_DST, DISPLAY_TEXT_DELAY, true);
         }
 
-        if (_modeChanged || _setupChanged)
+        if (_mode.anyChanged())
         {
           displayBoolean(_display, _isDst);
         }
       }
       break;
-    case MODE_CHIME:
+    case Mode::MODE_CHIME:
       {
-        if (_modeChanged)
+        if (_mode.modeChanged())
         {
           _display.drawMomentaryTextCentered(STRING_DISPLAY_CHIME, DISPLAY_TEXT_DELAY, true);
         }
 
-        if (_modeChanged || _setupChanged)
+        if (_mode.anyChanged())
         {
           displayBoolean(_display, _chime);
         }
       }
       break;
-    case MODE_BATTERY:
+    case Mode::MODE_BATTERY:
       {
-        if (_modeChanged)
+        if (_mode.modeChanged())
         {
           _display.drawMomentaryTextCentered(STRING_DISPLAY_BATTERY, DISPLAY_TEXT_DELAY, true);
         }
 
-        if (_modeChanged || _setupChanged)
+        if (_mode.anyChanged())
         {
           float voltage = _batteryMonitor.voltage();
           displayVoltage(_display, voltage);
@@ -367,8 +364,7 @@ void loop()
   // ***
   // *** Reset mode and setup change flags.
   // ***
-  _modeChanged = false;
-  _setupChanged = false;
+  _mode.reset();
 
   // ***
   // *** Use delay to allow some backround processing.
@@ -415,13 +411,9 @@ void gpsEvent(GpsManager::GPS_EVENT_ID eventId)
         // *** Update the display only when we are in the display
         // *** time mode.
         // ***
-        if (_mode = MODE_DISPLAY_TIME)
+        if (_mode.getMode() == Mode::MODE_DISPLAY_TIME)
         {
-          // ***
-          // *** Highlight the LED at x = 18 and y = 5
-          // *** when the time is PM.
-          // ***
-          updateGpsFixDisplay(_display, _gpsManager);
+          _mode.modeChanged(true);
           TRACE(F("GPS Fix has changed: ")); TRACELN(_gpsManager.hasFix() ? F("Yes") : F("No"));
         }
       }
@@ -452,7 +444,7 @@ void timeEvent(TimeManager::TIME_EVENT_ID eventId)
         // ***
         if (_timeManager.getUtcDateTime().minute() == 0)
         {
-          if (_chime && _mode == MODE_DISPLAY_TIME)
+          if (_chime && _mode.getMode() == Mode::MODE_DISPLAY_TIME)
           {
             // ***
             // *** Clear the display.
@@ -484,7 +476,7 @@ void timeEvent(TimeManager::TIME_EVENT_ID eventId)
         // ***
         // *** Trigger a time update for the display.
         // ***
-        _setupChanged = true;
+        _mode.setupChanged(true);
       }
       break;
   }
@@ -509,7 +501,7 @@ void buttonEventHandler(AceButton * button, uint8_t eventType, uint8_t state)
               // *** A long press of the mode button will cause the time
               // *** to update from the GPS.
               // ***
-              _modeChanged = true;
+              _mode.modeChanged(true);
               _display.drawMomentaryTextCentered(STRING_DISPLAY_GPS, DISPLAY_TEXT_DELAY * 2, true);
 
               // ***
@@ -535,9 +527,9 @@ void buttonEventHandler(AceButton * button, uint8_t eventType, uint8_t state)
               // *** Increment the mode and set the mode
               // *** changed flag.
               // ***
-              _mode = ++_mode % MODE_MAX;
-              _modeChanged = true;
-              TRACE(F("Mode = ")); TRACELN(_mode);
+              _mode.increment();
+              //_modeChanged = true;
+              TRACE(F("Mode = ")); TRACELN(_mode.getMode());
             }
             break;
         }
@@ -555,9 +547,9 @@ void buttonEventHandler(AceButton * button, uint8_t eventType, uint8_t state)
           case AceButton::kEventReleased:
           case AceButton::kEventRepeatPressed:
             {
-              switch (_mode)
+              switch (_mode.getMode())
               {
-                case MODE_TZ:
+                case Mode::MODE_TZ:
                   {
                     // ***
                     // *** Increment the TZ offset
@@ -578,7 +570,7 @@ void buttonEventHandler(AceButton * button, uint8_t eventType, uint8_t state)
                     // ***
                     // *** Trigger setup change.
                     // ***
-                    _setupChanged = true;
+                    _mode.setupChanged(true);
 
                     // ***
                     // *** Write the new value to the serial port.
@@ -586,7 +578,7 @@ void buttonEventHandler(AceButton * button, uint8_t eventType, uint8_t state)
                     TRACE(F("Changed TZ to ")); TRACELN(_tzOffset);
                   }
                   break;
-                case MODE_DST:
+                case Mode::MODE_DST:
                   {
                     // ***
                     // *** Toggle the DST flag.
@@ -601,7 +593,7 @@ void buttonEventHandler(AceButton * button, uint8_t eventType, uint8_t state)
                     // ***
                     // *** Trigger setup change.
                     // ***
-                    _setupChanged = true;
+                    _mode.setupChanged(true);
 
                     // ***
                     // *** Write the new value to the serial port.
@@ -609,7 +601,7 @@ void buttonEventHandler(AceButton * button, uint8_t eventType, uint8_t state)
                     TRACE(F("Changed DST to ")); TRACELN(_isDst ? "Yes" : "No");
                   }
                   break;
-                case MODE_CHIME:
+                case Mode::MODE_CHIME:
                   {
                     // ***
                     // *** Toggle the chime flag.
@@ -619,7 +611,7 @@ void buttonEventHandler(AceButton * button, uint8_t eventType, uint8_t state)
                     // ***
                     // *** Trigger setup change.
                     // ***
-                    _setupChanged = true;
+                    _mode.setupChanged(true);
 
                     // ***
                     // *** Write the new value to the serial port.
@@ -627,9 +619,9 @@ void buttonEventHandler(AceButton * button, uint8_t eventType, uint8_t state)
                     TRACE(F("Changed Chime to ")); TRACELN(_chime ? "Yes" : "No");
                   }
                   break;
-                case MODE_BATTERY:
+                case Mode::MODE_BATTERY:
                   {
-                    _setupChanged = true;
+                    _mode.setupChanged(true);
                     TRACELN("Battery");
                   }
                   break;
@@ -661,31 +653,6 @@ void refreshDisplay()
   }
 }
 
-void updateTimeDisplay(const LedMatrix& display)
-{
-  // ***
-  // *** Format the date and time as time only.
-  // ***
-  char buffer[5];
-  sprintf(buffer, FORMAT_TIME, _timeManager.localHour(), _timeManager.localMinute());
-
-  // ***
-  // *** Update the time on the display.
-  // ***
-  display.drawTextCentered(buffer);
-  TRACE(F("Display Time: ")); TRACELN(buffer);
-}
-
-void updateAmPmDisplay(const LedMatrix& display, const TimeManager& timeManager)
-{
-  // ***
-  // *** Highlight the LED at x = 18 and y = 5
-  // *** when the time is PM.
-  // ***
-  display.drawPixel(18, 5, _timeManager.isPm() ? 1 : 0);
-  TRACE(F("AM/PM => ")); TRACELN(_timeManager.isPm() ? F("PM") : F("AM"));
-}
-
 void displayVoltage(const LedMatrix& display, float value)
 {
   // ***
@@ -704,15 +671,6 @@ void displayVoltage(const LedMatrix& display, float value)
   // *** Display the string.
   // ***
   display.drawTextCentered(str);
-}
-
-void updateGpsFixDisplay(const LedMatrix& display, const GpsManager& gps)
-{
-  // ***
-  // *** Highlight the LED at x = 18 and y = 5
-  // *** when the time is PM.
-  // ***
-  display.drawPixel(18, 1, gps.hasFix() ? 1 : 0);
 }
 
 void displayTzOffset(const LedMatrix& display, int16_t value)
