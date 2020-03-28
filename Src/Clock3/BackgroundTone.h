@@ -55,6 +55,11 @@ class BackgroundTone
     using BackgroundToneEvent = void (*)(SEQUENCE_EVENT_ID);
 
     // ***
+    // *** Default constructor.
+    // ***
+    BackgroundTone() {};
+
+    // ***
     // *** Initializes the player.
     // ***
     void begin(uint16_t, BackgroundToneEvent);
