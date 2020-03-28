@@ -23,6 +23,13 @@ LedMatrix::LedMatrix() : Adafruit_GFX(COLUMNS, ROWS)
   this->setTextWrap(false);
 }
 
+LedMatrix::LedMatrix(uint32_t refreshRate) : Adafruit_GFX(COLUMNS, ROWS)
+{
+  this->setRefreshRate(refreshRate);
+  this->setTextSize(1);
+  this->setTextWrap(false);
+}
+
 void LedMatrix::begin()
 {
   // ***

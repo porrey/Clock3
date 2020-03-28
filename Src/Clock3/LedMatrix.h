@@ -79,6 +79,11 @@ class LedMatrix : public Adafruit_GFX
     LedMatrix();
 
     // ***
+    // *** Create an instance with the specified refresh rate.
+    // ***
+    LedMatrix(uint32_t);
+
+    // ***
     // *** Initialize the display.
     // ***
     void begin();
