@@ -1,3 +1,19 @@
+// ***
+// *** Copyright(C) 2020, Daniel M. Porrey. All rights reserved.
+// ***
+// *** This program is free software: you can redistribute it and/or modify
+// *** it under the terms of the GNU Lesser General Public License as published
+// *** by the Free Software Foundation, either version 3 of the License, or
+// *** (at your option) any later version.
+// ***
+// *** This program is distributed in the hope that it will be useful,
+// *** but WITHOUT ANY WARRANTY; without even the implied warranty of
+// *** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// *** GNU Lesser General Public License for more details.
+// ***
+// *** You should have received a copy of the GNU Lesser General Public License
+// *** along with this program. If not, see http://www.gnu.org/licenses/.
+// ***
 #ifndef TIME_MANAGER_H
 #define TIME_MANAGER_H
 
@@ -34,52 +50,53 @@ class TimeManager
     void tickTock();
 
     // ***
-    // ***
+    // *** Gets/sets the time zone offset.
     // ***
     void setTimeZoneOffset(int16_t);
-    int16_t getTimeZoneOffset();
+    const int16_t getTimeZoneOffset();
 
     // ***
+    // *** Gets/sets the daylight savings flag.
     // ***
-    // ***
-    bool getIsDst();
+    const bool getIsDst();
     void setIsDst(bool);
 
     // ***
+    // *** Gets/sets UTC time.
     // ***
-    // ***
-    DateTime getUtcDateTime();
+    const DateTime getUtcDateTime();
     void setUtcDateTime(const DateTime&);
 
     // ***
+    // *** Gets the local time based on the current
+    // ** time zone offset and DST flag.
     // ***
-    // ***
-    DateTime getLocalDateTime();
+    const DateTime getLocalDateTime();
 
     // ***
+    // *** Returns the current local hour value.
     // ***
-    // ***
-    uint8_t localHour();
+    const uint8_t localHour();
 
     // ***
+    // *** Returns the current local minute value.
     // ***
-    // ***
-    uint8_t localMinute();
+    const uint8_t localMinute();
 
     // ***
+    // *** Converts a 24 hour value to a 12 hour value.
     // ***
-    // ***
-    uint8_t twentyFourToTwelve(uint8_t);
+    const uint8_t twentyFourToTwelve(uint8_t);
 
     // ***
+    // *** Returns true when the current local time is AM.
     // ***
-    // ***
-    bool isAm();
+    const bool isAm();
 
     // ***
+    // *** Returns true when the current local time is PM.
     // ***
-    // ***
-    bool isPm();
+    const bool isPm();
 
   protected:
     // ***
@@ -89,12 +106,12 @@ class TimeManager
     RTC_DS1307 _rtc;
 
     // ***
-    // ***
+    // *** Holds the time zone offset.
     // ***
     int16_t _tzOffset;
 
     // ***
-    // ***
+    // *** Holds the DST flag.
     // ***
     bool _isDst;
 

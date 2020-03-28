@@ -70,18 +70,18 @@ class GpsManager
     // *** used by the caller to ensure the correct baud rate is set
     // *** on the serial port being passed to this instance.
     // ***
-    uint16_t getBaudRate();
+    const uint16_t getBaudRate();
 
     // ***
     // *** Indicates whether or not the GPS has a fix.
     // ***
-    bool hasFix();
+    const bool hasFix();
 
     // ***
     // *** Gets the last date and time retrieved from
     // *** the GPS.
     // ***
-    DateTime dateTime();
+    const DateTime dateTime();
 
   protected:
     // ***
@@ -117,9 +117,8 @@ class GpsManager
     void parseDateAndTime();
 
     // ***
-    // *** Gets/sets a value to indicate if a processing
-    // *** loop is executing or not so that the loop
-    // *** is not re-entered while it is already running.
+    // *** Prevents renetering of process() method
+    // *** while it is already running.
     // ***
     bool _processing = false;
 

@@ -91,7 +91,7 @@ class LedMatrix : public Adafruit_GFX
     // ***
     // *** Get/set the refresh of the display.
     // ***
-    uint8_t getRefreshRate();
+    const uint8_t getRefreshRate();
     void setRefreshRate(uint8_t);
 
     // ***
@@ -112,7 +112,7 @@ class LedMatrix : public Adafruit_GFX
     // ***
     // *** Gets the recommended time between refreshes based on the selected mode.
     // ***
-    uint32_t getRefreshDelay();
+    const uint32_t getRefreshDelay();
 
     // ***
     // *** Resets and clears the entire display.
@@ -127,17 +127,27 @@ class LedMatrix : public Adafruit_GFX
     // ***
     // *** Get the width of text for this display.
     // ***
-    uint16_t getTextWidth(String);
+    const uint16_t getTextWidth(const char* text);
 
     // ***
     // *** Draws a string centered on the display.
     // ***
-    void drawTextCentered(String);
+    void drawTextCentered(const char* text);
 
     // ***
     // *** This routine will lop through the time of day.
     // ***
     void testDisplay(uint16_t);
+
+    // ***
+    // *** Highlights all of the pixels as a test.
+    // ***
+    void powerOnDisplayTest();
+
+    // ***
+    // ***
+    // ***
+    void drawMomentaryTextCentered(const char* text, uint64_t displayTime, bool resetAfter);
 
   protected:
     // ***

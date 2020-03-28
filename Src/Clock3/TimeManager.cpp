@@ -1,3 +1,19 @@
+// ***
+// *** Copyright(C) 2020, Daniel M. Porrey. All rights reserved.
+// ***
+// *** This program is free software: you can redistribute it and/or modify
+// *** it under the terms of the GNU Lesser General Public License as published
+// *** by the Free Software Foundation, either version 3 of the License, or
+// *** (at your option) any later version.
+// ***
+// *** This program is distributed in the hope that it will be useful,
+// *** but WITHOUT ANY WARRANTY; without even the implied warranty of
+// *** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// *** GNU Lesser General Public License for more details.
+// ***
+// *** You should have received a copy of the GNU Lesser General Public License
+// *** along with this program. If not, see http://www.gnu.org/licenses/.
+// ***
 #include "TimeManager.h"
 
 void TimeManager::begin(TimeEvent callback)
@@ -23,8 +39,14 @@ void TimeManager::begin(int16_t tzOffset, bool isDst, TimeEvent callback)
 
 void TimeManager::tickTock()
 {
+  // ***
+  // *** Get the current date and time from the RTC.
+  // ***
   DateTime now = this->_rtc.now();
 
+  // ***
+  // *** Check if the minute has changed.
+  // ***
   if (this->_lastMinuteDisplayed != now.minute())
   {
     // ***
@@ -39,7 +61,7 @@ void TimeManager::tickTock()
   }
 }
 
-int16_t TimeManager::getTimeZoneOffset()
+const int16_t TimeManager::getTimeZoneOffset()
 {
   return this->_tzOffset;
 }
@@ -53,7 +75,7 @@ void TimeManager::setTimeZoneOffset(int16_t tzOffset)
   }
 }
 
-bool TimeManager::getIsDst()
+const bool TimeManager::getIsDst()
 {
   return _isDst;
 }
@@ -67,7 +89,7 @@ void TimeManager::setIsDst(bool isDst)
   }
 }
 
-DateTime TimeManager::getUtcDateTime()
+const DateTime TimeManager::getUtcDateTime()
 {
   return this->_rtc.now();
 }
@@ -77,23 +99,23 @@ void TimeManager::setUtcDateTime(const DateTime& dateTime)
   _rtc.adjust(dateTime);
 }
 
-DateTime TimeManager::getLocalDateTime()
+const DateTime TimeManager::getLocalDateTime()
 {
   DateTime now = this->getUtcDateTime();
   return DateTime(now.unixtime() + (this->_tzOffset * 3600) + (this->_isDst ? 3600 : 0));
 }
 
-uint8_t TimeManager::localHour()
+const uint8_t TimeManager::localHour()
 {
   return this->twentyFourToTwelve(this->getLocalDateTime().hour());
 }
 
-uint8_t TimeManager::localMinute()
+const uint8_t TimeManager::localMinute()
 {
   return this->getLocalDateTime().minute();
 }
 
-uint8_t TimeManager::twentyFourToTwelve(uint8_t hour)
+const uint8_t TimeManager::twentyFourToTwelve(uint8_t hour)
 {
   uint8_t returnValue = 0;
 
@@ -113,12 +135,12 @@ uint8_t TimeManager::twentyFourToTwelve(uint8_t hour)
   return returnValue;
 }
 
-bool TimeManager::isAm()
+const bool TimeManager::isAm()
 {
   return !this->isPm();
 }
 
-bool TimeManager::isPm()
+const bool TimeManager::isPm()
 {
   return this->getLocalDateTime().hour() >= 12;
 }

@@ -1,3 +1,19 @@
+// ***
+// *** Copyright(C) 2020, Daniel M. Porrey. All rights reserved.
+// ***
+// *** This program is free software: you can redistribute it and/or modify
+// *** it under the terms of the GNU Lesser General Public License as published
+// *** by the Free Software Foundation, either version 3 of the License, or
+// *** (at your option) any later version.
+// ***
+// *** This program is distributed in the hope that it will be useful,
+// *** but WITHOUT ANY WARRANTY; without even the implied warranty of
+// *** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// *** GNU Lesser General Public License for more details.
+// ***
+// *** You should have received a copy of the GNU Lesser General Public License
+// *** along with this program. If not, see http://www.gnu.org/licenses/.
+// ***
 #include "GpsManager.h"
 
 GpsManager::GpsManager(Stream* serialPort)
@@ -22,7 +38,7 @@ void GpsManager::begin(GpsEvent callback)
   this->_callback(GPS_INITIALIZED);
 }
 
-uint16_t GpsManager::getBaudRate()
+const uint16_t GpsManager::getBaudRate()
 {
   return 9600;
 }
@@ -63,13 +79,13 @@ void GpsManager::process()
     this->parseDateAndTime();
 
     // ***
-    // *** Set the flag to prevent re-entry.
+    // *** Reset the flag.
     // ***
     _processing = false;
   }
 }
 
-bool GpsManager::hasFix()
+const bool GpsManager::hasFix()
 {
   return this->_hasFix;
 }
@@ -93,7 +109,7 @@ void GpsManager::setHasFix(bool hasFix)
   }
 }
 
-DateTime GpsManager::dateTime()
+const DateTime GpsManager::dateTime()
 {
   // ***
   // *** Return the internal value.

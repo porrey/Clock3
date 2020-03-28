@@ -52,7 +52,7 @@ void LedMatrix::begin(const GFXfont* f)
   this->begin();
 }
 
-uint8_t LedMatrix::getRefreshRate()
+const uint8_t LedMatrix::getRefreshRate()
 {
   return this->_refreshRate;
 }
@@ -73,7 +73,7 @@ void LedMatrix::setRefreshRate(uint8_t refreshRate)
   this->_refreshDelay = (uint64_t)(1.0 / ((float)this->_refreshRate * (float)this->width()) * 1000.0 * 1000.0);
 }
 
-uint32_t LedMatrix::getRefreshDelay()
+const uint32_t LedMatrix::getRefreshDelay()
 {
   return this->_refreshDelay;
 }
@@ -151,7 +151,7 @@ void LedMatrix::drawColumn(uint8_t column, uint8_t rows)
   // ***
   // *** Since this method is called in rapid succession, we can use a delay here to simulate
   // *** PWM on the display. A longer delay here makes the display look dimmer. Depending on
-  // *** the numbr of rows that are turned on, a delay is calculatedd to compensate for when
+  // *** the number of rows that are turned on, a delay is calculated to compensate for when
   // *** a column has less LEDs lit up and therefore looks brighter. The less rows displayed,
   // *** the longer the delay (more time spent off).
   // ***
@@ -244,7 +244,7 @@ void LedMatrix::clear()
   }
 }
 
-uint16_t LedMatrix::getTextWidth(String text)
+const uint16_t LedMatrix::getTextWidth(const char* text)
 {
   // ***
   // *** Since this display is one line only and is using a
@@ -257,13 +257,12 @@ uint16_t LedMatrix::getTextWidth(String text)
   uint8_t first = pgm_read_byte(&gfxFont->first);
   uint8_t last = pgm_read_byte(&gfxFont->last);
   char c;
-  const char *str = const_cast<char *>(text.c_str());
 
-  while ((c = *str++))
+  while ((c = *text++))
   {
     if ((c >= first) && (c <= last))
     {
-      GFXglyph *glyph = pgm_read_glyph_ptr(gfxFont, c - first);
+      GFXglyph* glyph = pgm_read_glyph_ptr(gfxFont, c - first);
       uint8_t xa = pgm_read_byte(&glyph->xAdvance);
       returnValue += xa;
     }
@@ -272,9 +271,12 @@ uint16_t LedMatrix::getTextWidth(String text)
   return returnValue;
 }
 
-void LedMatrix::drawTextCentered(String text)
+void LedMatrix::drawTextCentered(const char* text)
 {
-  this->reset();
+  // ***
+  // *** Clear the display.
+  // ***
+  this->clear();
 
   // ***
   // *** Calculate the width of the text. Remove the
@@ -317,13 +319,60 @@ void LedMatrix::testDisplay(uint16_t delayTime)
     {
       char buffer[5];
       sprintf(buffer, "%01d:%02d", h, minute);
-      String time = String(buffer);
+      //String time = String(buffer);
 
       this->reset();
-      this->drawTextCentered(time);
+      this->drawTextCentered(buffer);
       this->drawPixel(18, 5, pm ? 1 : 0);
 
       delay(delayTime);
     }
+  }
+}
+
+void LedMatrix::powerOnDisplayTest()
+{
+  // ***
+  // *** Light each LED.
+  // ***
+  for (uint8_t x = 0; x < this->width(); x++)
+  {
+    for (uint8_t y = 0; y < this->height(); y++)
+    {
+      this->drawPixel(x, y, 1);
+      delay(10);
+    }
+  }
+
+  // ***
+  // *** Pause for 2 seconds to show each
+  // *** LED is working.
+  // ***
+  delay(2000);
+
+  // ***
+  // *** Clear the display.
+  // ***
+  this->clear();
+}
+
+void LedMatrix::drawMomentaryTextCentered(const char* text, uint64_t displayTime, bool resetAfter)
+{
+  // ***
+  // *** Draw the text centered.
+  // ***
+  this->drawTextCentered(text);
+
+  // ***
+  // *** Use delay to pause the text.
+  // ***
+  delay(displayTime);
+
+  // ***
+  // *** Clear the display if specified.
+  // ***
+  if (resetAfter)
+  {
+    this->clear();
   }
 }
