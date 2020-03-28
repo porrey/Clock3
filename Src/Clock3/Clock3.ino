@@ -296,7 +296,7 @@ void loop()
           // *** Highlight the LED at x = 18 and y = 5
           // *** when the time is PM.
           // ***
-          _display.drawPixel(18, 1, gps.hasFix() ? 1 : 0);
+          _display.drawPixel(18, 1, _gpsManager.hasFix() ? 1 : 0);
         }
       }
       break;
