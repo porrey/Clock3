@@ -78,9 +78,9 @@ using namespace ace_button;
 // *** variable requires enough bytes to hold the data type plus one additional
 // *** byte for a checksum.
 // ***
-EEPROMStorage<int16_t> _tzOffset(0, 0);     // This variable is stored in EEPROM at positions 0, 1 and 2 (3 bytes).
-EEPROMStorage<bool> _isDst(3, false);       // This variable is stored in EEPROM at positions 3 and 4 (2 bytes).
-EEPROMStorage<bool> _chime(5, false);       // This variable is stored in EEPROM at positions 5 and 5 (2 bytes).
+EEPROMStorage<int16_t> _tzOffset(0, 0);   // This variable is stored in EEPROM at positions 0, 1 and 2 (3 bytes).
+EEPROMStorage<bool> _isDst(3, false);     // This variable is stored in EEPROM at positions 3 and 4 (2 bytes).
+EEPROMStorage<bool> _chime(5, true);      // This variable is stored in EEPROM at positions 5 and 5 (2 bytes).
 
 // ***
 // *** Create an instance of the GpsManager.
@@ -383,9 +383,10 @@ void backgroundToneEvent(BackgroundTone::SEQUENCE_EVENT_ID eventId)
     case BackgroundTone::SEQUENCE_STARTED:
       {
         // ***
-        // *** Clear the display.
+        // *** Clear and reset the display.
         // ***
         _display.clear();
+        _display.reset();
 
         TRACELN(F("Track started. Buttons are temporarily disabled."));
       }
@@ -393,7 +394,7 @@ void backgroundToneEvent(BackgroundTone::SEQUENCE_EVENT_ID eventId)
     case BackgroundTone::SEQUENCE_COMPLETED:
       {
         // ***
-        // *** Recconect the buttons.
+        // *** Reconnect the setup button.
         // ***
         pinMode(SETUP_BUTTON, INPUT_PULLUP);
         TRACELN(F("Track completed. Restored buttons."));
@@ -453,13 +454,24 @@ void timeEvent(TimeManager::TIME_EVENT_ID eventId)
         // ***
         if (_timeManager.getUtcDateTime().minute() == 0)
         {
-          if (_chime && _mode.getMode() == Mode::MODE_DISPLAY_TIME)
+          if (_chime)
           {
-            // ***
-            // *** The top of every hour.
-            // ***
-            _tone.play(BackgroundTone::CHIME);
-            TRACELN(F("Playing chime."));
+            if (_mode.getMode() == Mode::MODE_DISPLAY_TIME)
+            {
+              // ***
+              // *** The top of every hour.
+              // ***
+              _tone.play(BackgroundTone::CHIME);
+              TRACELN(F("Playing chime."));
+            }
+            else
+            {
+              TRACELN(F("Chime enabled; not in time display mode)."));
+            }
+          }
+          else
+          {
+            TRACELN(F("Chime is disabled."));
           }
         }
         else if (_timeManager.getUtcDateTime().minute() == 30)
