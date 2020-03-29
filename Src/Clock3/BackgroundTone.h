@@ -19,30 +19,38 @@
 
 #include <Arduino.h>
 #include "MusicNotes.h"
-#include <avr/pgmspace.h>
 
 #define NO_SEQUENCE 0xffff
 #define END_OF_SEQUENCE 0xffff
 #define REPEAT_SEQUENCE 0
 
 // ***
-// *** Represents a single note within
-// *** a sequence.
+// *** This represents a sequence of pitch/duration pairs to play
+// *** melodies or sounds.
 // ***
-struct NOTE
-{
-  uint16_t pitch;
-  uint16_t duration;
-};
+const static uint16_t _sequences[] PROGMEM = {
+      /* Buzz -> start : 0 */
+      NOTE_A2, 500, NOTE_REST, 300, NOTE_REST, REPEAT_SEQUENCE,
+      /* Classic -> start : 6 */
+      NOTE_A5, 50, NOTE_REST, 50,
+      NOTE_A5, 50, NOTE_REST, 50,
+      NOTE_A5, 50, NOTE_REST, 750,
+      NOTE_REST, REPEAT_SEQUENCE,
+      /* Chime -> start : 20 */
+      NOTE_F4, 800, NOTE_A4, 800, NOTE_G4, 800, NOTE_C4, 1600, NOTE_REST, 200,
+      NOTE_F4, 800, NOTE_G4, 800, NOTE_A4, 800, NOTE_F4, 1600, NOTE_REST, 200,
+      NOTE_A4, 800, NOTE_F4, 800, NOTE_G4, 800, NOTE_C4, 1600, NOTE_REST, 200,
+      NOTE_C4, 800, NOTE_G4, 800, NOTE_A4, 800, NOTE_F4, 1600, NOTE_REST, 200,
+      NOTE_REST, END_OF_SEQUENCE };
 
 class BackgroundTone
 {
   public:
     // ***
     // *** Specifies a particular sequence (song or chime). The value
-    // *** is the offset of the first note in the sequences[] array.
+    // *** is the offset of the first note in the _sequences[] array.
     // ***
-    enum SEQUENCE { BUZZ = 0, CLASSIC = 3, CHIME = 10 };
+    enum SEQUENCE { BUZZ = 0, CLASSIC = 6, CHIME = 20 };
 
     // ***
     // *** Species an event ID for the callback.
@@ -87,22 +95,6 @@ class BackgroundTone
     void stop();
 
   protected:
-    const NOTE _sequences[32] = {
-                                  /* Buzz -> start : 0 */
-                                  {NOTE_A2, 500}, {NOTE_REST, 300}, {NOTE_REST, REPEAT_SEQUENCE},
-                                  /* Classic -> start : 3 */
-                                  {NOTE_A5, 50}, {NOTE_REST, 50},
-                                  {NOTE_A5, 50}, {NOTE_REST, 50},
-                                  {NOTE_A5, 50}, {NOTE_REST, 750},
-                                  {NOTE_REST, REPEAT_SEQUENCE},
-                                  /* Chime -> start : 10 */
-                                  {NOTE_F4, 800}, {NOTE_A4, 800}, {NOTE_G4, 800}, {NOTE_C4, 1600}, {NOTE_REST, 200},
-                                  {NOTE_F4, 800}, {NOTE_G4, 800}, {NOTE_A4, 800}, {NOTE_F4, 1600}, {NOTE_REST, 200},
-                                  {NOTE_A4, 800}, {NOTE_F4, 800}, {NOTE_G4, 800}, {NOTE_C4, 1600}, {NOTE_REST, 200},
-                                  {NOTE_C4, 800}, {NOTE_G4, 800}, {NOTE_A4, 800}, {NOTE_F4, 1600}, {NOTE_REST, 200},
-                                  {NOTE_REST, END_OF_SEQUENCE}
-                                };
-
     // ***
     // *** This is the current sequence being played. This is
     // *** set to NO_SEQUENCE when nothing is playing.
@@ -117,7 +109,7 @@ class BackgroundTone
     // ***
     // *** Gets the next note in the sequence.
     // ***
-    const NOTE* getNextNote();
+    void getNextNote(uint16_t&, uint16_t&);
 
     // ***
     // *** This is the pin used to playing the tone.

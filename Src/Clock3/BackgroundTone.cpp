@@ -45,7 +45,7 @@ void BackgroundTone::stop()
 void BackgroundTone::tick()
 {
   // ***
-  // *** If the current track is END_OF_SEQUENCE, then no seuence
+  // *** If the current track is END_OF_SEQUENCE, then no sequence
   // *** is currently being played.
   // ***
   if (this->_currentSequence != NO_SEQUENCE)
@@ -59,16 +59,17 @@ void BackgroundTone::tick()
       // ***
       // *** Get the current note being played.
       // ***
-      NOTE* note = this->getNextNote();
+      uint16_t pitch, duration;
+      this->getNextNote(pitch, duration);
 
-      if (note->duration != END_OF_SEQUENCE)
+      if (duration != END_OF_SEQUENCE)
       {
-        if (note->pitch != NOTE_REST)
+        if (pitch != NOTE_REST)
         {
           // ***
           // *** Play the current note.
           // ***
-          tone(this->_pin, note->pitch, note->duration);
+          tone(this->_pin, pitch, duration);
         }
         else
         {
@@ -78,36 +79,37 @@ void BackgroundTone::tick()
           // ***
           // *** TO DO: Replace this with a countdown on Timer2
           // ***
-          tone(15, 100, note->duration);
+          tone(15, 100, duration);
         }
       }
     }
   }
 }
 
-const NOTE* BackgroundTone::getNextNote()
+void BackgroundTone::getNextNote(uint16_t& pitch, uint16_t& duration)
 {
-  NOTE* returnValue;
-
   // ***
-  // *** Get the nxt note in the sequence.
+  // *** Get the next note in the sequence.
   // ***
-  returnValue = &this->_sequences[this->_currentNoteIndex];
+  pitch = pgm_read_word_near(_sequences + this->_currentNoteIndex);
+  duration = pgm_read_word_near(_sequences + this->_currentNoteIndex + 1);
 
   // ***
   // *** If the duration of the note is 0 then it repeats. If the value
   // *** is -1 then it has ended.
   // ***
-  if (returnValue->duration == REPEAT_SEQUENCE)
+  if (duration == REPEAT_SEQUENCE)
   {
     // ***
     // *** This is a repeating sequence. Set the
     // *** next note to the start of the sequence.
     // ***
     this->_currentNoteIndex = this->_currentSequence;
-    returnValue = &this->_sequences[this->_currentNoteIndex];
+
+    pitch = pgm_read_word_near(_sequences + this->_currentNoteIndex);
+    duration = pgm_read_word_near(_sequences + this->_currentNoteIndex + 1);
   }
-  else if (returnValue->duration == END_OF_SEQUENCE)
+  else if (duration == END_OF_SEQUENCE)
   {
     this->_currentSequence = NO_SEQUENCE;
     this->_currentNoteIndex = END_OF_SEQUENCE;
@@ -119,8 +121,6 @@ const NOTE* BackgroundTone::getNextNote()
     // ***
     // *** Increment the note index.
     // ***
-    this->_currentNoteIndex++;
+    this->_currentNoteIndex += 2;
   }
-
-  return returnValue;
 }
