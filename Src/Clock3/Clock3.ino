@@ -532,7 +532,6 @@ void buttonEventHandler(AceButton * button, uint8_t eventType, uint8_t state)
               // *** changed flag.
               // ***
               _mode.increment();
-              //_modeChanged = true;
               TRACE(F("Mode = ")); TRACELN(_mode.getMode());
             }
             break;
