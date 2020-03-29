@@ -24,6 +24,11 @@
 #define SETUP_BUTTON 3
 
 // ***
+// *** GPS battery analog pin 
+// ***
+#define GPS_BATTERY_PIN A0
+
+// ***
 // *** Defines the register and port for the three 74LS138N 3 to 8 decoders. The three
 // *** input pins are on PD4 (A), PD5 (B) and PD6 (C). A, B and C are all tied
 // *** together on on three decoder chips.
