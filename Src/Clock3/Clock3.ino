@@ -164,8 +164,9 @@ void setup()
   TRACELN(F("Button pins have been initialized."));
 
   // ***
-  // *** Configure the ButtonConfig with the event handler and
-  // *** and the required features.
+  // *** Configure the AceButtons using ButtonConfig by
+  // *** assigning the event handler and setting the
+  // *** required features.
   // ***
   ButtonConfig* buttonConfig = ButtonConfig::getSystemButtonConfig();
   buttonConfig->setEventHandler(buttonEventHandler);
@@ -189,7 +190,9 @@ void setup()
   TRACELN(F("Timer1 has been initialized."));
 
   // ***
-  // *** Power on display test.
+  // *** Power on display test. This will ensure all LEDs are
+  // *** working and that the initialization of the display
+  // *** driver is working.
   // ***
   _display.powerOnDisplayTest();
 
@@ -197,7 +200,7 @@ void setup()
   // *** Initialize the battery monitor and display
   // *** the current voltage.
   // ***
-  _batteryMonitor.begin(A0);
+  _batteryMonitor.begin(GPS_BATTERY_PIN);
   TRACE(F("GPS Battery = ")); TRACE(_batteryMonitor.voltage()); TRACELN(F("v"));
 
   // ***
@@ -226,8 +229,9 @@ void setup()
 // ***
 // *** yield() is defined in the Arduino core and is called
 // *** by various parts of the code such as delay(). This allows
-// *** code to be run while other code is aiting for something to
-// *** prevent valuable CPU cycles from being wasted. See hooks.c.
+// *** code to be run while other code is waiting. This will
+// *** prevent valuable CPU cycles from being wasted. See hooks.c
+// *** in the Arduino core.
 // ***
 void yield()
 {
@@ -378,6 +382,11 @@ void backgroundToneEvent(BackgroundTone::SEQUENCE_EVENT_ID eventId)
   {
     case BackgroundTone::SEQUENCE_STARTED:
       {
+        // ***
+        // *** Clear the display.
+        // ***
+        _display.clear();
+
         TRACELN(F("Track started. Buttons are temporarily disabled."));
       }
       break;
@@ -446,11 +455,6 @@ void timeEvent(TimeManager::TIME_EVENT_ID eventId)
         {
           if (_chime && _mode.getMode() == Mode::MODE_DISPLAY_TIME)
           {
-            // ***
-            // *** Clear the display.
-            // ***
-            _display.clear();
-
             // ***
             // *** The top of every hour.
             // ***
