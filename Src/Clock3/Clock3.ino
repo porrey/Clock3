@@ -248,7 +248,8 @@ void setup()
 // *** by various parts of the code such as delay(). This allows
 // *** code to be run while other code is waiting. This will
 // *** prevent valuable CPU cycles from being wasted. See hooks.c
-// *** in the Arduino core.
+// *** in the Arduino core. This is a very basic form of
+// *** cooperative multitasking.
 // ***
 void yield()
 {
