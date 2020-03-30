@@ -20,7 +20,7 @@
 #include <Arduino.h>
 #include <Adafruit_GFX.h>
 #include "MyPins.h"
-#include "Bitwise.h"
+#include "Other\Bitwise.h"
 #include "gfxfont.h"
 
 // **************************************************************************** //
