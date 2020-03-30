@@ -31,7 +31,7 @@
 #include <AceButton.h>
 #include <EEPROM-Storage.h>
 #include "LedMatrix.h"
-#include "ClockFont.h"
+#include "Other\ClockFont.h"
 #include "GpsManager.h"
 #include "BackgroundTone.h"
 #include "TimeManager.h"
@@ -54,21 +54,21 @@ using namespace ace_button;
 // *** are mapped to Debug.println().
 // ***
 #ifdef DEBUG
-#include <SoftwareSerial.h>
-
-// ***
-// *** Define the serial port for displaying debug messages. Note we specify
-// *** RX of -1 since we only send data and do not expect to receive any data.
-// ***
-SoftwareSerial Debug(-1, 7); // RX, TX
-
-#define TRACE(x) Debug.print(x)
-#define TRACELN(x) Debug.println(x)
-#define TRACE_DATE(l, d) TraceDateTime(l, d)
+  #include <SoftwareSerial.h>
+  
+  // ***
+  // *** Define the serial port for displaying debug messages. Note we specify
+  // *** RX of -1 since we only send data and do not expect to receive any data.
+  // ***
+  SoftwareSerial Debug(-1, 7); // RX, TX
+  
+  #define TRACE(x) Debug.print(x)
+  #define TRACELN(x) Debug.println(x)
+  #define TRACE_DATE(l, d) TraceDateTime(l, d)
 #else
-#define TRACE(x)
-#define TRACELN(x)
-#define TRACE_DATE
+  #define TRACE(x)
+  #define TRACELN(x)
+  #define TRACE_DATE
 #endif
 
 // ***
@@ -561,6 +561,7 @@ void buttonEventHandler(AceButton* button, uint8_t eventType, uint8_t state)
               // *** Not used.
               // ***
               TRACELN(F("Mode button was double-clicked"));
+              modeButtonDoubleClicked();
             }
             break;
         }
@@ -737,35 +738,53 @@ void setupButtonClicked()
 
 void setupButtonDoubleClicked()
 {
-  _display.drawMomentaryTextCentered(STRING_DISPLAY_BATTERY, DISPLAY_TEXT_DELAY, true);
+  // ***
+  // *** Only allowed when in display time mode.
+  // ***
+  if (_clockMode.mode() == Mode::MODE_DISPLAY_TIME)
+  {
+    _display.drawMomentaryTextCentered(STRING_DISPLAY_BATTERY, DISPLAY_TEXT_DELAY, true);
 
-  // ***
-  // *** Get the GPS backup battery voltage.
-  // ***
-  float voltage = _batteryMonitor.voltage();
+    // ***
+    // *** Get the GPS backup battery voltage.
+    // ***
+    float voltage = _batteryMonitor.voltage();
 
-  // ***
-  // *** Convert the float value to a string.
-  // ***
-  char buffer[3];
-  dtostrf(voltage, 3, 1, buffer);
+    // ***
+    // *** Convert the float value to a string.
+    // ***
+    char buffer[3];
+    dtostrf(voltage, 3, 1, buffer);
 
-  // ***
-  // *** Format the string for display.
-  // ***
-  char str[3];
-  sprintf(str, FORMAT_VOLTAGE, buffer);
+    // ***
+    // *** Format the string for display.
+    // ***
+    char str[3];
+    sprintf(str, FORMAT_VOLTAGE, buffer);
 
-  // ***
-  // *** Display the string.
-  // ***
-  _display.drawMomentaryTextCentered(str, DISPLAY_TEXT_DELAY * 3, true);
+    // ***
+    // *** Display the string.
+    // ***
+    _display.drawMomentaryTextCentered(str, DISPLAY_TEXT_DELAY * 3, true);
 
-  // ***
-  // *** Force a redraw.
-  // ***
-  _clockMode.modeChanged(true);
+    // ***
+    // *** Force a redraw.
+    // ***
+    _clockMode.modeChanged(true);
+  }
 }
+
+void modeButtonDoubleClicked()
+{
+  // ***
+  // *** Only allowed when in display time mode.
+  // ***
+  if (_clockMode.mode() == Mode::MODE_DISPLAY_TIME)
+  {
+    _tone.play(BackgroundTone::CHIME);
+  }
+}
+
 // ***
 // *** Called by the Timer1 to refresh the display.
 // ***
