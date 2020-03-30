@@ -50,9 +50,9 @@ class TimeManager
     void begin(int16_t, bool, TimeEvent);
 
     // ***
+    // *** Background processing.
     // ***
-    // ***
-    void tickTock();
+    void process();
 
     // ***
     // *** Gets/sets the time zone offset.

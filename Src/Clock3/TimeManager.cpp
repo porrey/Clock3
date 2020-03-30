@@ -37,7 +37,7 @@ void TimeManager::begin(int16_t tzOffset, bool isDst, TimeEvent callback)
   this->begin(callback);
 }
 
-void TimeManager::tickTock()
+void TimeManager::process()
 {
   // ***
   // *** Get the current date and time from the RTC.
