@@ -54,21 +54,21 @@ using namespace ace_button;
 // *** are mapped to Debug.println().
 // ***
 #ifdef DEBUG
-  #include <SoftwareSerial.h>
-  
-  // ***
-  // *** Define the serial port for displaying debug messages. Note we specify
-  // *** RX of -1 since we only send data and do not expect to receive any data.
-  // ***
-  SoftwareSerial Debug(-1, 7); // RX, TX
-  
-  #define TRACE(x) Debug.print(x)
-  #define TRACELN(x) Debug.println(x)
-  #define TRACE_DATE(l, d) TraceDateTime(l, d)
+#include <SoftwareSerial.h>
+
+// ***
+// *** Define the serial port for displaying debug messages. Note we specify
+// *** RX of -1 since we only send data and do not expect to receive any data.
+// ***
+SoftwareSerial Debug(-1, 7); // RX, TX
+
+#define TRACE(x) Debug.print(x)
+#define TRACELN(x) Debug.println(x)
+#define TRACE_DATE(l, d) TraceDateTime(l, d)
 #else
-  #define TRACE(x)
-  #define TRACELN(x)
-  #define TRACE_DATE
+#define TRACE(x)
+#define TRACELN(x)
+#define TRACE_DATE
 #endif
 
 // ***
@@ -256,7 +256,7 @@ void yield()
   {
     TRACELN(F("Mode changed to default."));
   }
-  
+
   // ***
   // *** If there is a tone playing, the serial port will interfere
   // *** with it and the buttons do not need to work.
@@ -530,7 +530,6 @@ void buttonEventHandler(AceButton * button, uint8_t eventType, uint8_t state)
               // *** A long press of the mode button will cause the time
               // *** to update from the GPS.
               // ***
-              _mode.modeChanged(true);
               _display.drawMomentaryTextCentered(STRING_DISPLAY_GPS, DISPLAY_TEXT_DELAY * 2, true);
 
               // ***
@@ -545,9 +544,14 @@ void buttonEventHandler(AceButton * button, uint8_t eventType, uint8_t state)
               }
               else
               {
-                _display.drawMomentaryTextCentered(STRING_DISPLAY_NO_FIX, DISPLAY_TEXT_DELAY * 2, true);
                 TRACELN(F("RTC could not be updated from the GPS; no fix."));
+                _display.drawMomentaryTextCentered(STRING_DISPLAY_NO_FIX, DISPLAY_TEXT_DELAY * 2, true);
               }
+
+              // ***
+              // *** Force an update of the time display.
+              // ***
+              _mode.modeChanged(true);
             }
             break;
           case AceButton::kEventReleased:
