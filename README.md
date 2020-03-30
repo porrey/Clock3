@@ -22,6 +22,7 @@ This firmware has been written from scratch using standard Arduino libraries. In
 - The original **TimerOne** library has been kept for refreshing the display. The refresh has been optimized to allow a lower refresh rate by drawing one column at a time while maintaining a consistent LED brightness.
 - The code has been broken out into modules/classes in an effort to make it easier to include or exclude capabilities.
 - This library continues to support sound through the pizeo.
+- Added optional **[Westminster Quarters](https://en.wikipedia.org/wiki/Westminster_Quarters)** (hourly only).
 
 
 ## GFX Font Editor
