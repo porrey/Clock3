@@ -7,7 +7,7 @@ class Mode
     // ***
     // *** Defines the various modes.
     // ***
-    enum MODE { MODE_DISPLAY_TIME = 0, MODE_TZ = 1, MODE_DST = 2, MODE_CHIME = 3, MODE_BATTERY = 4 , MODE_MAX = 5 };
+    enum MODE { MODE_DISPLAY_TIME = 0, MODE_TZ = 1, MODE_DST = 2, MODE_CHIME = 3, MODE_MAX = 4 };
 
     // ***
     // *** Creates an instance with the specified default mode

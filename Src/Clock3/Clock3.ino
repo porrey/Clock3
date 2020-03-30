@@ -370,20 +370,6 @@ void loop()
         }
       }
       break;
-    case Mode::MODE_BATTERY:
-      {
-        if (_clockMode.modeChanged())
-        {
-          _display.drawMomentaryTextCentered(STRING_DISPLAY_BATTERY, DISPLAY_TEXT_DELAY, true);
-        }
-
-        if (_clockMode.anyChanged())
-        {
-          float voltage = _batteryMonitor.voltage();
-          displayVoltage(_display, voltage);
-        }
-      }
-      break;
   }
 
   // ***
@@ -622,10 +608,8 @@ void buttonEventHandler(AceButton* button, uint8_t eventType, uint8_t state)
             break;
           case AceButton::kEventDoubleClicked:
             {
-              // ***
-              // *** Not used.
-              // ***
               TRACELN(F("Setup button was double-clicked"));
+              setupButtonDoubleClicked();
             }
             break;
         }
@@ -748,15 +732,40 @@ void setupButtonClicked()
         TRACE(F("Changed Chime to ")); TRACELN(_chime ? "Yes" : "No");
       }
       break;
-    case Mode::MODE_BATTERY:
-      {
-        _clockMode.setupChanged(true);
-        TRACELN("Battery");
-      }
-      break;
   }
 }
 
+void setupButtonDoubleClicked()
+{
+  _display.drawMomentaryTextCentered(STRING_DISPLAY_BATTERY, DISPLAY_TEXT_DELAY, true);
+
+  // ***
+  // *** Get the GPS backup battery voltage.
+  // ***
+  float voltage = _batteryMonitor.voltage();
+
+  // ***
+  // *** Convert the float value to a string.
+  // ***
+  char buffer[3];
+  dtostrf(voltage, 3, 1, buffer);
+
+  // ***
+  // *** Format the string for display.
+  // ***
+  char str[3];
+  sprintf(str, FORMAT_VOLTAGE, buffer);
+
+  // ***
+  // *** Display the string.
+  // ***
+  _display.drawMomentaryTextCentered(str, DISPLAY_TEXT_DELAY * 3, true);
+
+  // ***
+  // *** Force a redraw.
+  // ***
+  _clockMode.modeChanged(true);
+}
 // ***
 // *** Called by the Timer1 to refresh the display.
 // ***
@@ -774,26 +783,6 @@ void refreshDisplay()
     // ***
     _display.refresh();
   }
-}
-
-void displayVoltage(const LedMatrix& display, float value)
-{
-  // ***
-  // *** Convert the float value to a string.
-  // ***
-  char buffer[3];
-  dtostrf(value, 3, 1, buffer);
-
-  // ***
-  // *** Format the string for display.
-  // ***
-  char str[3];
-  sprintf(str, FORMAT_VOLTAGE, buffer);
-
-  // ***
-  // *** Display the string.
-  // ***
-  display.drawTextCentered(str);
 }
 
 void displayTzOffset(const LedMatrix& display, int16_t value)
