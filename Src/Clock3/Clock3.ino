@@ -102,9 +102,11 @@ TimeManager _timeManager = TimeManager();
 LedMatrix _display = LedMatrix(50);
 
 // ***
-// *** Create an instance of Mode to track the clock mode.
+// *** Create an instance of Mode to track the clock mode
+// *** specifying MODE_DISPLAY_TIME as the default mode
+// *** and a 15 second timeout.
 // ***
-Mode _mode = Mode(Mode::MODE_DISPLAY_TIME);
+Mode _mode = Mode(Mode::MODE_DISPLAY_TIME, 15);
 
 // ***
 // *** Define the IDs for the the mode and setup buttons.
@@ -238,13 +240,23 @@ void yield()
   // ***
   // *** Keep the background tone generator rolling...
   // ***
-  _tone.tick();
+  _tone.process();
 
   // ***
   // *** Keep the time manager ticking...
   // ***
-  _timeManager.tickTock();
+  _timeManager.process();
 
+  // ***
+  // *** Checks for mode timeout. Retuns true
+  // *** whenever the mode is reset back to
+  // *** the default mode.
+  // ***
+  if (_mode.process())
+  {
+    TRACELN(F("Mode changed to default."));
+  }
+  
   // ***
   // *** If there is a tone playing, the serial port will interfere
   // *** with it and the buttons do not need to work.
@@ -269,7 +281,7 @@ void loop()
   // ***
   // *** Check the current mode.
   // ***
-  switch (_mode.getMode())
+  switch (_mode.mode())
   {
     // ***
     // *** Display the time.
@@ -371,7 +383,8 @@ void loop()
   _mode.reset();
 
   // ***
-  // *** Use delay to allow some backround processing.
+  // *** Use delay to allow some backround processing. Internally,
+  // *** this calls yield();
   // ***
   delay(250);
 }
@@ -421,7 +434,7 @@ void gpsEvent(GpsManager::GPS_EVENT_ID eventId)
         // *** Update the display only when we are in the display
         // *** time mode.
         // ***
-        if (_mode.getMode() == Mode::MODE_DISPLAY_TIME)
+        if (_mode.mode() == Mode::MODE_DISPLAY_TIME)
         {
           _mode.modeChanged(true);
           TRACE(F("GPS Fix has changed: ")); TRACELN(_gpsManager.hasFix() ? F("Yes") : F("No"));
@@ -456,7 +469,7 @@ void timeEvent(TimeManager::TIME_EVENT_ID eventId)
         {
           if (_chime)
           {
-            if (_mode.getMode() == Mode::MODE_DISPLAY_TIME)
+            if (_mode.mode() == Mode::MODE_DISPLAY_TIME)
             {
               // ***
               // *** The top of every hour.
@@ -544,7 +557,7 @@ void buttonEventHandler(AceButton * button, uint8_t eventType, uint8_t state)
               // *** changed flag.
               // ***
               _mode.increment();
-              TRACE(F("Mode = ")); TRACELN(_mode.getMode());
+              TRACE(F("Mode = ")); TRACELN(_mode.mode());
             }
             break;
         }
@@ -562,7 +575,7 @@ void buttonEventHandler(AceButton * button, uint8_t eventType, uint8_t state)
           case AceButton::kEventReleased:
           case AceButton::kEventRepeatPressed:
             {
-              switch (_mode.getMode())
+              switch (_mode.mode())
               {
                 case Mode::MODE_TZ:
                   {

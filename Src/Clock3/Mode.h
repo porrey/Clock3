@@ -10,17 +10,24 @@ class Mode
     enum MODE { MODE_DISPLAY_TIME = 0, MODE_TZ = 1, MODE_DST = 2, MODE_CHIME = 3, MODE_BATTERY = 4 , MODE_MAX = 5 };
 
     // ***
-    // *** Creates an instance with the specified intial mode.
+    // *** Creates an instance with the specified default mode
+    // *** and mode timeout (in seconds);
     // ***
-    Mode(uint8_t initialMode)
+    Mode(uint8_t defaultMode, uint8_t timeout)
     {
-      this->_mode = initialMode;
+      this->_defaultMode = defaultMode;
+      this->_mode = defaultMode;
+
+      // ***
+      // *** Convert timeout to milliseconds.
+      // ***
+      this->_timeout = timeout * 1000;
     };
 
     // ***
     // *** Gets the current mode.
     // ***
-    const uint8_t getMode()
+    const uint8_t mode()
     {
       return this->_mode;
     }
@@ -28,10 +35,10 @@ class Mode
     // ***
     // *** Sets the current mode.
     // ***
-    void setMode(uint8_t mode)
+    void mode(uint8_t mode)
     {
       this->_mode = mode;
-      this->_modeChanged = true;
+      this->modeChanged(true);
     }
 
     // ***
@@ -40,7 +47,7 @@ class Mode
     // ***
     void increment()
     {
-      this->setMode(++this->_mode % MODE_MAX);
+      this->mode(++this->_mode % MODE_MAX);
     }
 
     // ***
@@ -49,7 +56,7 @@ class Mode
     // ***
     const bool modeChanged()
     {
-      return this->_modeChanged ;
+      return this->_modeChanged;
     }
 
     // ***
@@ -58,6 +65,7 @@ class Mode
     void modeChanged(bool changed)
     {
       this->_modeChanged = changed;
+      this->_timer = millis();
     }
 
     // ***
@@ -75,6 +83,7 @@ class Mode
     void setupChanged(bool changed)
     {
       this->_setupChanged = changed;
+      this->_timer = millis();
     }
 
     // ***
@@ -95,11 +104,45 @@ class Mode
       this->_setupChanged = false;
     }
 
+    // ***
+    // *** Called in loop() to check mode timeout.
+    // ***
+    bool process()
+    {
+      bool returnValue = false;
+
+      // ***
+      // *** Chck if indefault more.
+      // ***
+      if (this->_mode != this->_defaultMode)
+      {
+        // ***
+        // *** Check if the timeout period has elapsed.
+        // ***
+        if ((millis() - this->_timer) > this->_timeout)
+        {
+          // ***
+          // *** Switch back to the default mode.
+          // ***
+          this->mode(this->_defaultMode);
+          returnValue = true;
+        }
+      }
+
+      return returnValue;
+    }
+
   protected:
     // ***
     // *** Stores the current mode.
     // ***
     uint8_t _mode;
+
+    // ***
+    // *** This is the mode the clock
+    // *** should be in normally.
+    // ***
+    uint8_t _defaultMode;
 
     // ***
     // *** The mode changed flag.
@@ -110,5 +153,17 @@ class Mode
     // *** The setup changed flag.
     // ***
     bool _setupChanged = false;
+
+    // ***
+    // *** The amount of time, in seconds, that the mode
+    // *** will switch back to the default mode if no changes
+    // *** are detected.
+    // ***
+    uint16_t _timeout;
+
+    // ***
+    // *** Tracks the last mode or setup change.
+    // ***
+    uint64_t _timer;
 };
 #endif
