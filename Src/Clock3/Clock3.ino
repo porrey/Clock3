@@ -17,15 +17,25 @@
 
 // ******************************************************************
 // ***
+// *** Board:       Arduino Pro or Pro Min
+// *** Processor:   ATmega328P (3.3V, 8MHz)
+// ***
 // *** Required fuses:
 // ***
-// *** Low:       0xE2
-// *** High:      0xDA
-// *** Extended:  0xFD (or 0x05)
+// ***  Low:       0xE2
+// ***  High:      0xDA
+// ***  Extended:  0xFD (or 0x05)
 // ***
-// *** -U lfuse:w:0xe2:m -U hfuse:w:0xda:m -U efuse:w:0xfd:m
+// ***  -U lfuse:w:0xe2:m -U hfuse:w:0xda:m -U efuse:w:0xfd:m
 // ***
 // ******************************************************************
+
+// ***
+// *** Comment/Uncomment this line to disable/enable debugging on the serial
+// *** port. Connect RX from a TTL or FTDI cable to D7 (PD7). Note, this
+// *** will use more program memory and mor dynamic memory.
+// ***
+//#define DEBUG
 
 #include <TimerOne.h>
 #include <AceButton.h>
@@ -42,11 +52,15 @@
 using namespace ace_button;
 
 // ***
-// *** Comment/Uncomment this line to disable/enable debugging on the serial
-// *** port. Connect RX from a TTL or FTDI cable to D7 (PD7). Note, this
-// *** will use more program memory and mor dynamic memory.
+// *** Buttons
 // ***
-#define DEBUG
+#define MODE_BUTTON 2
+#define SETUP_BUTTON 3
+
+// ***
+// *** GPS battery analog pin 
+// ***
+#define GPS_BATTERY_PIN A0
 
 // ***
 // *** If debugging is enabled, The software serial port is created
@@ -391,9 +405,8 @@ void backgroundToneEvent(BackgroundTone::SEQUENCE_EVENT_ID eventId)
     case BackgroundTone::SEQUENCE_STARTED:
       {
         // ***
-        // *** Clear and reset the display.
+        // *** Reset the display.
         // ***
-        _display.clear();
         _display.reset();
 
         TRACELN(F("Track started. Buttons are temporarily disabled."));
