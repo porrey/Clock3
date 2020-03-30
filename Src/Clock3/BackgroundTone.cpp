@@ -42,7 +42,12 @@ void BackgroundTone::stop()
   this->_callback(SEQUENCE_COMPLETED);
 }
 
-void BackgroundTone::tick()
+uint16_t BackgroundTone::currentSequence()
+{
+  return _currentSequence;
+}
+
+void BackgroundTone::process()
 {
   // ***
   // *** If the current track is END_OF_SEQUENCE, then no sequence

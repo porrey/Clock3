@@ -29,19 +29,20 @@
 // *** melodies or sounds.
 // ***
 const static uint16_t _sequences[] PROGMEM = {
-      /* Buzz -> start : 0 */
-      NOTE_A2, 500, NOTE_REST, 300, NOTE_REST, REPEAT_SEQUENCE,
-      /* Classic -> start : 6 */
-      NOTE_A5, 50, NOTE_REST, 50,
-      NOTE_A5, 50, NOTE_REST, 50,
-      NOTE_A5, 50, NOTE_REST, 750,
-      NOTE_REST, REPEAT_SEQUENCE,
-      /* Chime -> start : 20 */
-      NOTE_F4, 800, NOTE_A4, 800, NOTE_G4, 800, NOTE_C4, 1600, NOTE_REST, 200,
-      NOTE_F4, 800, NOTE_G4, 800, NOTE_A4, 800, NOTE_F4, 1600, NOTE_REST, 200,
-      NOTE_A4, 800, NOTE_F4, 800, NOTE_G4, 800, NOTE_C4, 1600, NOTE_REST, 200,
-      NOTE_C4, 800, NOTE_G4, 800, NOTE_A4, 800, NOTE_F4, 1600, NOTE_REST, 200,
-      NOTE_REST, END_OF_SEQUENCE };
+  /* Buzz -> start : 0 */
+  NOTE_A2, 500, NOTE_REST, 300, NOTE_REST, REPEAT_SEQUENCE,
+  /* Classic -> start : 6 */
+  NOTE_A5, 50, NOTE_REST, 50,
+  NOTE_A5, 50, NOTE_REST, 50,
+  NOTE_A5, 50, NOTE_REST, 750,
+  NOTE_REST, REPEAT_SEQUENCE,
+  /* Chime -> start : 20 */
+  NOTE_F4, 800, NOTE_A4, 800, NOTE_G4, 800, NOTE_C4, 1600, NOTE_REST, 200,
+  NOTE_F4, 800, NOTE_G4, 800, NOTE_A4, 800, NOTE_F4, 1600, NOTE_REST, 200,
+  NOTE_A4, 800, NOTE_F4, 800, NOTE_G4, 800, NOTE_C4, 1600, NOTE_REST, 200,
+  NOTE_C4, 800, NOTE_G4, 800, NOTE_A4, 800, NOTE_F4, 1600, NOTE_REST, 200,
+  NOTE_REST, END_OF_SEQUENCE
+};
 
 class BackgroundTone
 {
@@ -75,7 +76,7 @@ class BackgroundTone
     // ***
     // *** Called in the loop to keep things moving.
     // ***
-    void tick();
+    void process();
 
     // ***
     // *** Starts playing the specified sequence.
@@ -86,6 +87,11 @@ class BackgroundTone
     // *** Returns true if a sequence is playing.
     // ***
     const bool isPlaying();
+
+    // ***
+    // *** Returns the current sequence being played.
+    // ***
+    uint16_t currentSequence();
 
     // ***
     // *** Stops a playing sequence. Some sequences have a fixed playing length
