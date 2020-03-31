@@ -28,11 +28,19 @@ class BatteryMonitor
       this->_voltageSteps = referenceVoltage / pow(2, bits);
     };
 
+    // ***
+    // *** Initializes this instance on the
+    // *** specified analog pin.
+    // ***
     void begin(uint16_t pin)
     {
       this->_pin = pin;
     }
 
+    // ***
+    // *** Gets the current voltage on
+    // *** the analog pin.
+    // ***
     const float voltage()
     {
       // ***
@@ -42,13 +50,25 @@ class BatteryMonitor
       return this->_voltageSteps * value;
     }
 
+    // ***
+    // *** Gets the voltage per ADC increment.
+    // ***
     const float voltageIncrements()
     {
       return this->_voltageSteps;
     }
 
   protected:
+    // ***
+    // *** Stores the analog pin.
+    // ***
     uint16_t _pin;
+    
+    // ***
+    // *** Holds the calculated voltage
+    // *** increment applied to the value read
+    // *** from the analog port.
+    // ***
     float _voltageSteps;
 };
 #endif

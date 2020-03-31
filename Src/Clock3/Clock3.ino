@@ -35,7 +35,7 @@
 // *** port. Connect RX from a TTL or FTDI cable to D7 (PD7). Note, this
 // *** will use more program memory and mor dynamic memory.
 // ***
-//#define DEBUG
+#define DEBUG
 
 #include <TimerOne.h>
 #include <AceButton.h>
@@ -120,7 +120,7 @@ LedMatrix _display = LedMatrix(50);
 // *** specifying MODE_DISPLAY_TIME as the default mode
 // *** and a 15 second timeout.
 // ***
-Mode _clockMode = Mode(Mode::MODE_DISPLAY_TIME, 15);
+Mode _clockMode = Mode(Mode_t::MODE_DISPLAY_TIME, 15);
 
 // ***
 // *** Define the IDs for the the mode and setup buttons.
@@ -139,15 +139,20 @@ AceButton _buttons[2];
 BackgroundTone _tone;
 
 // ***
-// *** Create an instance of battery monitor.
+// *** Create an instance of battery monitor. The ADC on the ATmega328P
+// *** is 10-bit and the reference voltage is 5.0V.
 // ***
-BatteryMonitor _batteryMonitor;
+BatteryMonitor _batteryMonitor(10, 5.0);
 
 // ***
 // *** AMount of time for delayed text.
 // ***
-#define DISPLAY_TEXT_DELAY    650
+#define DISPLAY_TEXT_DELAY 650
 
+// ***
+// *** setup() is calld once when the microcontroler
+// *** is first powered up.
+// ***
 void setup()
 {
 #ifdef DEBUG
@@ -300,6 +305,10 @@ void yield()
   }
 }
 
+// ***
+// *** loop() is called by the Arduino internals again
+// *** and again forever...
+// ***
 void loop()
 {
   // ***
@@ -310,7 +319,7 @@ void loop()
     // ***
     // *** Display the time.
     // ***
-    case Mode::MODE_DISPLAY_TIME:
+    case Mode_t::MODE_DISPLAY_TIME:
       {
         if (_clockMode.anyChanged())
         {
@@ -340,7 +349,7 @@ void loop()
         }
       }
       break;
-    case Mode::MODE_TZ:
+    case Mode_t::MODE_TZ:
       {
         // ***
         // *** Display the current offset.
@@ -356,7 +365,7 @@ void loop()
         }
       }
       break;
-    case Mode::MODE_DST:
+    case Mode_t::MODE_DST:
       {
         // ***
         // *** Display the current DST mode.
@@ -372,7 +381,7 @@ void loop()
         }
       }
       break;
-    case Mode::MODE_CHIME:
+    case Mode_t::MODE_CHIME:
       {
         if (_clockMode.modeChanged())
         {
@@ -399,11 +408,14 @@ void loop()
   delay(250);
 }
 
-void backgroundToneEvent(BackgroundTone::SEQUENCE_EVENT_ID eventId)
+// ***
+// *** Event handler for the Background Tone.
+// ***
+void backgroundToneEvent(SequenceEventId_t eventId)
 {
   switch (eventId)
   {
-    case BackgroundTone::SEQUENCE_STARTED:
+    case SequenceEventId_t::SEQUENCE_STARTED:
       {
         // ***
         // *** Reset the display.
@@ -413,7 +425,7 @@ void backgroundToneEvent(BackgroundTone::SEQUENCE_EVENT_ID eventId)
         TRACELN(F("Track started. Buttons are temporarily disabled."));
       }
       break;
-    case BackgroundTone::SEQUENCE_COMPLETED:
+    case SequenceEventId_t::SEQUENCE_COMPLETED:
       {
         // ***
         // *** Reconnect the setup button.
@@ -425,11 +437,14 @@ void backgroundToneEvent(BackgroundTone::SEQUENCE_EVENT_ID eventId)
   }
 }
 
-void gpsEvent(GpsManager::GPS_EVENT_ID eventId)
+// ***
+// *** Event handler for the GPS Manager.
+// ***
+void gpsEvent(GpsEventId_t eventId)
 {
   switch (eventId)
   {
-    case GpsManager::GPS_INITIALIZED:
+    case GpsEventId_t::GPS_INITIALIZED:
       {
         // ***
         // *** Not used.
@@ -437,13 +452,13 @@ void gpsEvent(GpsManager::GPS_EVENT_ID eventId)
         TRACELN(F("GPS has been initialized."));
       }
       break;
-    case GpsManager::GPS_FIX_CHANGED:
+    case GpsEventId_t::GPS_FIX_CHANGED:
       {
         // ***
         // *** Update the display only when we are in the display
         // *** time mode.
         // ***
-        if (_clockMode.mode() == Mode::MODE_DISPLAY_TIME)
+        if (_clockMode.mode() == Mode_t::MODE_DISPLAY_TIME)
         {
           _clockMode.modeChanged(true);
           TRACE(F("GPS Fix has changed: ")); TRACELN(_gpsManager.hasFix() ? F("Yes") : F("No"));
@@ -453,21 +468,24 @@ void gpsEvent(GpsManager::GPS_EVENT_ID eventId)
   }
 }
 
-void timeEvent(TimeManager::TIME_EVENT_ID eventId)
+// ***
+// *** Event handler for the Time Manager.
+// ***
+void timeEvent(TimeEventId_t eventId)
 {
   switch (eventId)
   {
-    case TimeManager::TIME_INITIALIZED:
+    case TimeEventId_t::TIME_INITIALIZED:
       {
         TRACELN(F("The time manager has been initialized."));
       }
       break;
-    case TimeManager::TIME_NO_RTC:
+    case TimeEventId_t::TIME_NO_RTC:
       {
         TRACELN(F("The timer manager could not find the RTC."));
       }
       break;
-    case TimeManager::TIME_MINUTE_CHANGED:
+    case TimeEventId_t::TIME_MINUTE_CHANGED:
       {
         TRACELN(F("Minute changed."));
 
@@ -478,12 +496,12 @@ void timeEvent(TimeManager::TIME_EVENT_ID eventId)
         {
           if (_chime)
           {
-            if (_clockMode.mode() == Mode::MODE_DISPLAY_TIME)
+            if (_clockMode.mode() == Mode_t::MODE_DISPLAY_TIME)
             {
               // ***
               // *** The top of every hour.
               // ***
-              _tone.play(BackgroundTone::CHIME);
+              _tone.play(Sequence_t::CHIME);
               TRACELN(F("Playing chime."));
             }
             else
@@ -677,7 +695,7 @@ void setupButtonClicked()
 {
   switch (_clockMode.mode())
   {
-    case Mode::MODE_TZ:
+    case Mode_t::MODE_TZ:
       {
         // ***
         // *** Increment the TZ offset
@@ -706,7 +724,7 @@ void setupButtonClicked()
         TRACE(F("Changed TZ to ")); TRACELN(_tzOffset);
       }
       break;
-    case Mode::MODE_DST:
+    case Mode_t::MODE_DST:
       {
         // ***
         // *** Toggle the DST flag.
@@ -729,7 +747,7 @@ void setupButtonClicked()
         TRACE(F("Changed DST to ")); TRACELN(_isDst ? "Yes" : "No");
       }
       break;
-    case Mode::MODE_CHIME:
+    case Mode_t::MODE_CHIME:
       {
         // ***
         // *** Toggle the chime flag.
@@ -755,7 +773,7 @@ void setupButtonDoubleClicked()
   // ***
   // *** Only allowed when in display time mode.
   // ***
-  if (_clockMode.mode() == Mode::MODE_DISPLAY_TIME)
+  if (_clockMode.mode() == Mode_t::MODE_DISPLAY_TIME)
   {
     _display.drawMomentaryTextCentered(STRING_DISPLAY_BATTERY, DISPLAY_TEXT_DELAY, true);
 
@@ -793,9 +811,9 @@ void modeButtonDoubleClicked()
   // ***
   // *** Only allowed when in display time mode.
   // ***
-  if (_clockMode.mode() == Mode::MODE_DISPLAY_TIME)
+  if (_clockMode.mode() == Mode_t::MODE_DISPLAY_TIME)
   {
-    _tone.play(BackgroundTone::CHIME);
+    _tone.play(Sequence_t::CHIME);
   }
 }
 
@@ -818,6 +836,10 @@ void refreshDisplay()
   }
 }
 
+// ***
+// *** Displays the time zone offset centered on
+// *** the display.
+// ***
 void displayTzOffset(const LedMatrix& display, int16_t value)
 {
   // ***
@@ -832,6 +854,10 @@ void displayTzOffset(const LedMatrix& display, int16_t value)
   display.drawTextCentered(buffer);
 }
 
+// ***
+// *** Displays a boolean value using the strings 'Yes' and
+// *** 'No'. The text is centered on the display.
+// ***
 void displayBoolean(const LedMatrix& display, bool value)
 {
   char buffer[3];
@@ -844,6 +870,9 @@ void displayBoolean(const LedMatrix& display, bool value)
 }
 
 #ifdef DEBUG
+// ***
+// *** Used to display a DateTime value when debugging.
+// ***
 void TraceDateTime(String label, const DateTime& dt)
 {
   char buffer[] = "MM-DD-YYYY hh:mm:ss";

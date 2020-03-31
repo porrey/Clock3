@@ -21,22 +21,25 @@
 #include <Wire.h>
 #include <RTClib.h>
 
+// ***
+// *** A list of event IDs.
+// ***
+typedef enum TIME_EVENT_ID : uint8_t
+{
+  TIME_INITIALIZED = 0,
+  TIME_NO_RTC = 1,
+  TIME_TZ_OFFSET_CHANGED  = 2,
+  TIME_DST_CHANGED = 3,
+  TIME_MINUTE_CHANGED = 4
+} TimeEventId_t;
+
 class TimeManager
 {
   public:
     // ***
-    // *** A list of event IDs.
-    // ***
-    enum TIME_EVENT_ID
-    {
-      TIME_INITIALIZED = 0, TIME_NO_RTC = 1, TIME_TZ_OFFSET_CHANGED  = 2,
-      TIME_DST_CHANGED = 3, TIME_MINUTE_CHANGED = 4
-    };
-
-    // ***
     // *** Definition for the event callback handler.
     // ***
-    using TimeEvent = void (*)(TIME_EVENT_ID);
+    using TimeEventHandler = void (*)(TimeEventId_t);
 
     // ***
     // *** Default constructor.
@@ -46,8 +49,8 @@ class TimeManager
     // ***
     // *** Initializes this instance.
     // ***
-    void begin(TimeEvent);
-    void begin(int16_t, bool, TimeEvent);
+    void begin(TimeEventHandler);
+    void begin(int16_t, bool, TimeEventHandler);
 
     // ***
     // *** Background processing.
@@ -129,6 +132,6 @@ class TimeManager
     // ***
     // *** The event callback handler.
     // ***
-    TimeEvent _callback;
+    TimeEventHandler _callback;
 };
 #endif

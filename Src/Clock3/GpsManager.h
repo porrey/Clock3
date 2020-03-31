@@ -31,21 +31,22 @@
 #define PMTK_ENABLE_WAAS F("$PMTK301,2*2E")
 #define PGCMD_ANTENNA F("$PGCMD,33,1*6C")
 
+// ***
+// *** A list of event IDs.
+// ***
+typedef enum GPS_EVENT_ID : uint8_t
+{
+  GPS_INITIALIZED = 0,
+  GPS_FIX_CHANGED = 1
+} GpsEventId_t;
+
 class GpsManager
 {
   public:
     // ***
-    // *** A list of event IDs.
-    // ***
-    enum GPS_EVENT_ID
-    {
-      GPS_INITIALIZED = 0, GPS_FIX_CHANGED = 1
-    };
-
-    // ***
     // *** Definition for the event callback handler.
     // ***
-    using GpsEvent = void (*)(GPS_EVENT_ID);
+    using GpsEventHandler = void (*)(GpsEventId_t);
 
     // ***
     // *** Creates an instance of GpsManager with
@@ -57,7 +58,7 @@ class GpsManager
     // *** Initializes this instance with the given
     // *** event handler.
     // ***
-    void begin(GpsEvent);
+    void begin(GpsEventHandler);
 
     // ***
     // *** Performs the background processing necessary to keep
@@ -132,6 +133,6 @@ class GpsManager
     // ***
     // *** The event callback handler.
     // ***
-    GpsEvent _callback;
+    GpsEventHandler _callback;
 };
 #endif

@@ -16,13 +16,13 @@
 // ***
 #include "BackgroundTone.h"
 
-void BackgroundTone::begin(uint16_t pin, BackgroundToneEvent callback)
+void BackgroundTone::begin(uint16_t pin, BackgroundToneEventHandler callback)
 {
   this->_pin = pin;
   this->_callback = callback;
 }
 
-void BackgroundTone::play(SEQUENCE sequence)
+void BackgroundTone::play(Sequence_t sequence)
 {
   this->_currentSequence = sequence;
   this->_currentNoteIndex = sequence;
@@ -42,7 +42,7 @@ void BackgroundTone::stop()
   this->_callback(SEQUENCE_COMPLETED);
 }
 
-const uint16_t BackgroundTone::currentSequence()
+const Sequence_t BackgroundTone::currentSequence()
 {
   return _currentSequence;
 }

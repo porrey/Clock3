@@ -16,7 +16,7 @@
 // ***
 #include "TimeManager.h"
 
-void TimeManager::begin(TimeEvent callback)
+void TimeManager::begin(TimeEventHandler callback)
 {
   this->_callback = callback;
 
@@ -30,7 +30,7 @@ void TimeManager::begin(TimeEvent callback)
   }
 }
 
-void TimeManager::begin(int16_t tzOffset, bool isDst, TimeEvent callback)
+void TimeManager::begin(int16_t tzOffset, bool isDst, TimeEventHandler callback)
 {
   this->_tzOffset = tzOffset;
   this->_isDst = isDst;

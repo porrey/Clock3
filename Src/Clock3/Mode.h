@@ -1,19 +1,26 @@
 #ifndef MODE_H
 #define MODE_H
 
+// ***
+// *** Defines the various modes.
+// ***
+typedef enum MODE : uint8_t
+{
+  MODE_DISPLAY_TIME = 0,
+  MODE_TZ = 1,
+  MODE_DST = 2,
+  MODE_CHIME = 3,
+  MODE_MAX = 4
+} Mode_t;
+
 class Mode
 {
   public:
     // ***
-    // *** Defines the various modes.
-    // ***
-    enum MODE { MODE_DISPLAY_TIME = 0, MODE_TZ = 1, MODE_DST = 2, MODE_CHIME = 3, MODE_MAX = 4 };
-
-    // ***
     // *** Creates an instance with the specified default mode
     // *** and mode timeout (in seconds);
     // ***
-    Mode(uint8_t defaultMode, uint8_t timeout)
+    Mode(Mode_t defaultMode, uint8_t timeout)
     {
       this->_defaultMode = defaultMode;
       this->_mode = defaultMode;
@@ -27,7 +34,7 @@ class Mode
     // ***
     // *** Gets the current mode.
     // ***
-    const uint8_t mode()
+    const Mode_t mode()
     {
       return this->_mode;
     }
@@ -35,7 +42,7 @@ class Mode
     // ***
     // *** Sets the current mode.
     // ***
-    void mode(uint8_t mode)
+    void mode(Mode_t mode)
     {
       this->_mode = mode;
       this->modeChanged(true);
@@ -47,7 +54,9 @@ class Mode
     // ***
     void increment()
     {
-      this->mode(++this->_mode % MODE_MAX);
+      Mode_t nextMode = this->_mode + 1;
+      nextMode = nextMode % Mode_t::MODE_MAX;
+      this->mode(nextMode);
     }
 
     // ***
@@ -136,13 +145,13 @@ class Mode
     // ***
     // *** Stores the current mode.
     // ***
-    uint8_t _mode;
+    Mode_t _mode;
 
     // ***
     // *** This is the mode the clock
     // *** should be in normally.
     // ***
-    uint8_t _defaultMode;
+    Mode_t _defaultMode;
 
     // ***
     // *** The mode changed flag.

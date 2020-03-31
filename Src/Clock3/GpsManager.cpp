@@ -21,7 +21,7 @@ GpsManager::GpsManager(Stream* serialPort)
   this->_serialPort = serialPort;
 }
 
-void GpsManager::begin(GpsEvent callback)
+void GpsManager::begin(GpsEventHandler callback)
 {
   this->_callback = callback;
 
@@ -35,7 +35,7 @@ void GpsManager::begin(GpsEvent callback)
   this->_serialPort->println(PMTK_ENABLE_WAAS); delay(250);
   this->_serialPort->println(PGCMD_ANTENNA); delay(250);
 
-  this->_callback(GPS_INITIALIZED);
+  this->_callback(GpsEventId_t::GPS_INITIALIZED);
 }
 
 const uint16_t GpsManager::getBaudRate()
@@ -105,7 +105,7 @@ void GpsManager::setHasFix(bool hasFix)
     // ***
     // *** Fire the event.
     // ***
-    this->_callback(GPS_FIX_CHANGED);
+    this->_callback(GpsEventId_t::GPS_FIX_CHANGED);
   }
 }
 

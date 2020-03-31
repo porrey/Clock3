@@ -41,7 +41,7 @@ const static uint16_t _sequences[] PROGMEM = {
       E4, F♯4, G♯4, E4
       G♯4, E4, F♯4, B3
       B3, F♯4, G♯4, E4
-   */
+  */
   NOTE_E4, 800, NOTE_GS4, 800, NOTE_FS4, 800, NOTE_B3, 1600, NOTE_REST, 200,
   NOTE_E4, 800, NOTE_FS4, 800, NOTE_GS4, 800, NOTE_E4, 1600, NOTE_REST, 200,
   NOTE_GS4, 800, NOTE_E4, 800, NOTE_FS4, 800, NOTE_B3, 1600, NOTE_REST, 200,
@@ -49,24 +49,33 @@ const static uint16_t _sequences[] PROGMEM = {
   NOTE_REST, END_OF_SEQUENCE
 };
 
+// ***
+// *** Specifies a particular sequence (song or chime). The value
+// *** is the offset of the first note in the _sequences[] array.
+// ***
+typedef enum SEQUENCE : uint16_t
+{
+  BUZZ = 0,
+  CLASSIC = 6,
+  CHIME = 20
+} Sequence_t;
+
+// ***
+// *** Species an event ID for the callback.
+// ***
+typedef enum SEQUENCE_EVENT_ID : uint8_t
+{
+  SEQUENCE_STARTED = 0,
+  SEQUENCE_COMPLETED = 1
+} SequenceEventId_t;
+
 class BackgroundTone
 {
   public:
     // ***
-    // *** Specifies a particular sequence (song or chime). The value
-    // *** is the offset of the first note in the _sequences[] array.
-    // ***
-    enum SEQUENCE { BUZZ = 0, CLASSIC = 6, CHIME = 20 };
-
-    // ***
-    // *** Species an event ID for the callback.
-    // ***
-    enum SEQUENCE_EVENT_ID { SEQUENCE_STARTED = 0, SEQUENCE_COMPLETED = 1 };
-
-    // ***
     // *** Definition for the event callback handler.
     // ***
-    using BackgroundToneEvent = void (*)(SEQUENCE_EVENT_ID);
+    using BackgroundToneEventHandler = void (*)(SequenceEventId_t);
 
     // ***
     // *** Default constructor.
@@ -76,7 +85,7 @@ class BackgroundTone
     // ***
     // *** Initializes the player.
     // ***
-    void begin(uint16_t, BackgroundToneEvent);
+    void begin(uint16_t, BackgroundToneEventHandler);
 
     // ***
     // *** Called in the loop to keep things moving.
@@ -86,7 +95,7 @@ class BackgroundTone
     // ***
     // *** Starts playing the specified sequence.
     // ***
-    void play(SEQUENCE);
+    void play(Sequence_t);
 
     // ***
     // *** Returns true if a sequence is playing.
@@ -96,7 +105,7 @@ class BackgroundTone
     // ***
     // *** Returns the current sequence being played.
     // ***
-    const uint16_t currentSequence();
+    const Sequence_t currentSequence();
 
     // ***
     // *** Stops a playing sequence. Some sequences have a fixed playing length
@@ -110,7 +119,7 @@ class BackgroundTone
     // *** This is the current sequence being played. This is
     // *** set to NO_SEQUENCE when nothing is playing.
     // ***
-    uint16_t _currentSequence = NO_SEQUENCE;
+    Sequence_t _currentSequence = NO_SEQUENCE;
 
     // ***
     // *** Current note being played in the current sequence.
@@ -135,6 +144,6 @@ class BackgroundTone
     // ***
     // *** The event callback handler.
     // ***
-    BackgroundToneEvent _callback;
+    BackgroundToneEventHandler _callback;
 };
 #endif
