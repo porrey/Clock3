@@ -96,7 +96,7 @@ class BackgroundTone
     // ***
     // *** Returns the current sequence being played.
     // ***
-    uint16_t currentSequence();
+    const uint16_t currentSequence();
 
     // ***
     // *** Stops a playing sequence. Some sequences have a fixed playing length

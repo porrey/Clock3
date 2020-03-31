@@ -42,7 +42,7 @@ void BackgroundTone::stop()
   this->_callback(SEQUENCE_COMPLETED);
 }
 
-uint16_t BackgroundTone::currentSequence()
+const uint16_t BackgroundTone::currentSequence()
 {
   return _currentSequence;
 }
