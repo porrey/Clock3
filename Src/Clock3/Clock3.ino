@@ -191,6 +191,7 @@ void setup()
   // ***
   ButtonConfig* buttonConfig = ButtonConfig::getSystemButtonConfig();
   buttonConfig->setEventHandler(buttonEventHandler);
+  buttonConfig->setFeature(ButtonConfig::kFeatureClick);
   buttonConfig->setFeature(ButtonConfig::kFeatureLongPress);
   buttonConfig->setFeature(ButtonConfig::kFeatureDoubleClick);
   buttonConfig->setFeature(ButtonConfig::kFeatureRepeatPress);
@@ -238,7 +239,7 @@ void setup()
   _gpsManager.begin(gpsEvent);
 
   // ***
-  // *** Show version number.ngs.en-US
+  // *** Show version number.
   // ***
   _display.drawMomentaryTextCentered(STRING_DISPLAY_VERSION, DISPLAY_TEXT_DELAY * 3, true);
 
@@ -405,7 +406,7 @@ void loop()
   // *** Use delay to allow some backround processing. Internally,
   // *** this calls yield();
   // ***
-  delay(250);
+  delay(325);
 }
 
 // ***
