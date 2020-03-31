@@ -23,7 +23,10 @@ class BatteryMonitor
     // ***
     // *** Default constructor.
     // ***
-    BatteryMonitor() { };
+    BatteryMonitor(uint8_t bits, float referenceVoltage)
+    {
+      this->_voltageSteps = referenceVoltage / pow(2, bits);
+    };
 
     void begin(uint16_t pin)
     {
@@ -36,10 +39,16 @@ class BatteryMonitor
       // *** Get the GPS battery voltage.
       // ***
       uint16_t value = analogRead(this->_pin);
-      return 0.0049 * value;
+      return this->_voltageSteps * value;
+    }
+
+    const float voltageIncrements()
+    {
+      return this->_voltageSteps;
     }
 
   protected:
     uint16_t _pin;
+    float _voltageSteps;
 };
 #endif
