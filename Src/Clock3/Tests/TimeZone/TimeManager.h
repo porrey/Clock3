@@ -20,6 +20,7 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <RTClib.h>
+#include "RtcMemory.h"
 
 #define MARCH 3
 #define NOVEMBER 11
@@ -120,15 +121,15 @@ class TimeManager
     // ***
     // *** Gets/sets UTC time.
     // ***
-    DateTime utcDateTime();
+    const DateTime utcDateTime();
     void utcDateTime(const DateTime&);
 
     // ***
     // *** Gets the local time based on the current
     // ** time zone offset and DST flag.
     // ***
-    DateTime localDateTime();
-    DateTime localDateTime(int16_t, bool);
+    const DateTime localDateTime();
+    const DateTime localDateTime(int16_t, bool);
 
     // ***
     // *** Returns the current time offset
@@ -199,7 +200,7 @@ class TimeManager
     // *** RTC in the Spikenzielabs clock is a DS1337 but
     // *** the interface for DS1307 works just as well.
     // ***
-    RTC_DS1307 _rtc;
+    RtcMemory _rtc;
 
     // ***
     // *** Tracks the last minute displayed so the display
@@ -221,7 +222,7 @@ class TimeManager
     // *** Calculates local date and time based on
     // *** DST and offset.
     // ***
-    DateTime calculateLocalDateTime(int16_t);
+    const DateTime calculateLocalDateTime(int16_t);
 
     // ***
     // *** Calculates DST based on the current date

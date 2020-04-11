@@ -192,7 +192,7 @@ const DstMode_t TimeManager::toggleDstMode()
   return this->dstMode();
 }
 
-DateTime TimeManager::utcDateTime()
+const DateTime TimeManager::utcDateTime()
 {
   // ***
   // *** Get the current date an time from the RTC
@@ -209,7 +209,7 @@ void TimeManager::utcDateTime(const DateTime& dateTime)
   _rtc.adjust(dateTime);
 }
 
-DateTime TimeManager::localDateTime()
+const DateTime TimeManager::localDateTime()
 {
   // ***
   // *** Calculate the local date and time based on
@@ -393,7 +393,7 @@ const static TimeZone_t* TimeManager::getTimeZone(uint8_t timeZoneId)
   return returnValue;
 }
 
-DateTime TimeManager::calculateLocalDateTime(int16_t offset)
+const DateTime TimeManager::calculateLocalDateTime(int16_t offset)
 {
   // ***
   // *** Get the current UTC date and time.

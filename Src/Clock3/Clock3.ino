@@ -31,11 +31,11 @@
 // ******************************************************************
 
 // ***
-// *** Comment/Uncomment this line to disable/enable debugging on the serial
+// *** Comment/uncomment this line to disable/enable debugging on the serial
 // *** port. Connect RX from a TTL or FTDI cable to D7 (PD7). Note, this
-// *** will use more program memory and mor dynamic memory.
+// *** will use more program memory and more dynamic memory.
 // ***
-#define DEBUG
+//#define DEBUG
 
 #include <TimerOne.h>
 #include <AceButton.h>
@@ -58,7 +58,7 @@ using namespace ace_button;
 #define SETUP_BUTTON 3
 
 // ***
-// *** GPS battery analog pin 
+// *** GPS battery analog pin
 // ***
 #define GPS_BATTERY_PIN A0
 
@@ -68,21 +68,24 @@ using namespace ace_button;
 // *** are mapped to Debug.println().
 // ***
 #ifdef DEBUG
-  #include <SoftwareSerial.h>
-  
-  // ***
-  // *** Define the serial port for displaying debug messages. Note we specify
-  // *** RX of -1 since we only send data and do not expect to receive any data.
-  // ***
-  SoftwareSerial Debug(-1, 7); // RX, TX
-  
-  #define TRACE(x) Debug.print(x)
-  #define TRACELN(x) Debug.println(x)
-  #define TRACE_DATE(l, d) TraceDateTime(l, d)
+#include <SoftwareSerial.h>
+#include "Other\memory.h"
+
+// ***
+// *** Define the serial port for displaying debug messages. Note we specify
+// *** RX of -1 since we only send data and do not expect to receive any data.
+// ***
+SoftwareSerial Debug(-1, 7); // RX, TX
+
+#define TRACE(x) Debug.print(x)
+#define TRACELN(x) Debug.println(x)
+#define TRACE_DATE(l, d) TraceDateTime(l, d)
+#define TRACE_DETAILS() traceTimeDetails()
 #else
-  #define TRACE(x)
-  #define TRACELN(x)
-  #define TRACE_DATE
+#define TRACE(x)
+#define TRACELN(x)
+#define TRACE_DATE(l, d)
+#define TRACE_DETAILS()
 #endif
 
 // ***
@@ -92,9 +95,10 @@ using namespace ace_button;
 // *** variable requires enough bytes to hold the data type plus one additional
 // *** byte for a checksum.
 // ***
-EEPROMStorage<int16_t> _tzOffset(0, 0);   // This variable is stored in EEPROM at positions 0, 1 and 2 (3 bytes).
-EEPROMStorage<bool> _isDst(3, false);     // This variable is stored in EEPROM at positions 3 and 4 (2 bytes).
-EEPROMStorage<bool> _chime(5, true);      // This variable is stored in EEPROM at positions 5 and 5 (2 bytes).
+EEPROMStorage<uint8_t> _timeZoneId(0, 0);                       // This variable is stored in EEPROM at positions 0 and 1 (2 bytes).
+EEPROMStorage<DstMode_t> _dstMode(2, DstMode_t::AUTO);          // This variable is stored in EEPROM at positions 2 and 3 (2 bytes).
+EEPROMStorage<bool> _chime(4, true);                            // This variable is stored in EEPROM at positions 4 and 5 (2 bytes).
+EEPROMStorage<bool> _twelveHour(6, true);                       // This variable is stored in EEPROM at positions 6 and 7 (2 bytes).
 
 // ***
 // *** Create an instance of the GpsManager.
@@ -150,7 +154,7 @@ BatteryMonitor _batteryMonitor(10, 5.0);
 #define DISPLAY_TEXT_DELAY 650
 
 // ***
-// *** setup() is calld once when the microcontroler
+// *** setup() is called once when the microcontroller
 // *** is first powered up.
 // ***
 void setup()
@@ -166,10 +170,9 @@ void setup()
   // ***
   // *** Initialize the time manager.
   // ***
-  _timeManager.begin(_tzOffset, _isDst, timeEvent);
-  TRACE(F("TZ Offset: ")); TRACELN(_timeManager.getTimeZoneOffset());
-  TRACE(F("DST: ")); TRACELN(_timeManager.getIsDst() ? F("Yes") : F("No"));
-  TRACE_DATE(F("UTC Date/Time from RTC: "), _timeManager.getUtcDateTime());
+  TRACE(F("Time Zone ID from EEPROM: ")); TRACELN(_timeZoneId);
+  _timeManager.begin(_timeZoneId, _dstMode, _twelveHour, onTimeEvent);
+  TRACE_DETAILS();
 
   // ***
   // *** Initialize the LED matrix.
@@ -190,7 +193,7 @@ void setup()
   // *** required features.
   // ***
   ButtonConfig* buttonConfig = ButtonConfig::getSystemButtonConfig();
-  buttonConfig->setEventHandler(buttonEventHandler);
+  buttonConfig->setEventHandler(onButtonEvent);
   buttonConfig->setFeature(ButtonConfig::kFeatureClick);
   buttonConfig->setFeature(ButtonConfig::kFeatureLongPress);
   buttonConfig->setFeature(ButtonConfig::kFeatureDoubleClick);
@@ -200,8 +203,8 @@ void setup()
   // ***
   // *** Initialize the buttons.
   // ***
-  _buttons[BUTTON_ID_MODE].init(buttonConfig, MODE_BUTTON, HIGH, BUTTON_ID_MODE);
-  _buttons[BUTTON_ID_SETUP].init(buttonConfig, SETUP_BUTTON, HIGH, BUTTON_ID_SETUP);
+  _buttons[BUTTON_ID_MODE].init(MODE_BUTTON, HIGH, BUTTON_ID_MODE);
+  _buttons[BUTTON_ID_SETUP].init(SETUP_BUTTON, HIGH, BUTTON_ID_SETUP);
   TRACELN(F("Button have been initialized."));
 
   // ***
@@ -209,7 +212,7 @@ void setup()
   // *** values based on refresh mode.
   // ***
   Timer1.initialize(_display.getRefreshDelay());
-  Timer1.attachInterrupt(refreshDisplay);
+  Timer1.attachInterrupt(onRefreshDisplay);
   TRACELN(F("Timer1 has been initialized."));
 
   // ***
@@ -229,14 +232,14 @@ void setup()
   // ***
   // *** Set up the background tone generator.
   // ***
-  _tone.begin(SETUP_BUTTON, backgroundToneEvent);
+  _tone.begin(SETUP_BUTTON, onBackgroundToneEvent);
   TRACELN(F("Sound has been initialized."));
 
   // ***
   // *** Initialize the Serial port and GPS Manager.
   // ***
   Serial.begin(9600);
-  _gpsManager.begin(gpsEvent);
+  _gpsManager.begin(onGpsEvent);
 
   // ***
   // *** Show version number.
@@ -334,19 +337,26 @@ void loop()
           TRACE(F("Display Time: ")); TRACELN(buffer);
 
           // ***
-          // *** Update the AM/PM mark on the display.
-          // *** Highlight the LED at x = 18 and y = 5
-          // *** when the time is PM.
+          // *** Do not show the AM/PM or GPS Fix indicators
+          // *** in 24-hour format.
           // ***
-          _display.drawPixel(18, 5, _timeManager.isPm() ? 1 : 0);
-          TRACE(F("AM/PM => ")); TRACELN(_timeManager.isPm() ? F("PM") : F("AM"));
+          if (_timeManager.displayTwelveHourFormat)
+          {
+            // ***
+            // *** Update the AM/PM mark on the display.
+            // *** Highlight the LED at x = 18 and y = 5
+            // *** when the time is PM.
+            // ***
+            _display.drawPixel(18, 5, _timeManager.isPm() ? 1 : 0);
+            TRACE(F("AM/PM => ")); TRACELN(_timeManager.isPm() ? F("PM") : F("AM"));
 
-          // ***
-          // *** Update the GPS fix mark on the display.
-          // *** Highlight the LED at x = 18 and y = 5
-          // *** when the time is PM.
-          // ***
-          _display.drawPixel(18, 1, _gpsManager.hasFix() ? 1 : 0);
+            // ***
+            // *** Update the GPS fix mark on the display.
+            // *** Highlight the LED at x = 18 and y = 5
+            // *** when the time is PM.
+            // ***
+            _display.drawPixel(18, 1, _gpsManager.hasFix() ? 1 : 0);
+          }
         }
       }
       break;
@@ -362,7 +372,16 @@ void loop()
 
         if (_clockMode.anyChanged())
         {
-          displayTzOffset(_display, _tzOffset);
+          TimeZone_t* tz = TimeManager::getTimeZone(_timeManager.timeZoneId());
+
+          if (_timeManager.isDst())
+          {
+            _display.drawTextCentered(tz->dName);
+          }
+          else
+          {
+            _display.drawTextCentered(tz->sName);
+          }
         }
       }
       break;
@@ -378,7 +397,7 @@ void loop()
 
         if (_clockMode.anyChanged())
         {
-          displayBoolean(_display, _isDst);
+          _display.drawTextCentered(_timeManager.dstLabel());
         }
       }
       break;
@@ -395,6 +414,19 @@ void loop()
         }
       }
       break;
+    case Mode_t::MODE_FORMAT:
+      {
+        if (_clockMode.modeChanged())
+        {
+          _display.drawMomentaryTextCentered(STRING_DISPLAY_FMT, DISPLAY_TEXT_DELAY, true);
+        }
+
+        if (_clockMode.anyChanged())
+        {
+          displayBoolean(_display, _twelveHour);
+        }
+      }
+      break;
   }
 
   // ***
@@ -406,13 +438,13 @@ void loop()
   // *** Use delay to allow some backround processing. Internally,
   // *** this calls yield();
   // ***
-  delay(325);
+  delay(350);
 }
 
 // ***
 // *** Event handler for the Background Tone.
 // ***
-void backgroundToneEvent(SequenceEventId_t eventId)
+void onBackgroundToneEvent(SequenceEventId_t eventId)
 {
   switch (eventId)
   {
@@ -433,6 +465,11 @@ void backgroundToneEvent(SequenceEventId_t eventId)
         // ***
         pinMode(SETUP_BUTTON, INPUT_PULLUP);
         TRACELN(F("Track completed. Restored buttons."));
+
+        // ***
+        // *** Force the display to dedraw.
+        // ***
+        _clockMode.setupChanged(true);
       }
       break;
   }
@@ -441,7 +478,7 @@ void backgroundToneEvent(SequenceEventId_t eventId)
 // ***
 // *** Event handler for the GPS Manager.
 // ***
-void gpsEvent(GpsEventId_t eventId)
+void onGpsEvent(GpsEventId_t eventId)
 {
   switch (eventId)
   {
@@ -462,7 +499,7 @@ void gpsEvent(GpsEventId_t eventId)
         if (_clockMode.mode() == Mode_t::MODE_DISPLAY_TIME)
         {
           _clockMode.modeChanged(true);
-          TRACE(F("GPS Fix has changed: ")); TRACELN(_gpsManager.hasFix() ? F("Yes") : F("No"));
+          TRACE_DETAILS();
         }
       }
       break;
@@ -472,7 +509,7 @@ void gpsEvent(GpsEventId_t eventId)
 // ***
 // *** Event handler for the Time Manager.
 // ***
-void timeEvent(TimeEventId_t eventId)
+void onTimeEvent(TimeEventId_t eventId)
 {
   switch (eventId)
   {
@@ -486,6 +523,16 @@ void timeEvent(TimeEventId_t eventId)
         TRACELN(F("The timer manager could not find the RTC."));
       }
       break;
+    case TimeEventId_t::TIME_ZONE_CHANGED:
+      {
+        TRACELN(F("Time zone changed."));
+      }
+      break;
+    case TimeEventId_t::DST_MODE_CHANGED:
+      {
+        TRACELN(F("DST mode changed."));
+      }
+      break;
     case TimeEventId_t::TIME_MINUTE_CHANGED:
       {
         TRACELN(F("Minute changed."));
@@ -493,7 +540,7 @@ void timeEvent(TimeEventId_t eventId)
         // ***
         // *** Check the current minute.
         // ***
-        if (_timeManager.getUtcDateTime().minute() == 0)
+        if (_timeManager.utcDateTime().minute() == 0)
         {
           if (_chime)
           {
@@ -515,7 +562,7 @@ void timeEvent(TimeEventId_t eventId)
             TRACELN(F("Chime is disabled."));
           }
         }
-        else if (_timeManager.getUtcDateTime().minute() == 30)
+        else if (_timeManager.utcDateTime().minute() == 30)
         {
           // ***
           // *** Every hour at 15 minutes past the hour,
@@ -524,9 +571,8 @@ void timeEvent(TimeEventId_t eventId)
           if (_gpsManager.hasFix())
           {
             TRACELN(F("Updating RTC from GPS."));
-            TRACE_DATE("UTC Date/Time from RTC: ", _timeManager.getUtcDateTime());
-            TRACE_DATE("UTC Date/Time from GPS: ", _gpsManager.dateTime());
-            _timeManager.setUtcDateTime(_gpsManager.dateTime());
+            TRACE_DETAILS();
+            _timeManager.utcDateTime(_gpsManager.dateTime());
           }
         }
 
@@ -534,12 +580,13 @@ void timeEvent(TimeEventId_t eventId)
         // *** Trigger a time update for the display.
         // ***
         _clockMode.setupChanged(true);
+        TRACE_DETAILS();
       }
       break;
   }
 }
 
-void buttonEventHandler(AceButton* button, uint8_t eventType, uint8_t state)
+void onButtonEvent(AceButton* button, uint8_t eventType, uint8_t state)
 {
   // ***
   // *** Get the ID of the button that was pressed.
@@ -554,17 +601,11 @@ void buttonEventHandler(AceButton* button, uint8_t eventType, uint8_t state)
         {
           case AceButton::kEventPressed:
             {
-              // ***
-              // *** Not used.
-              // ***
               TRACELN(F("Mode button was pressed"));
             }
             break;
           case AceButton::kEventReleased:
             {
-              // ***
-              // *** Not used.
-              // ***
               TRACELN(F("Mode button was released"));
             }
             break;
@@ -582,17 +623,11 @@ void buttonEventHandler(AceButton* button, uint8_t eventType, uint8_t state)
             break;
           case AceButton::kEventRepeatPressed:
             {
-              // ***
-              // *** Not used.
-              // ***
               TRACELN(F("Mode button was repeat-pressed"));
             }
             break;
           case AceButton::kEventDoubleClicked:
             {
-              // ***
-              // *** Not used.
-              // ***
               TRACELN(F("Mode button was double-clicked"));
               modeButtonDoubleClicked();
             }
@@ -606,25 +641,16 @@ void buttonEventHandler(AceButton* button, uint8_t eventType, uint8_t state)
         {
           case AceButton::kEventPressed:
             {
-              // ***
-              // *** Not used.
-              // ***
               TRACELN(F("Setup button was pressed"));
             }
             break;
           case AceButton::kEventReleased:
             {
-              // ***
-              // *** Not used.
-              // ***
               TRACELN(F("Setup button was released"));
             }
             break;
           case AceButton::kEventLongPressed:
             {
-              // ***
-              // *** Not used.
-              // ***
               TRACELN(F("Setup button was long pressed."));
             }
             break;
@@ -637,7 +663,6 @@ void buttonEventHandler(AceButton* button, uint8_t eventType, uint8_t state)
           case AceButton::kEventRepeatPressed:
             {
               TRACELN(F("Setup button was repeat-pressed"));
-              setupButtonClicked();
             }
             break;
           case AceButton::kEventDoubleClicked:
@@ -666,9 +691,8 @@ void modeButtonLongPressed()
   if (_gpsManager.hasFix())
   {
     TRACELN(F("Updating RTC from GPS."));
-    TRACE_DATE("UTC Date/Time from RTC: ", _timeManager.getUtcDateTime());
-    TRACE_DATE("UTC Date/Time from GPS: ", _gpsManager.dateTime());
-    _timeManager.setUtcDateTime(_gpsManager.dateTime());
+    TRACE_DETAILS();
+    _timeManager.utcDateTime(_gpsManager.dateTime());
   }
   else
   {
@@ -702,17 +726,17 @@ void setupButtonClicked()
         // *** Increment the TZ offset
         // *** by 60 minutes.
         // ***
-        _tzOffset++;
+        _timeZoneId++;
 
-        if (_tzOffset > 14)
+        if (_timeZoneId > TimeManager::timeZoneCount())
         {
-          _tzOffset = -14;
+          _timeZoneId = 0;
         }
 
         // ***
         // *** Update the time manager.
         // ***
-        _timeManager.setTimeZoneOffset(_tzOffset);
+        _timeManager.timeZoneId(_timeZoneId);
 
         // ***
         // *** Trigger setup change.
@@ -722,20 +746,15 @@ void setupButtonClicked()
         // ***
         // *** Write the new value to the serial port.
         // ***
-        TRACE(F("Changed TZ to ")); TRACELN(_tzOffset);
+        TRACE(F("Changed Time Zone ID to ")); TRACELN(_timeZoneId);
       }
       break;
     case Mode_t::MODE_DST:
       {
         // ***
-        // *** Toggle the DST flag.
+        // *** Toggle the DST mode.
         // ***
-        _isDst = !_isDst;
-
-        // ***
-        // *** Update the time manager.
-        // ***
-        _timeManager.setIsDst(_isDst);
+        _dstMode = _timeManager.toggleDstMode();
 
         // ***
         // *** Trigger setup change.
@@ -745,7 +764,7 @@ void setupButtonClicked()
         // ***
         // *** Write the new value to the serial port.
         // ***
-        TRACE(F("Changed DST to ")); TRACELN(_isDst ? "Yes" : "No");
+        TRACE(F("Changed DST Mode to ")); TRACELN(_timeManager.dstLabel());
       }
       break;
     case Mode_t::MODE_CHIME:
@@ -764,6 +783,30 @@ void setupButtonClicked()
         // *** Write the new value to the serial port.
         // ***
         TRACE(F("Changed Chime to ")); TRACELN(_chime ? "Yes" : "No");
+      }
+      break;
+    case Mode_t::MODE_FORMAT:
+      {
+        // ***
+        // *** Toggle the twelve hour format flag.
+        // ***
+        _twelveHour = !_twelveHour;
+
+        // ***
+        // *** Update the time manager.
+        // ***
+        // ***
+        _timeManager.displayTwelveHourFormat = _twelveHour;
+
+        // ***
+        // *** Trigger setup change.
+        // ***
+        _clockMode.setupChanged(true);
+
+        // ***
+        // *** Write the new value to the serial port.
+        // ***
+        TRACE(F("Changed twelve hour to ")); TRACELN(_twelveHour ? "Yes" : "No");
       }
       break;
   }
@@ -786,13 +829,13 @@ void setupButtonDoubleClicked()
     // ***
     // *** Convert the float value to a string.
     // ***
-    char buffer[3];
+    char buffer[4];
     dtostrf(voltage, 3, 1, buffer);
 
     // ***
     // *** Format the string for display.
     // ***
-    char str[3];
+    char str[5];
     sprintf(str, FORMAT_VOLTAGE, buffer);
 
     // ***
@@ -803,7 +846,7 @@ void setupButtonDoubleClicked()
     // ***
     // *** Force a redraw.
     // ***
-    _clockMode.modeChanged(true);
+    _clockMode.setupChanged(true);
   }
 }
 
@@ -821,7 +864,7 @@ void modeButtonDoubleClicked()
 // ***
 // *** Called by the Timer1 to refresh the display.
 // ***
-void refreshDisplay()
+void onRefreshDisplay()
 {
   // ***
   // *** If the screen is refreshed while the tone is
@@ -878,5 +921,20 @@ void TraceDateTime(String label, const DateTime& dt)
 {
   char buffer[] = "MM-DD-YYYY hh:mm:ss";
   TRACE(label); TRACELN(dt.toString(buffer));
+}
+
+void traceTimeDetails()
+{
+  TRACELN();
+  TRACE(F("Time Zone [")); TRACE(_timeManager.timeZoneId()); TRACE(F("]: ")); TRACELN(_timeManager.timeZoneName());
+  TRACE(F("TZ Offset: ")); TRACELN(_timeManager.timeOffset());
+  TRACE(F("DST Mode: ")); TRACELN(_timeManager.dstLabel());
+  TRACE(F("DST: ")); TRACELN(_timeManager.isDst() ? F("Yes") : F("No") );
+  TRACE_DATE(F("UTC Dt/Tm [RTC]: "), _timeManager.utcDateTime());
+  TRACE_DATE(F("Local Dt/Tm [RTC]: "), _timeManager.localDateTime());
+  TRACE(F("GPS Fix: ")); TRACELN(_gpsManager.hasFix() ? F("Yes") : F("No"));
+  TRACE_DATE("UTC Dt/Tm [GPS]: ", _gpsManager.dateTime());
+  TRACE(F("Free memory = ")); TRACELN(freeMemory());
+  TRACELN();
 }
 #endif

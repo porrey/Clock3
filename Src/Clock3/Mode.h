@@ -10,7 +10,8 @@ typedef enum MODE : uint8_t
   MODE_TZ = 1,
   MODE_DST = 2,
   MODE_CHIME = 3,
-  MODE_MAX = 4
+  MODE_FORMAT = 4,
+  MODE_MAX = 5
 } Mode_t;
 
 class Mode
@@ -121,7 +122,7 @@ class Mode
       bool returnValue = false;
 
       // ***
-      // *** Chck if indefault more.
+      // *** Check if indefault more.
       // ***
       if (this->_mode != this->_defaultMode)
       {

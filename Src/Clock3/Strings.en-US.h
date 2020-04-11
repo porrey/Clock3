@@ -29,6 +29,7 @@
 #define STRING_DISPLAY_NO_FIX "No Fx"
 #define STRING_DISPLAY_YES "Yes"
 #define STRING_DISPLAY_NO "No"
+#define STRING_DISPLAY_FMT "12 Hr"
 
 // ***
 // *** Strings used for formatting.

@@ -109,7 +109,7 @@ void GpsManager::setHasFix(bool hasFix)
   }
 }
 
-const DateTime GpsManager::dateTime()
+DateTime GpsManager::dateTime()
 {
   // ***
   // *** Return the internal value.

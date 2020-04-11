@@ -82,7 +82,7 @@ class GpsManager
     // *** Gets the last date and time retrieved from
     // *** the GPS.
     // ***
-    const DateTime dateTime();
+    DateTime dateTime();
 
   protected:
     // ***
