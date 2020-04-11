@@ -23,6 +23,9 @@ This firmware has been written from scratch using standard Arduino libraries. In
 - The code has been broken out into modules/classes in an effort to make it easier to include or exclude capabilities.
 - This library continues to support sound through the pizeo.
 - Added optional **[Westminster Quarters](https://en.wikipedia.org/wiki/Westminster_Quarters)** (hourly only).
+- Added US timezone selection.
+- Added an auto DST (daylight savings) option for built-in US timezones.
+- Select bewteen 12-hour or 24-hour display.
 
 
 ## GFX Font Editor
